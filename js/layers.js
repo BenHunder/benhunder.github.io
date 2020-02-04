@@ -182,7 +182,7 @@ export function createAllCells(){
         createCell('n', new Vec2(5,2), new Vec2(343, 252)),
         createCell('m', new Vec2(6,2), new Vec2(391, 252)),
         createCell(',', new Vec2(7,2), new Vec2(438, 252)),
-        createCell('dot', new Vec2(8,2), new Vec2(486, 252)),
+        createCell('PERIOD', new Vec2(8,2), new Vec2(486, 252)),
         //createCell('/', new Vec2(9,2), new Vec2(533, 252)),
 
     //]).then(([q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m]) => {
