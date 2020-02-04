@@ -11,7 +11,7 @@ export default class Layer{
         }
 
         console.log("cells of : " + this.zIndex);
-        console.log({cells});
+        console.log({cells:this.cells});
         if(this.cells){
             this.cells.forEach(cell => {
                 console.log("cell:");
