@@ -1,5 +1,6 @@
 import { Vec2 } from "../math.js";
 import {getRandomInt} from '../math.js';
+import Cell from './Cell.js';
 
 //im sure there are better ways to do this, but this makes sense to me at this moment so, I'm rolling with it.
 //cellMap contains a map so you can access cells by their corresponding letter (the key) and it contains a two dimensional array (this.grid) so cells can be accessed by x,y coordinates and math can be done to get neightboring cells
@@ -32,8 +33,10 @@ export default class CellMap{
         if(typeof(key) === "string"){
             return this.letterMap.get(key);
         }else if(typeof(key) === "object"){
+            //grid width doesnt work too well here because each row has a different width, but the instanceof fix works for now
             if((key.x >= 0) && (key.x < this.gridWidth) && (key.y >= 0) && (key.y < this.gridHeight)){
-                return this.grid[key.x][key.y];
+                const cell = this.grid[key.x][key.y];
+                return cell instanceof Cell ? cell:null;
             }else{
                 return null;
             }

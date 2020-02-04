@@ -8,13 +8,13 @@
     "spawners": [
         {
             "type": "mushboy",
-            "spawnRate": 4,
-            "spawnVariance": 2
+            "spawnRate": 7,
+            "spawnVariance": 3
         },
         {
             "type": "bunbun",
-            "spawnRate": 5,
-            "spawnVariance": 2,
+            "spawnRate": 6,
+            "spawnVariance": 4,
             "spawnCluster": 2
         },
         {
