@@ -9,13 +9,9 @@ export default class Layer{
         if(this.buffer){
             context.drawImage(this.buffer, 0, 0);
         }
-
-        console.log("cells of : " + this.zIndex);
-        console.log({cells:this.cells});
+        
         if(this.cells){
             this.cells.forEach(cell => {
-                console.log("cell:");
-                console.log({cell});
                 cell.draw(context);
             });
         }
