@@ -161,7 +161,7 @@ export function createAllCells(){
         createCell('i', new Vec2(7,0), new Vec2(391, 155)),
         createCell('o', new Vec2(8,0), new Vec2(438, 155)),
         createCell('p', new Vec2(9,0), new Vec2(485, 155)),
-        createCell('[', new Vec2(10,0), new Vec2(532, 155)),
+        //createCell('[', new Vec2(10,0), new Vec2(532, 155)),
         //createCell(']', new Vec2(11,0), new Vec2(580, 155)),
         createCell('a', new Vec2(0,1), new Vec2(83, 204)),
         createCell('s', new Vec2(1,1), new Vec2(131, 204)),
@@ -172,7 +172,7 @@ export function createAllCells(){
         createCell('j', new Vec2(6,1), new Vec2(367, 204)),
         createCell('k', new Vec2(7,1), new Vec2(414, 204)),
         createCell('l', new Vec2(8,1), new Vec2(462, 204)),
-        createCell(';', new Vec2(9,1), new Vec2(509, 204)),
+        //createCell(';', new Vec2(9,1), new Vec2(509, 204)),
         //createCell('\'', new Vec2(10,1), new Vec2(557, 204)),
         createCell('z', new Vec2(0,2), new Vec2(107, 252)),
         createCell('x', new Vec2(1,2), new Vec2(154, 252)),
@@ -181,8 +181,8 @@ export function createAllCells(){
         createCell('b', new Vec2(4,2), new Vec2(296, 252)),
         createCell('n', new Vec2(5,2), new Vec2(343, 252)),
         createCell('m', new Vec2(6,2), new Vec2(391, 252)),
-        createCell(',', new Vec2(7,2), new Vec2(438, 252)),
-        createCell('.', new Vec2(8,2), new Vec2(486, 252)),
+        //createCell(',', new Vec2(7,2), new Vec2(438, 252)),
+        //createCell('.', new Vec2(8,2), new Vec2(486, 252)),
         //createCell('/', new Vec2(9,2), new Vec2(533, 252)),
 
     //]).then(([q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m]) => {
