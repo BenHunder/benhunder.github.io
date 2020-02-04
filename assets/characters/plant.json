@@ -1,0 +1,29 @@
+{
+    "name": "plant",
+    "height": 16,
+    "width": 32,
+    "spriteSheetLocation": "/assets/img/sprites/plant-01-sprites.png",
+    "frameDataLocation": "/assets/characters/plant-01-sprites.json",
+    "sounds": [
+        {
+            "name": "kill",
+            "location": "/assets/sfx/sfx4.wav"
+        }
+    ],
+    "attributes": {
+        "health": 10,
+        "maxHunger": 40,
+        "traits": [
+            "superGrowth", 
+            "poisonPunch"
+        ],
+        "abilities": [
+            "multiply",
+            "multiply",
+            "teleport"
+        ],
+        "type": "plant"
+    }
+    
+
+}

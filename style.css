@@ -1,0 +1,27 @@
+#gameContainer{
+    width: 100%;
+    text-align: center;
+
+    /* position: absolute;
+    left: 50%;
+    right: 50%; */
+}
+
+#gameCanvas{
+    /* width: 1280px; */
+    /* height: 960px; */
+    /* width: 100%; */
+    /* height: 100%; */
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+
+    background-color: black;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+

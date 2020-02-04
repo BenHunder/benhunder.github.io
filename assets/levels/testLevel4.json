@@ -1,0 +1,26 @@
+{
+    "timeLimit": 30,
+    "keyboard": 
+        {
+            "layout": "mac-qwerty",
+            "location": "/layouts/mac-querty"
+        },
+    "spawners": [
+        {
+            "type": "mushboy",
+            "spawnRate": 4,
+            "spawnVariance": 2
+        },
+        {
+            "type": "bunbun",
+            "spawnRate": 5,
+            "spawnVariance": 2,
+            "spawnCluster": 2
+        },
+        {
+            "type": "protector",
+            "spawnRate": 5,
+            "spawnVariance": 2
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "name": "multboy",
+    "height": 40,
+    "width": 32,
+    "spriteSheetLocation": "/assets/img/sprites/mushboy.png",
+    "frameDataLocation": "/assets/characters/mushboy-sprites.json",
+    "sounds": [
+        {
+            "name": "kill",
+            "location": "/assets/sfx/sfx4.wav"
+        }
+    ],
+    "attributes": {
+        "health": 10,
+        "traits": [
+            "superGrowth", 
+            "poisonPunch"
+        ],
+        "abilities": [
+            "multiply",
+            "teleport",
+            "attack"
+        ],
+        "type": "enemy"
+    }
+    
+
+}
