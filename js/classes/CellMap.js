@@ -134,6 +134,12 @@ export default class CellMap{
         return this.adjacentTo(cell).filter(cell => !cell.isActive);
     }
 
+    randomActiveTarget(cell){
+        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive);
+        let r = getRandomInt(occupied.length);
+        return occupied.length > 0 ? occupied[r]:null;
+    }
+
     //returns an array of max length n (could be less) of random cells adjacent to cell
     randomAdjacentTo(cell, n){
         let cells = [];

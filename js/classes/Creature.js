@@ -13,7 +13,7 @@ export default class Creature{
 
     update(deltaTime){
         this.traits.forEach(trait => {
-            trait.update(this, deltaTime);
+            trait.update(deltaTime);
         })
     } 
 

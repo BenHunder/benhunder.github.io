@@ -38,7 +38,12 @@ export class Spawner{
         }else{
             const cell = this.cellMap.randomAvailableCell();
             if(cell){
-                cell.spawnNew(this.creatureFactory.create());
+                let creature = this.creatureFactory.create();
+                if (creature.name == 'protector'){
+                    creature.targetCell = this.cellMap.randomActiveTarget(cell, 1);
+                    console.log({creature});
+                }
+                cell.spawnNew(creature);
             }
         }
     }
@@ -51,7 +56,6 @@ export class Spawner{
 
             firstCell.spawnNew(this.creatureFactory.create());
             spawns.forEach(cell => {
-                console.log({cell});
                 cell.spawnNew(this.creatureFactory.create());
             });
         }

@@ -18,6 +18,7 @@ export default class Cell{
         this.speed = 50;
         this.duringSinkingAnimation = false;
         this.isActive = false;
+        this.isProtected = false;
         this.creature = null;
 
         this.traits = [];
@@ -60,6 +61,10 @@ export default class Cell{
         this.traits.forEach(trait => {
             trait.update(deltaTime);
         });
+        this.isProtected = false;
+        if(this.isActive && !this.duringSinkingAnimation && this.creature != null){
+            this.creature.update();
+        }
     }
 
     addTrait(trait){
