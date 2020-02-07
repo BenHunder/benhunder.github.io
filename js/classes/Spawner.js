@@ -41,7 +41,6 @@ export class Spawner{
                 let creature = this.creatureFactory.create();
                 if (creature.name == 'protector'){
                     creature.targetCell = this.cellMap.randomActiveTarget(cell, 1);
-                    console.log({creature});
                 }
                 cell.spawnNew(creature);
             }

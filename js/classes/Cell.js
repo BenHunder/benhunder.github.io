@@ -33,11 +33,9 @@ export default class Cell{
     draw(context){
         if(this.depth < this.maxDepth){
             context.drawImage(this.buffer, 0, Math.ceil(this.depth));
+            
             if(this.creature){
                 this.drawSprite(context);
-                //context.strokeStyle = this.creature.type === "plant" ? '#008000':'#f00';  // some color/style
-                //context.lineWidth = 2;         // thickness
-                //context.strokeRect(x, y, 32, 32);
             }
         }
         //context.fillText(this.name, this.center.x - 20, this.center.y + 10);
@@ -53,6 +51,11 @@ export default class Cell{
         const x = Math.ceil(this.center.x) - this.creature.width/2;
         const y = Math.ceil(this.center.y) + Math.ceil(this.depth) - this.creature.height + yOffset;
 
+        if(this.isProtected){
+            context.strokeStyle = '#008000';  // some color/style
+            context.lineWidth = 2;         // thickness
+            context.strokeRect(x, y, 32, 32);
+        }
         this.creature.draw(context, x, y);
 
     }
