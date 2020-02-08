@@ -36,12 +36,20 @@ export class Spawner{
         if (this.spawnCluster > 1){
             this.spawnMultiple();
         }else{
-            const cell = this.cellMap.randomAvailableCell();
-            if(cell){
-                let creature = this.creatureFactory.create();
-                if (creature.name == 'protector'){
-                    creature.targetCell = this.cellMap.randomActiveTarget(cell, 1);
+            let creature = this.creatureFactory.create();
+            let cell = null;
+
+            if (creature.name == 'protector'){
+                const targetCell = this.cellMap.randomOccupiedCell();
+                if(targetCell){
+                    creature.targetCell = targetCell
+                    cell = this.cellMap.randomAdjacentTo(creature.targetCell, 1)[0];
                 }
+            }else{
+                cell = this.cellMap.randomAvailableCell();
+            }
+            
+            if(cell){
                 cell.spawnNew(creature);
             }
         }

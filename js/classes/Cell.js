@@ -65,9 +65,6 @@ export default class Cell{
             trait.update(deltaTime);
         });
         this.isProtected = false;
-        if(this.isActive && !this.duringSinkingAnimation && this.creature != null){
-            this.creature.update();
-        }
     }
 
     addTrait(trait){

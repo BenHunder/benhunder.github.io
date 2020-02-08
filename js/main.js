@@ -255,14 +255,30 @@ function start(comp){
     const timer = new Timer(1/60);
     timer.update = function update(deltaTime){
         if(!paused){
+            //spawn creatures
             spawnerSet.forEach( spawner => spawner.update(deltaTime));
-            comp.update(deltaTime);
-            comp.draw(canvas);
 
+            //update layers and cells
+            comp.update(deltaTime);
+
+            //update creatures
+            const creatureCells = cellMap.occupiedCells();
+            creatureCells.forEach( ([name, cell]) => {
+                if(!cell.duringSinkingAnimation){
+                    cell.creature.update();
+                }
+            });
+
+            //check win/lose conditions
             if(player1.health <= 0 || game.timer <= 0){
                 comp.menu = loseMenu;
                 pause();
             }
+
+            //draw everything
+            comp.draw(canvas);
+
+            
         }else{
             comp.draw(canvas);
             comp.drawMenu(canvas);

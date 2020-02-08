@@ -167,11 +167,23 @@ export default class CellMap{
         return this.allCells().filter(([name,cell]) => !cell.isActive);
     }
 
+    occupiedCells(){
+        return this.allCells().filter(([name,cell]) => cell.isActive);
+    }
+
     randomAvailableCell(){
         const availableCells = this.availableCells();
         if(availableCells.length > 0){
             const i = getRandomInt(availableCells.length);
             return availableCells[i][1];
+        }
+    }
+
+    randomOccupiedCell(){
+        const occupiedCells = this.occupiedCells();
+        if(occupiedCells.length > 0){
+            const i = getRandomInt(occupiedCells.length);
+            return occupiedCells[i][1];
         }
     }
 
