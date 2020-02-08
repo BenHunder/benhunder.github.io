@@ -168,7 +168,7 @@ export default class CellMap{
     }
 
     occupiedCells(){
-        return this.allCells().filter(([name,cell]) => cell.isActive);
+        return this.allCells().filter(([name,cell]) => cell.isActive && !cell.duringSinkingAnimation);
     }
 
     randomAvailableCell(){
