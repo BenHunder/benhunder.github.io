@@ -62,9 +62,6 @@ export function createLevelMenu(font, fontLarge){
     return loadImage('/assets/img/ui/PauseScreenMockUp.png').then(img => {
         let options = [
             {
-                'label': 'level 4'
-            },
-            {
                 'label': 'level 1'
             },
             {

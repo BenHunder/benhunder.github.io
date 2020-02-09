@@ -56,7 +56,7 @@ function resizeGame() {
 //window.addEventListener('orientationchange', resizeGame, false);
 
 export let cellMap;
-let spawnerSet;
+let spawner;
 
 export let globalSoundBoard;
 
@@ -191,8 +191,8 @@ async function initialize(){
                         comp.setMenu(startMenu)
                     }else if(action.substring(0, 5) === "level"){
                         resetLevel();
-                        loadLevel(cellMap, action).then(spawners => {
-                            spawnerSet = spawners;
+                        loadLevel(cellMap, action).then(spwnr => {
+                            spawner = spwnr;
                             unpause();
                         });
                         
@@ -256,7 +256,7 @@ function start(comp){
     timer.update = function update(deltaTime){
         if(!paused){
             //spawn creatures
-            spawnerSet.forEach( spawner => spawner.update(deltaTime));
+            spawner.update(deltaTime);
 
             //update layers and cells
             comp.update(deltaTime);

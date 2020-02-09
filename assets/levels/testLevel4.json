@@ -5,22 +5,22 @@
             "layout": "mac-qwerty",
             "location": "/layouts/mac-querty"
         },
+    "plants":
+        {
+            "type": "standardBush",
+            "spawnRate": 3,
+            "spawnVariance": 1
+        },
     "spawners": [
         {
             "type": "mushboy",
+            "spawnRate": 2,
+            "spawnVariance": 1
+        },
+        {
+            "type": "plant",
             "spawnRate": 7,
-            "spawnVariance": 3
-        },
-        {
-            "type": "bunbun",
-            "spawnRate": 6,
-            "spawnVariance": 4,
-            "spawnCluster": 2
-        },
-        {
-            "type": "protector",
-            "spawnRate": 5,
-            "spawnVariance": 2
+            "spawnVariance": 1
         }
     ]
 }
