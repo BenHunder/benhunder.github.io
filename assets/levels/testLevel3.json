@@ -1,22 +1,24 @@
 {
     "timeLimit": 30,
-    "keyboard": 
-        {
-            "layout": "mac-qwerty",
-            "location": "/layouts/mac-querty"
-        },
-    "spawners": [
+    "keyboard": {
+        "layout": "mac-qwerty",
+        "location": "/layouts/mac-querty"
+    },
+    "spawner": {
+        "spawnRate": 0.5,
+        "creatures": [
         {
             "type": "mushboy",
-            "spawnRate": 1.5,
-            "spawnVariance": 1,
-            "spawnCluster": 1
+            "chance": 0.3
         },
         {
-            "type": "plant",
-            "spawnRate": 7,
-            "spawnVariance": 1,
-            "spawnCluster": 2
-        }
-    ]
+            "type": "bunbun",
+            "chance": 0.1,
+            "cluster": 2
+        },
+        {
+            "type": "protector",
+            "chance": 0.08
+        }]
+    }
 }

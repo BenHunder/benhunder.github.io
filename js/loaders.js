@@ -109,23 +109,25 @@ export async function loadSounds(soundNames){
 export function loadLevel(cellMap, levelName){
     return loadJson(levelLocations[levelName])
     .then( level => {
+        const newSpawner = new Spawner(cellMap, level.spawner.spawnRate);
+
         let promisesArray = [];
-        level.spawners.forEach( spawner => {
+        level.spawner.creatures.forEach( creature => {
             promisesArray.push( 
-                loadCreature(spawner.type)
+                loadCreature(creature.type, creature.chance, creature.cluster)
                 .then( creatureFactory => {
-                    const newSpawner = new Spawner(cellMap, creatureFactory, spawner.spawnRate, spawner.spawnVariance, spawner.spawnCluster);
-                    return newSpawner;
+                    newSpawner.addCreature(creatureFactory);
                 })
             );
         });
+        Promise.all(promisesArray);
 
-        return Promise.all(promisesArray);
+        return newSpawner;
     });
 }
 
 //load all character properties (sounds, frames, attributes)
-export function loadCreature(creatureName){
+export function loadCreature(creatureName, creatureChance, creatureCluster){
     return loadJson(creatureLocations[creatureName])
     .then( creature => {
         return Promise.all([
@@ -133,7 +135,7 @@ export function loadCreature(creatureName){
             loadSounds(creature.sounds)
         ])
         .then( ([spriteSheet, soundBoard]) => {
-            return new CreatureFactory(spriteSheet, soundBoard, creature.name, creature.width, creature.height, creature.attributes);
+            return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, creature.name, creature.width, creature.height, creature.attributes);
         });
     });
 }

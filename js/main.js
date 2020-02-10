@@ -56,7 +56,7 @@ function resizeGame() {
 //window.addEventListener('orientationchange', resizeGame, false);
 
 export let cellMap;
-let spawnerSet;
+let spawner;
 
 export let globalSoundBoard;
 
@@ -99,6 +99,7 @@ const fontData = [
 
 let player1;
 let game;
+let currentLevel;
 let startMenu;
 let levelMenu;
 let pauseMenu;
@@ -189,10 +190,21 @@ async function initialize(){
                     }else if(action === "quit"){
                         resetLevel();
                         comp.setMenu(startMenu)
+                    }else if(action === "next level"){
+                        resetLevel();
+                        const nextLevel = (parseInt(currentLevel, 10) + 1)
+                        currentLevel = nextLevel;
+                        const level = "level " + nextLevel;
+                        console.log("load " + level);
+                        loadLevel(cellMap, level).then(spwnr => {
+                            spawner = spwnr;
+                            unpause();
+                        });
                     }else if(action.substring(0, 5) === "level"){
                         resetLevel();
-                        loadLevel(cellMap, action).then(spawners => {
-                            spawnerSet = spawners;
+                        currentLevel = action.substring(6, 7);
+                        loadLevel(cellMap, action).then(spwnr => {
+                            spawner = spwnr;
                             unpause();
                         });
                         
@@ -256,7 +268,7 @@ function start(comp){
     timer.update = function update(deltaTime){
         if(!paused){
             //spawn creatures
-            spawnerSet.forEach( spawner => spawner.update(deltaTime));
+            spawner.update(deltaTime);
 
             //update layers and cells
             comp.update(deltaTime);
@@ -270,8 +282,11 @@ function start(comp){
             });
 
             //check win/lose conditions
-            if(player1.health <= 0 || game.timer <= 0){
-                comp.menu = loseMenu;
+            if(player1.health <= 0){
+                comp.setMenu(loseMenu);
+                pause();
+            }else if(game.timer <= 0){
+                comp.setMenu(winMenu);
                 pause();
             }
 

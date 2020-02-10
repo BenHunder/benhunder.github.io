@@ -8,9 +8,11 @@ import Protect from "./traits/Protect.js";
 
 export class CreatureFactory{
     //TODO should spriteSheet and soundBoard really be passed in here? If so, creature should have a function to play sounds like its draw method 
-    constructor(spriteSheet, soundBoard, name, width, height, attributes){
+    constructor(spriteSheet, soundBoard, chance, cluster, name, width, height, attributes){
         this.spriteSheet = spriteSheet;
         this.soundBoard = soundBoard;
+        this.chance = chance;
+        this.cluster = cluster;
         this.name = name;
         this.width = width;
         this.height = height;

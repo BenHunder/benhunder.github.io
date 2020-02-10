@@ -171,6 +171,10 @@ export default class CellMap{
         return this.allCells().filter(([name,cell]) => cell.isActive && !cell.duringSinkingAnimation);
     }
 
+    percentageOccupied(){
+        return this.occupiedCells().length / this.letterMap.length;
+    }
+
     randomAvailableCell(){
         const availableCells = this.availableCells();
         if(availableCells.length > 0){
