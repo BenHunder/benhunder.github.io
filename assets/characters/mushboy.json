@@ -2,7 +2,7 @@
     "name": "mushboy",
     "height": 40,
     "width": 32,
-    "spriteSheetLocation": "/assets/img/sprites/mushboy.png",
+    "spriteSheetLocation": "/assets/img/sprites/mushboy-sprites.png",
     "frameDataLocation": "/assets/characters/mushboy-sprites.json",
     "sounds": [
         {
@@ -15,8 +15,9 @@
         "traits": [
             {
                 "name": "hit",
-                "rate": 3,
-                "damage": 5
+                "rate": 5,
+                "damage": 5,
+                "animationOffset": 2.75
             }
         ],
         "abilities": [

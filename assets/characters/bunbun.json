@@ -15,8 +15,9 @@
         "traits": [
             {
                 "name": "hit",
-                "rate": 2,
-                "damage": 1
+                "rate": 2.5,
+                "damage": 1,
+                "animationOffset": 0.3
             }
         ],
         "abilities": [

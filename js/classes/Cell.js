@@ -83,7 +83,7 @@ export default class Cell{
             }
         }else{
             globalSoundBoard.play('bonkOther');
-            player.damage(5);
+            player.damage(1);
         }
     }
 

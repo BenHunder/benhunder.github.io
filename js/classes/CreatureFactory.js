@@ -55,7 +55,7 @@ export class CreatureFactory{
             if(trait.name === 'protect'){
                 creature.addTrait(new Protect(creature));
             }else if(trait.name === 'hit'){
-                creature.addTrait(new Hit(creature, trait.rate, trait.damage));
+                creature.addTrait(new Hit(creature, trait.rate, trait.damage, trait.animationOffset));
             }
 
             //TODO eventually traits will be defined in the JSON or somehting I guess, but for now, they are just strings. This line is pretty useless rn
