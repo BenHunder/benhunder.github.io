@@ -13,11 +13,9 @@
     "attributes": {
         "health": 30,
         "traits": [
-            "protect"
-        ],
-        "abilities": [
-            "multiply",
-            "attack"
+            {
+                "name": "protect"
+            }
         ],
         "type": "enemy"
     }

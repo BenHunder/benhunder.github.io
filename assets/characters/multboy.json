@@ -13,11 +13,13 @@
     "attributes": {
         "health": 10,
         "traits": [
+            {
+                "name": "hit",
+                "rate": 3,
+                "damage": 5
+            }
         ],
         "abilities": [
-            "multiply",
-            "teleport",
-            "attack"
         ],
         "type": "enemy"
     }

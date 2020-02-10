@@ -97,7 +97,7 @@ const fontData = [
     }
 ]
 
-let player1;
+export let player1;
 let game;
 let startMenu;
 let levelMenu;
@@ -276,7 +276,7 @@ function start(comp){
             const creatureCells = cellMap.occupiedCells();
             creatureCells.forEach( ([name, cell]) => {
                 if(!cell.duringSinkingAnimation){
-                    cell.creature.update();
+                    cell.creature.update(deltaTime);
                 }
             });
 

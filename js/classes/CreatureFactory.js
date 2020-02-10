@@ -1,8 +1,9 @@
 import Creature from "./Creature.js";
 import Trait from "./traits/Trait.js";
 
-import * as allAbilities from '../abilities.js'
+import * as allAbilities from '../abilities.js';
 import Protect from "./traits/Protect.js";
+import Hit from "./traits/Hit.js";
 
 //do we need this? or do we just need to pass a function that returns a new creature or something. i am getting confused. this factory thing seems like a lot of unnecessary work
 
@@ -50,9 +51,11 @@ export class CreatureFactory{
             abilitiesArray.push(allAbilities[ability](creature));
         });
 
-        this.traits.forEach( traitName => {
-            if(traitName == 'protect'){
+        this.traits.forEach( trait => {
+            if(trait.name === 'protect'){
                 creature.addTrait(new Protect(creature));
+            }else if(trait.name === 'hit'){
+                creature.addTrait(new Hit(creature, trait.rate, trait.damage));
             }
 
             //TODO eventually traits will be defined in the JSON or somehting I guess, but for now, they are just strings. This line is pretty useless rn
