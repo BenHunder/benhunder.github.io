@@ -1,9 +1,9 @@
 {
-    "name": "plant",
+    "name": "sprout",
     "height": 16,
     "width": 32,
-    "spriteSheetLocation": "/assets/img/sprites/plant-01-sprites.png",
-    "frameDataLocation": "/assets/characters/plant-01-sprites.json",
+    "spriteSheetLocation": "/assets/characters/sprout/sprout.png",
+    "frameDataLocation": "/assets/characters/sprout/frame-data.json",
     "sounds": [
         {
             "name": "kill",

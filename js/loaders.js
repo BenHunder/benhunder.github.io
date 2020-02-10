@@ -96,8 +96,8 @@ export async function loadSounds(soundNames){
 }
 
 //loads level json, makes creature factories, returns and array of spawners 
-export function loadLevel(cellMap, levelName){
-    return loadJson(levelLocations[levelName])
+export function loadLevel(cellMap, lvl){
+    return loadJson("./assets/levels/l" + lvl + ".json")
     .then( level => {
         const newSpawner = new Spawner(cellMap, level.spawner.spawnRate);
 

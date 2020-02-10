@@ -79,19 +79,19 @@ const soundNames = [
 const fontData = [
     {
         'name': 'manaspace',
-        'location': '../assets/img/fonts/manaspace/manaspace.png',
+        'location': '../assets/fonts/manaspace/manaspace.png',
         'charWidth': 16,
         'charHeight': 24
     },
     {
         'name': 'manaspace-large',
-        'location': '../assets/img/fonts/manaspace/manaspace-large.png',
+        'location': '../assets/fonts/manaspace/manaspace-large.png',
         'charWidth': 24,
         'charHeight': 36
     },
     {
         'name': 'lunchtime',
-        'location': '../assets/img/fonts/lunchtime/lunchtime.png',
+        'location': '../assets/fonts/lunchtime/lunchtime.png',
         'charWidth': 18,
         'charHeight': 32
     }
@@ -193,16 +193,14 @@ async function initialize(){
                         resetLevel();
                         const nextLevel = (parseInt(game.level, 10) + 1)
                         game.level = nextLevel;
-                        const level = "level " + nextLevel;
-                        console.log("load " + level);
-                        loadLevel(cellMap, level).then(spwnr => {
+                        loadLevel(cellMap, game.level).then(spwnr => {
                             spawner = spwnr;
                             unpause();
                         });
                     }else if(action.substring(0, 5) === "level"){
                         resetLevel();
                         game.level = action.substring(6, 7);
-                        loadLevel(cellMap, action).then(spwnr => {
+                        loadLevel(cellMap, game.level).then(spwnr => {
                             spawner = spwnr;
                             unpause();
                         });
