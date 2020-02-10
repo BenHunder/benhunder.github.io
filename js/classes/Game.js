@@ -1,6 +1,6 @@
 export default class Game{
     constructor(){
-        this.baseTimer = 100;
+        this.baseTimer = 20;
 
         this.cellMap = null;
         this.timer = this.baseTimer;
