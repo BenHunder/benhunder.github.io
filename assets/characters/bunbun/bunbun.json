@@ -1,9 +1,9 @@
 {
-    "name": "mushboy",
+    "name": "bunbun",
     "height": 40,
     "width": 32,
-    "spriteSheetLocation": "/assets/img/sprites/mushboy-sprites.png",
-    "frameDataLocation": "/assets/characters/mushboy-sprites.json",
+    "spriteSheetLocation": "/assets/characters/bunbun/bunbun.png",
+    "frameDataLocation": "/assets/characters/bunbun/frame-data.json",
     "sounds": [
         {
             "name": "kill",
@@ -11,13 +11,13 @@
         }
     ],
     "attributes": {
-        "health": 20,
+        "health": 10,
         "traits": [
             {
                 "name": "hit",
-                "rate": 5,
-                "damage": 5,
-                "animationOffset": 2.75
+                "rate": 2.5,
+                "damage": 1,
+                "animationOffset": 0.3
             }
         ],
         "abilities": [

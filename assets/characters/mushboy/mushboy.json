@@ -1,9 +1,9 @@
 {
-    "name": "multboy",
+    "name": "mushboy",
     "height": 40,
     "width": 32,
-    "spriteSheetLocation": "/assets/img/sprites/mushboy.png",
-    "frameDataLocation": "/assets/characters/mushboy-sprites.json",
+    "spriteSheetLocation": "/assets/characters/mushboy/mushboy.png",
+    "frameDataLocation": "/assets/characters/mushboy/frame-data.json",
     "sounds": [
         {
             "name": "kill",
@@ -11,12 +11,13 @@
         }
     ],
     "attributes": {
-        "health": 10,
+        "health": 20,
         "traits": [
             {
                 "name": "hit",
-                "rate": 3,
-                "damage": 5
+                "rate": 5,
+                "damage": 5,
+                "animationOffset": 2.75
             }
         ],
         "abilities": [

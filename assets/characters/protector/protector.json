@@ -2,8 +2,8 @@
     "name": "protector",
     "height": 40,
     "width": 32,
-    "spriteSheetLocation": "/assets/img/sprites/protector.png",
-    "frameDataLocation": "/assets/characters/protector-sprites.json",
+    "spriteSheetLocation": "/assets/characters/protector/protector.png",
+    "frameDataLocation": "/assets/characters/protector/frame-data.json",
     "sounds": [
         {
             "name": "kill",
