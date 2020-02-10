@@ -13,8 +13,6 @@
     "attributes": {
         "health": 20,
         "traits": [
-            "superGrowth", 
-            "poisonPunch"
         ],
         "abilities": [
             "multiply",

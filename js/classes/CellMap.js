@@ -134,6 +134,12 @@ export default class CellMap{
         return this.adjacentTo(cell).filter(cell => !cell.isActive);
     }
 
+    randomActiveTarget(cell){
+        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive);
+        let r = getRandomInt(occupied.length);
+        return occupied.length > 0 ? occupied[r]:null;
+    }
+
     //returns an array of max length n (could be less) of random cells adjacent to cell
     randomAdjacentTo(cell, n){
         let cells = [];
@@ -161,11 +167,23 @@ export default class CellMap{
         return this.allCells().filter(([name,cell]) => !cell.isActive);
     }
 
+    occupiedCells(){
+        return this.allCells().filter(([name,cell]) => cell.isActive && !cell.duringSinkingAnimation);
+    }
+
     randomAvailableCell(){
         const availableCells = this.availableCells();
         if(availableCells.length > 0){
             const i = getRandomInt(availableCells.length);
             return availableCells[i][1];
+        }
+    }
+
+    randomOccupiedCell(){
+        const occupiedCells = this.occupiedCells();
+        if(occupiedCells.length > 0){
+            const i = getRandomInt(occupiedCells.length);
+            return occupiedCells[i][1];
         }
     }
 

@@ -10,7 +10,7 @@ export default class Attack extends Trait {
     }
 
     start(weapon, player){
-        if(!this.cell.duringSinkingAnimation){
+        if(!this.cell.duringSinkingAnimation && !this.cell.isProtected){
             globalSoundBoard.play('bonkEnemy');
 
             this.cell.creature.health -= weapon.power;

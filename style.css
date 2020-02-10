@@ -25,3 +25,10 @@
     display: block;
 }
 
+#deviceType{
+    display: none;
+    margin-right: auto;
+    margin-left: auto;
+    width: 200px;
+    height:100px;
+}
