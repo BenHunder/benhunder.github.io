@@ -7,6 +7,7 @@ export default class Attack extends Trait {
 
         //TODO this is a circular reference, should fix and make traits make more sense
         this.cell = cell;
+        this.sinkDelay = 0;
     }
 
     start(weapon, player){
@@ -23,17 +24,32 @@ export default class Attack extends Trait {
     kill(player){
         if(!this.cell.duringSinkingAnimation){
             this.cell.creature.playSound('kill', 80);
-            player.addScore(this.cell.creature.scoreValue);
-            this.cell.duringSinkingAnimation = true;
+            const delay = this.cell.creature.kill();
+
+            if(delay === 0){
+                player.addScore(this.cell.creature.scoreValue);
+                this.cell.duringSinkingAnimation = true;
+            }else if( delay > 0){
+                this.sinkDelay = delay;
+                //should score be added here?
+                player.addScore(this.cell.creature.scoreValue);
+                this.cell.duringSinkingAnimation = true;
+            }else{
+                //negative delay here is a special case where the cell shouldn't sink or die after the creature was killed. If killing a creature would replace it with another creature for example, that kill function should return a negative delay
+            }
         }
     }
 
     update(deltaTime){
-        if(this.cell.duringSinkingAnimation && this.cell.depth < this.cell.maxDepth){
-            this.cell.depth += this.cell.speed * deltaTime;
-        }else if(this.cell.duringSinkingAnimation && this.cell.depth >= this.cell.maxDepth){
-            this.cell.duringSinkingAnimation = false;
-            this.cell.reset();
+        if(this.sinkDelay >= 0){
+            this.sinkDelay -= deltaTime;
+        }else{
+            if(this.cell.duringSinkingAnimation && this.cell.depth < this.cell.maxDepth){
+                this.cell.depth += this.cell.speed * deltaTime;
+            }else if(this.cell.duringSinkingAnimation && this.cell.depth >= this.cell.maxDepth){
+                this.cell.duringSinkingAnimation = false;
+                this.cell.reset();
+            }
         }
     }
 }

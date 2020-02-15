@@ -12,13 +12,13 @@
             "chance": 0.3
         },
         {
-            "type": "bunbun",
-            "chance": 0.1,
-            "cluster": 2
+            "type": "mysterybox",
+            "chance": 0.1
         },
         {
-            "type": "protector",
-            "chance": 0.08
+            "type": "bunbun",
+            "chance": 0.2,
+            "cluster": 2
         }]
     }
 }

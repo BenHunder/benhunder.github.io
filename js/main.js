@@ -98,7 +98,7 @@ const fontData = [
 ]
 
 export let player1;
-let game;
+export let game1;
 let startMenu;
 let levelMenu;
 let pauseMenu;
@@ -138,7 +138,7 @@ async function initialize(){
         createLayer3(cellMap),
         createLayer4(),
         createLayer5(),
-        createDashboardLayer(font, player1, game),
+        createDashboardLayer(font, player1, game1),
         createStartMenu(font, fontLarge),
         createLevelMenu(font, fontLarge),
         createPauseMenu(font, fontLarge),
@@ -191,16 +191,16 @@ async function initialize(){
                         comp.setMenu(startMenu)
                     }else if(action === "next level"){
                         resetLevel();
-                        const nextLevel = (parseInt(game.level, 10) + 1)
-                        game.level = nextLevel;
-                        loadLevel(cellMap, game.level).then(spwnr => {
+                        const nextLevel = (parseInt(game1.level, 10) + 1)
+                        game1.level = nextLevel;
+                        loadLevel(cellMap, game1.level).then(spwnr => {
                             spawner = spwnr;
                             unpause();
                         });
                     }else if(action.substring(0, 5) === "level"){
                         resetLevel();
-                        game.level = action.substring(6, 7);
-                        loadLevel(cellMap, game.level).then(spwnr => {
+                        game1.level = action.substring(6, 7);
+                        loadLevel(cellMap, game1.level).then(spwnr => {
                             spawner = spwnr;
                             unpause();
                         });
@@ -282,7 +282,7 @@ function start(comp){
             if(player1.health <= 0){
                 comp.setMenu(loseMenu);
                 pause();
-            }else if(game.timer <= 0){
+            }else if(game1.timer <= 0){
                 comp.setMenu(winMenu);
                 pause();
             }
@@ -311,7 +311,7 @@ function initializePlayer(){
 }
 
 function initializeGame(){
-    game = new Game();
+    game1 = new Game();
 
 }
 
@@ -321,7 +321,7 @@ function resetLevel(){
     });
 
     player1.reset();
-    game.reset();
+    game1.reset();
 }
 
 

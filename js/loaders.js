@@ -125,7 +125,14 @@ export function loadCreature(creatureName, creatureChance, creatureCluster){
             loadSounds(creature.sounds)
         ])
         .then( ([spriteSheet, soundBoard]) => {
-            return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, creature.name, creature.width, creature.height, creature.attributes);
+            if(creature.subCreature){
+                return loadCreature(creature.subCreature, 0, 0).then( creatureFactory => {
+                    return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, creature.name, creature.width, creature.height, creature.attributes, creatureFactory);
+                })
+            }else{
+                return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, creature.name, creature.width, creature.height, creature.attributes, null);
+            }
+            
         });
     });
 }

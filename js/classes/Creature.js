@@ -4,7 +4,6 @@ export default class Creature{
         this.spriteSheet = spriteSheet;
         this.soundBoard = soundBoard;
         this.traits = [];
-        
         this.isAnimating = false;
         this.currentFrame = 0;
         this.counter = 0;
@@ -13,6 +12,16 @@ export default class Creature{
     addTrait(trait) {
         this.traits.push(trait);
         this[trait.NAME] = trait;
+    }
+
+    kill(){
+        let delay = 0;
+        this.traits.forEach( trait => {
+            if(typeof trait.kill === 'function'){
+                delay += trait.kill();
+            }
+        })
+        return delay;
     }
 
     update(deltaTime){
@@ -53,7 +62,6 @@ export default class Creature{
                 }
             }
         }else{
-            this.currentFrame = 0;
             this.counter = 0;
         }
 

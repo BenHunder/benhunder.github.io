@@ -44,7 +44,7 @@ export default class Cell{
     //provides coordinates so it appears that the sprite is standing in the center of the tile using the sprites dimensions
     //TODO is this where the animation frame name would be passed in?
     drawSprite(context){
-        const yOffset = 5;
+        const yOffset = 8;
         //rounds down to whole number so sprites aren't drawn looking blurry
 
         //TODO: once board is set, this should draw in the lower left corner of each cell
@@ -95,10 +95,20 @@ export default class Cell{
 
     spawnNew(creature){
         if(!this.isActive){
+            creature.currentCell = this;
             this.creature = creature;
             this.spawn.start();
         }else{
             console.log("tried to spawn on active cell");
+        }
+    }
+
+    replace(creature){
+        if(this.isActive){
+            creature.currentCell = this;
+            this.creature = creature; 
+        }else{
+            console.log("tried to replace an inactive cell");
         }
     }
 
@@ -118,6 +128,7 @@ export default class Cell{
         this.speed = 50;
         this.duringSinkingAnimation = false;
         this.isActive = false;
+        this.isProtected = false;
         this.creature = null;
     };
 }

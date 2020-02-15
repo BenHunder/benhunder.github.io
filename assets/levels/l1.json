@@ -9,7 +9,11 @@
         "creatures": [
         {
             "type": "mushboy",
-            "chance": 0.3
+            "chance": 0.2
+        },
+        {
+            "type": "mysterybox",
+            "chance": 0.5
         },
         {
             "type": "bunbun",

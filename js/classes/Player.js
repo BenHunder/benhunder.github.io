@@ -9,6 +9,10 @@ export default class Player{
         this.food = null;
     }
 
+    heal(amount){
+        this.health += amount;    
+    }
+
     damage(amount){
         this.health -= amount;
     }

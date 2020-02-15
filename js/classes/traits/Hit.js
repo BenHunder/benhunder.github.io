@@ -3,14 +3,14 @@ import {globalSoundBoard} from '../../main.js';
 import {player1} from '../../main.js';
 
 export default class Hit extends Trait {
-    constructor(creature, rate, damage, offset){
+    constructor(creature, trait){
         super('hit');
 
         //TODO this is a circular reference, should fix and make traits make more sense
         this.creature = creature;
-        this.rate = rate;
-        this.damage = damage;
-        this.offset = offset;
+        this.rate = trait.rate;
+        this.damage = trait.damage;
+        this.offset = trait.animationOffset;
 
         this.animationFired = false;
         this.counter = 0;
