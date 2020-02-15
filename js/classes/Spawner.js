@@ -32,10 +32,22 @@ export class Spawner{
                     let cell = null;
 
                     if (creature.name == 'protector'){
+                        //pick a random occupied cell then spawn a protector next to it, protecting it
                         const targetCell = this.cellMap.randomOccupiedCell();
                         if(targetCell){
                             creature.targetCell = targetCell
                             cell = this.cellMap.randomAdjacentTo(creature.targetCell, 1)[0];
+                        }
+                    }else if (creature.name == 'dragon'){
+                        //pick a random cell and try to find two available adjacent cells to spawn protectors protecting the dragon
+                        cell = this.cellMap.randomAvailableCell();
+                        if(cell){
+                            const protectorCells = this.cellMap.randomAdjacentTo(cell, 2);
+                            protectorCells.forEach( c => {
+                                let protector = creature.subCreatureFactory.create();
+                                protector.targetCell = cell;
+                                c.spawnNew(protector);
+                            })
                         }
                     }else{
                         cell = this.cellMap.randomAvailableCell();
