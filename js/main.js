@@ -304,7 +304,7 @@ initialize().then((comp) => start(comp));
 
 function initializePlayer(){
     player1 = new Player();
-    const basicWeapon = new Weapon("basicWeapon", 10);
+    const basicWeapon = new Weapon("basicWeapon", 20);
     const basicFood = new Food('basicFood', 10);
     player1.weapon = basicWeapon;
     player1.food = basicFood;

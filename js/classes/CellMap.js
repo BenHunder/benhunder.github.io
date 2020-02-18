@@ -140,6 +140,12 @@ export default class CellMap{
         return occupied.length > 0 ? occupied[r]:null;
     }
 
+    randomAdjacentPlant(cell){
+        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.type === 'pl@nt');
+        let r = getRandomInt(occupied.length);
+        return occupied.length > 0 ? occupied[r]:null;
+    }
+
     //returns an array of max length n (could be less) of random cells adjacent to cell
     randomAdjacentTo(cell, n){
         let cells = [];
@@ -171,10 +177,10 @@ export default class CellMap{
         return this.allCells().filter(([name,cell]) => cell.isActive && !cell.duringSinkingAnimation);
     }
 
-    percentageOccupied(){
-        return this.occupiedCells().length / this.letterMap.length;
+    numOccupied(){
+        return this.occupiedCells().length;
     }
-
+    
     randomAvailableCell(){
         const availableCells = this.availableCells();
         if(availableCells.length > 0){

@@ -15,7 +15,13 @@ export class Spawner{
 
     update(deltaTime){
         this.counter += deltaTime;
-        if(this.counter >= this.spawnRate){
+
+        //raise spawnRate (lower frequency of spawns) when there are more creatures on the board, so players aren't overwhelmed
+        //ie.. start faster, then get slower
+        const thresh = this.spawnRate * (((this.cellMap.numOccupied()*5) + 5) / 29);
+
+        if(this.counter >= thresh){
+            console.log("spawn");
             this.spawnAll();
             this.counter = 0;
         }

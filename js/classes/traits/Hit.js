@@ -1,6 +1,7 @@
 import Trait from './Trait.js';
 import {globalSoundBoard} from '../../main.js';
 import {player1} from '../../main.js';
+import {cellMap} from '../../main.js';
 
 export default class Hit extends Trait {
     constructor(creature, trait){
@@ -18,6 +19,10 @@ export default class Hit extends Trait {
 
     start(){
         player1.damage(this.damage);
+        // const target = cellMap.randomAdjacentPlant(this.creature.currentCell);
+        // if(target){
+        //     target.attack.start2(this.damage);
+        // }
     }
 
     //update fires an animation offset seconds before it triggers its start functionality. animationFired ensures the animation won't finish and start again until start has completed.

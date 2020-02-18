@@ -1,6 +1,9 @@
 import Trait from './Trait.js';
 import {globalSoundBoard} from '../../main.js';
 
+//temporary (to test creature on creature interaction)
+import {player1} from '../../main.js';
+
 export default class Attack extends Trait {
     constructor(cell){
         super('attack');
@@ -13,10 +16,18 @@ export default class Attack extends Trait {
     start(weapon, player){
         if(!this.cell.duringSinkingAnimation && !this.cell.isProtected){
             globalSoundBoard.play('bonkEnemy');
-
             this.cell.creature.health -= weapon.power;
             if(this.cell.creature.health <= 0){
                 this.cell.attack.kill(player);
+            }
+        }
+    }
+    start2(amount){
+        if(!this.cell.duringSinkingAnimation && !this.cell.isProtected){
+            globalSoundBoard.play('bonkEnemy');
+            this.cell.creature.health -= amount;
+            if(this.cell.creature.health <= 0){
+                this.cell.attack.kill(player1);
             }
         }
     }

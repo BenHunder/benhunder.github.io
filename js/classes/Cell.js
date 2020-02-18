@@ -7,11 +7,16 @@ import { globalSoundBoard, cellMap } from '../main.js';
 import { Vec2 } from '../math.js';
 
 export default class Cell{
-    constructor(name, coordinates, center, buffer){
+    constructor(name, coordinates, center, normalBuffer, hitBuffer){
         this.name = name;
         this.coordinates = coordinates;
         this.center = center
-        this.buffer = buffer;
+        this.normalBuffer = normalBuffer;
+        this.hitBuffer = hitBuffer;
+        this.buffer = normalBuffer;
+
+        this.hitTimer = 0;
+        this.trailTime = 1;
 
         this.depth = 50;
         this.maxDepth = 50;
@@ -32,11 +37,21 @@ export default class Cell{
     //TODO if draw coordinates aren't whole numbers the tile/sprites will look blurry. using math.ceil here to avoid that, but I wonder if there is a better solution
     draw(context){
         if(this.depth < this.maxDepth){
-            context.drawImage(this.buffer, 0, Math.ceil(this.depth));
-            
+            if(this.hitTimer > 0){
+                context.globalAlpha = this.hitTimer;
+                context.drawImage(this.hitBuffer, 0, Math.ceil(this.depth));
+                context.globalAlpha = 1;
+            }else{
+                context.drawImage(this.normalBuffer, 0, Math.ceil(this.depth));
+            }
+
             if(this.creature){
                 this.drawSprite(context);
             }
+        }else if(this.hitTimer > 0){
+            context.globalAlpha = this.hitTimer;
+            context.drawImage(this.hitBuffer, 0, 0);
+            context.globalAlpha = 1;
         }
         //context.fillText(this.name, this.center.x - 20, this.center.y + 10);
     }
@@ -65,6 +80,12 @@ export default class Cell{
             trait.update(deltaTime);
         });
         this.isProtected = false;
+
+        if(this.hitTimer > 0){
+            this.hitTimer -= deltaTime;
+        }else{
+            this.hitTimer = 0;
+        }
     }
 
     addTrait(trait){
@@ -75,6 +96,7 @@ export default class Cell{
 
     //routes to appropriate trait based on held item and cell state, then damages player if an inactive cell is pressed or adds score if a creature is killed
     interact(item, player){
+        this.hitTimer = this.trailTime;
         if(this.isActive){
             if(item instanceof Weapon){
                 this.attack.start(item, player);

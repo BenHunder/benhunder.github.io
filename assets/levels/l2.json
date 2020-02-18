@@ -13,11 +13,11 @@
         },
         {
             "type": "mysterybox",
-            "chance": 0.05
+            "chance": 0.015
         },
         {
             "type": "bunbun",
-            "chance": 0.2,
+            "chance": 0.1,
             "cluster": 2
         }]
     }

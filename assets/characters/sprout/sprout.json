@@ -15,12 +15,7 @@
         "maxHunger": 40,
         "traits": [
         ],
-        "abilities": [
-            "multiply",
-            "multiply",
-            "teleport"
-        ],
-        "type": "plant"
+        "type": "pl@nt"
     }
     
 

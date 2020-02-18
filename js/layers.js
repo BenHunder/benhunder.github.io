@@ -114,6 +114,9 @@ export function createWinMenu(font, fontLarge){
             },
             {
                 'label': 'restart'
+            },
+            {
+                'label': 'quit'
             }
         ]
         return new Menu(font, fontLarge, 'YOU WIN', options);
@@ -121,13 +124,20 @@ export function createWinMenu(font, fontLarge){
 }
 
 export function createCell(name, coordinates, center){
-    return loadImage('/assets/background/normal-cells/' + name.toUpperCase() + '.png').then(img => {
-        const buffer = document.createElement('canvas');
-        buffer.width = gameWidth;
-        buffer.height = gameHeight;
-        buffer.getContext('2d').drawImage(img, 0, 0);
+    return Promise.all([
+        loadImage('/assets/background/normal-cells/' + name.toUpperCase() + '.png'),
+        loadImage('/assets/background/hit-cells/' + name.toUpperCase() + '.png')
+    ]).then(imgs => {
+        let buffers = [];
+        imgs.forEach( img => {
+            const buffer = document.createElement('canvas');
+            buffer.width = gameWidth;
+            buffer.height = gameHeight;
+            buffer.getContext('2d').drawImage(img, 0, 0);
+            buffers.push(buffer);
+        });
 
-        return new Cell(name, coordinates, center, buffer)
+        return new Cell(name, coordinates, center, buffers[0], buffers[1]);
     });
 }
 
