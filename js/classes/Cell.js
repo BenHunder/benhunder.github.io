@@ -148,6 +148,7 @@ export default class Cell{
         this.depth = 50;
         this.maxDepth = 50;
         this.speed = 50;
+        this.hitTimer = 0;
         this.duringSinkingAnimation = false;
         this.isActive = false;
         this.isProtected = false;

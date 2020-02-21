@@ -125,8 +125,8 @@ export function createWinMenu(font, fontLarge){
 
 export function createCell(name, coordinates, center){
     return Promise.all([
-        loadImage('/assets/background/normal-cells/' + name.toUpperCase() + '.png'),
-        loadImage('/assets/background/hit-cells/' + name.toUpperCase() + '.png')
+        loadImage('/assets/background/ortholinear-cells/' + name.toUpperCase() + '.png'),
+        loadImage('/assets/background/ortholinear-hit-cells/' + name.toUpperCase() + '.png')
     ]).then(imgs => {
         let buffers = [];
         imgs.forEach( img => {
@@ -141,45 +141,92 @@ export function createCell(name, coordinates, center){
     });
 }
 
+// export function createAllCells(){
+//     return Promise.all([
+//         createCell('q', new Vec2(0,0), new Vec2(59, 155)),
+//         createCell('w', new Vec2(1,0), new Vec2(108, 155)),
+//         createCell('e', new Vec2(2,0), new Vec2(156, 155)),
+//         createCell('r', new Vec2(3,0), new Vec2(203, 155)),
+//         createCell('t', new Vec2(4,0), new Vec2(250, 155)),
+//         createCell('y', new Vec2(5,0), new Vec2(298, 155)),
+//         createCell('u', new Vec2(6,0), new Vec2(343, 155)),
+//         createCell('i', new Vec2(7,0), new Vec2(391, 155)),
+//         createCell('o', new Vec2(8,0), new Vec2(438, 155)),
+//         createCell('p', new Vec2(9,0), new Vec2(485, 155)),
+//         //createCell('[', new Vec2(10,0), new Vec2(532, 155)),
+//         //createCell(']', new Vec2(11,0), new Vec2(580, 155)),
+//         createCell('a', new Vec2(0,1), new Vec2(83, 204)),
+//         createCell('s', new Vec2(1,1), new Vec2(131, 204)),
+//         createCell('d', new Vec2(2,1), new Vec2(179, 204)),
+//         createCell('f', new Vec2(3,1), new Vec2(226, 204)),
+//         createCell('g', new Vec2(4,1), new Vec2(274, 204)),
+//         createCell('h', new Vec2(5,1), new Vec2(320, 204)),
+//         createCell('j', new Vec2(6,1), new Vec2(367, 204)),
+//         createCell('k', new Vec2(7,1), new Vec2(414, 204)),
+//         createCell('l', new Vec2(8,1), new Vec2(462, 204)),
+//         createCell(';', new Vec2(9,1), new Vec2(509, 204)),
+//         //createCell('\'', new Vec2(10,1), new Vec2(557, 204)),
+//         createCell('z', new Vec2(0,2), new Vec2(107, 252)),
+//         createCell('x', new Vec2(1,2), new Vec2(154, 252)),
+//         createCell('c', new Vec2(2,2), new Vec2(201, 252)),
+//         createCell('v', new Vec2(3,2), new Vec2(249, 252)),
+//         createCell('b', new Vec2(4,2), new Vec2(296, 252)),
+//         createCell('n', new Vec2(5,2), new Vec2(343, 252)),
+//         createCell('m', new Vec2(6,2), new Vec2(391, 252)),
+//         createCell(',', new Vec2(7,2), new Vec2(438, 252)),
+//         createCell('PERIOD', new Vec2(8,2), new Vec2(486, 252)),
+//         createCell('/', new Vec2(9,2), new Vec2(533, 252)),
+
+//     //]).then(([q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m]) => {
+//     ]).then((cells) => {
+//         const cellMap = new CellMap(11,3);
+//         cells.forEach(cell => {
+//             cellMap.set(cell.name, cell.coordinates, cell);
+//         })
+
+//         return cellMap
+//     });
+// }
+
 export function createAllCells(){
     return Promise.all([
-        createCell('q', new Vec2(0,0), new Vec2(59, 155)),
-        createCell('w', new Vec2(1,0), new Vec2(108, 155)),
-        createCell('e', new Vec2(2,0), new Vec2(156, 155)),
-        createCell('r', new Vec2(3,0), new Vec2(203, 155)),
-        createCell('t', new Vec2(4,0), new Vec2(250, 155)),
-        createCell('y', new Vec2(5,0), new Vec2(298, 155)),
-        createCell('u', new Vec2(6,0), new Vec2(343, 155)),
-        createCell('i', new Vec2(7,0), new Vec2(391, 155)),
-        createCell('o', new Vec2(8,0), new Vec2(438, 155)),
-        createCell('p', new Vec2(9,0), new Vec2(485, 155)),
-        createCell('[', new Vec2(10,0), new Vec2(532, 155)),
+        createCell('q', new Vec2(0,0), new Vec2(66, 142)),
+        createCell('w', new Vec2(1,0), new Vec2(124, 142)),
+        createCell('e', new Vec2(2,0), new Vec2(179, 142)),
+        createCell('r', new Vec2(3,0), new Vec2(236, 142)),
+        createCell('t', new Vec2(4,0), new Vec2(293, 142)),
+        createCell('y', new Vec2(5,0), new Vec2(347, 142)),
+        createCell('u', new Vec2(6,0), new Vec2(404, 142)),
+        createCell('i', new Vec2(7,0), new Vec2(462, 142)),
+        createCell('o', new Vec2(8,0), new Vec2(517, 142)),
+        createCell('p', new Vec2(9,0), new Vec2(574, 142)),
+        //createCell('[', new Vec2(10,0), new Vec2(532, 155)),
         //createCell(']', new Vec2(11,0), new Vec2(580, 155)),
-        createCell('a', new Vec2(0,1), new Vec2(83, 204)),
-        createCell('s', new Vec2(1,1), new Vec2(131, 204)),
-        createCell('d', new Vec2(2,1), new Vec2(179, 204)),
-        createCell('f', new Vec2(3,1), new Vec2(226, 204)),
-        createCell('g', new Vec2(4,1), new Vec2(274, 204)),
-        createCell('h', new Vec2(5,1), new Vec2(320, 204)),
-        createCell('j', new Vec2(6,1), new Vec2(367, 204)),
-        createCell('k', new Vec2(7,1), new Vec2(414, 204)),
-        createCell('l', new Vec2(8,1), new Vec2(462, 204)),
-        createCell(';', new Vec2(9,1), new Vec2(509, 204)),
+        createCell('a', new Vec2(0,1), new Vec2(53, 190)),
+        createCell('s', new Vec2(1,1), new Vec2(113, 190)),
+        createCell('d', new Vec2(2,1), new Vec2(172, 190)),
+        createCell('f', new Vec2(3,1), new Vec2(232, 190)),
+        createCell('g', new Vec2(4,1), new Vec2(291, 190)),
+        createCell('h', new Vec2(5,1), new Vec2(350, 190)),
+        createCell('j', new Vec2(6,1), new Vec2(409, 190)),
+        createCell('k', new Vec2(7,1), new Vec2(469, 190)),
+        createCell('l', new Vec2(8,1), new Vec2(528, 190)),
+        createCell(';', new Vec2(9,1), new Vec2(587, 190)),
         //createCell('\'', new Vec2(10,1), new Vec2(557, 204)),
-        createCell('z', new Vec2(0,2), new Vec2(107, 252)),
-        createCell('x', new Vec2(1,2), new Vec2(154, 252)),
-        createCell('c', new Vec2(2,2), new Vec2(201, 252)),
-        createCell('v', new Vec2(3,2), new Vec2(249, 252)),
-        createCell('b', new Vec2(4,2), new Vec2(296, 252)),
-        createCell('n', new Vec2(5,2), new Vec2(343, 252)),
-        createCell('m', new Vec2(6,2), new Vec2(391, 252)),
-        createCell(',', new Vec2(7,2), new Vec2(438, 252)),
-        createCell('PERIOD', new Vec2(8,2), new Vec2(486, 252)),
-        //createCell('/', new Vec2(9,2), new Vec2(533, 252)),
+        createCell('z', new Vec2(0,2), new Vec2(36, 251)),
+        createCell('x', new Vec2(1,2), new Vec2(100, 251)),
+        createCell('c', new Vec2(2,2), new Vec2(163, 251)),
+        createCell('v', new Vec2(3,2), new Vec2(226, 251)),
+        createCell('b', new Vec2(4,2), new Vec2(289, 251)),
+        createCell('n', new Vec2(5,2), new Vec2(353, 251)),
+        createCell('m', new Vec2(6,2), new Vec2(415, 251)),
+        createCell(',', new Vec2(7,2), new Vec2(479, 251)),
+        createCell('PERIOD', new Vec2(8,2), new Vec2(540, 252)),
+        createCell('FSLASH', new Vec2(9,2), new Vec2(604, 252)),
 
     //]).then(([q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m]) => {
     ]).then((cells) => {
-        const cellMap = new CellMap(11,3);
+        const cellMap = new CellMap(10,3);
         cells.forEach(cell => {
             cellMap.set(cell.name, cell.coordinates, cell);
         })
@@ -190,7 +237,7 @@ export function createAllCells(){
 
 function createLayer(zIndex, cells){
     //zIndex++;
-    return loadImage('/assets/background/layers/Layer' + zIndex + '.png').then(img => {
+    return loadImage('/assets/background/ortholinear-layers/Layer' + zIndex + '.png').then(img => {
         const buffer = document.createElement('canvas');
         buffer.width = gameWidth;
         buffer.height = gameHeight;
@@ -212,7 +259,7 @@ export function createLayer1(cellMap){
         cellMap.get('i'),
         cellMap.get('o'),
         cellMap.get('p'),
-        cellMap.get('['),
+        //ellMap.get('['),
         //cellMap.get(']')
 
         ])
@@ -251,7 +298,7 @@ export function createLayer3(cellMap){
         cellMap.get('m'),
         cellMap.get('\,'),
         cellMap.get('PERIOD'),
-        //cellMap.get('/')
+        cellMap.get('FSLASH')
         ])
     .then(layer => {
         return layer;

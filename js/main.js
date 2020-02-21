@@ -137,7 +137,7 @@ async function initialize(){
         createLayer2(cellMap),
         createLayer3(cellMap),
         createLayer4(),
-        createLayer5(),
+        //createLayer5(),
         createDashboardLayer(font, player1, game1),
         createStartMenu(font, fontLarge),
         createLevelMenu(font, fontLarge),
@@ -145,7 +145,7 @@ async function initialize(){
         createLoseMenu(font, fontLarge),
         createWinMenu(font, fontLarge)
     ])
-    .then(([sndBrd, layer1, layer2, layer3, layer4, layer5, dashboardLayer, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
+    .then(([sndBrd, layer1, layer2, layer3, layer4, dashboardLayer, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
         globalSoundBoard = sndBrd;
 
         const comp = new Compositor();
@@ -154,7 +154,7 @@ async function initialize(){
         comp.layers.push(layer2);
         comp.layers.push(layer3);
         comp.layers.push(layer4);
-        comp.layers.push(layer5);
+        //comp.layers.push(layer5);
         comp.layers.push(dashboardLayer);
         console.log({comp})
         startMenu = sMenu;
@@ -235,8 +235,8 @@ async function initialize(){
         //const keyCodes = [65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,219,221,186,222,188,190,191];
         
         //]'/ removed
-        const letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','[',';','\,','PERIOD'];
-        const keyCodes = [65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,219,186,188,190];
+        const letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',';','\,','PERIOD','FSLASH'];
+        const keyCodes = [65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,186,188,190,191];
         
         letters.forEach((key, n) => {
             const cell = cellMap.get(key);

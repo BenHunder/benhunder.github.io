@@ -21,7 +21,6 @@ export class Spawner{
         const thresh = this.spawnRate * (((this.cellMap.numOccupied()*5) + 5) / 29);
 
         if(this.counter >= thresh){
-            console.log("spawn");
             this.spawnAll();
             this.counter = 0;
         }
