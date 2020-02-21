@@ -125,8 +125,10 @@ export function createWinMenu(font, fontLarge){
 
 export function createCell(name, coordinates, center){
     return Promise.all([
-        loadImage('/assets/background/ortholinear-cells/' + name.toUpperCase() + '.png'),
-        loadImage('/assets/background/ortholinear-hit-cells/' + name.toUpperCase() + '.png')
+        // loadImage('/assets/background/ortholinear-cells/' + name.toUpperCase() + '.png'),
+        // loadImage('/assets/background/ortholinear-hit-cells/' + name.toUpperCase() + '.png')
+        loadImage('/assets/background/ortholinear-cells/' + name + '.png'),
+        loadImage('/assets/background/ortholinear-hit-cells/' + name + '.png')
     ]).then(imgs => {
         let buffers = [];
         imgs.forEach( img => {
