@@ -5,21 +5,12 @@ import { Spawner } from './classes/Spawner.js';
 import Font from './classes/Font.js';
 
 
-//TODO probably move or REMOVE later (maybe make all creature's file name their type.json, maybe keep it this way to use different character versions or something?)
-const creatureLocations = {
-    "mushboy": "./assets/characters/mushboy.json",
-    "bunbun": "./assets/characters/bunbun.json",
-    "protector": "./assets/characters/protector.json",
-    "plant": "./assets/characters/plant.json"
-}
-
 const levelLocations = {
     "level 1": "./assets/levels/testLevel1.json",
     "level 2": "./assets/levels/testLevel2.json",
     "level 3": "./assets/levels/testLevel3.json",
     "level 4": "./assets/levels/testLevel4.json"
 }
-
 
 
 export function loadJson(path){
@@ -60,8 +51,7 @@ export function loadFrames(spriteSheetLocation, frameDataLocation){
         const frameNames = Object.keys(frameData.frames);
         frameNames.forEach( (frameName, n) => {
             const frame = frameData.frames[frameName].frame;
-            sprites.define('frame' + n, frame.x, frame.y, frame.w, frame.h);
-            //console.log(sprites.getBuffer(n));
+            sprites.define('frame' + n, frame.x, frame.y, frame.w, frame.h, frameData.frames[frameName].duration);
         });
         return sprites;
     })
@@ -106,34 +96,43 @@ export async function loadSounds(soundNames){
 }
 
 //loads level json, makes creature factories, returns and array of spawners 
-export function loadLevel(cellMap, levelName){
-    return loadJson(levelLocations[levelName])
+export function loadLevel(cellMap, lvl){
+    return loadJson("./assets/levels/l" + lvl + ".json")
     .then( level => {
+        const newSpawner = new Spawner(cellMap, level.spawner.spawnRate);
+
         let promisesArray = [];
-        level.spawners.forEach( spawner => {
+        level.spawner.creatures.forEach( creature => {
             promisesArray.push( 
-                loadCreature(spawner.type)
+                loadCreature(creature.type, creature.chance, creature.cluster)
                 .then( creatureFactory => {
-                    const newSpawner = new Spawner(cellMap, creatureFactory, spawner.spawnRate, spawner.spawnVariance, spawner.spawnCluster);
-                    return newSpawner;
+                    newSpawner.addCreature(creatureFactory);
                 })
             );
         });
+        Promise.all(promisesArray);
 
-        return Promise.all(promisesArray);
+        return newSpawner;
     });
 }
 
 //load all character properties (sounds, frames, attributes)
-export function loadCreature(creatureName){
-    return loadJson(creatureLocations[creatureName])
+export function loadCreature(creatureName, creatureChance, creatureCluster){
+    return loadJson("./assets/characters/" + creatureName + "/" + creatureName + ".json",)
     .then( creature => {
         return Promise.all([
             loadFrames(creature.spriteSheetLocation, creature.frameDataLocation),
             loadSounds(creature.sounds)
         ])
         .then( ([spriteSheet, soundBoard]) => {
-            return new CreatureFactory(spriteSheet, soundBoard, creature.name, creature.width, creature.height, creature.attributes);
+            if(creature.subCreature){
+                return loadCreature(creature.subCreature, 0, 0).then( creatureFactory => {
+                    return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, creature.name, creature.width, creature.height, creature.attributes, creatureFactory);
+                })
+            }else{
+                return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, creature.name, creature.width, creature.height, creature.attributes, null);
+            }
+            
         });
     });
 }

@@ -7,6 +7,14 @@ export default class Game{
         this.level = 1;
     }
 
+    addTime(amount){
+        this.timer += amount;
+    }
+
+    subtractTime(amount){
+        this.timer -= amount;
+    }
+
     reset(){
         this.timer = this.baseTimer;
     }

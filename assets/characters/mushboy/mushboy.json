@@ -1,0 +1,29 @@
+{
+    "name": "mushboy",
+    "height": 40,
+    "width": 32,
+    "spriteSheetLocation": "/assets/characters/mushboy/mushboy.png",
+    "frameDataLocation": "/assets/characters/mushboy/frame-data.json",
+    "sounds": [
+        {
+            "name": "kill",
+            "location": "/assets/sfx/sfx4.wav"
+        }
+    ],
+    "attributes": {
+        "health": 20,
+        "traits": [
+            {
+                "name": "hit",
+                "rate": 5,
+                "damage": 5,
+                "animationOffset": 2.75
+            }
+        ],
+        "abilities": [
+        ],
+        "type": "enemy"
+    }
+    
+
+}

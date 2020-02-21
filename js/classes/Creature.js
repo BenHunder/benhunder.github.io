@@ -4,6 +4,9 @@ export default class Creature{
         this.spriteSheet = spriteSheet;
         this.soundBoard = soundBoard;
         this.traits = [];
+        this.isAnimating = false;
+        this.currentFrame = 0;
+        this.counter = 0;
     }
 
     addTrait(trait) {
@@ -11,26 +14,61 @@ export default class Creature{
         this[trait.NAME] = trait;
     }
 
+    kill(){
+        let delay = 0;
+        this.traits.forEach( trait => {
+            if(typeof trait.kill === 'function'){
+                delay += trait.kill();
+            }
+        })
+        return delay;
+    }
+
     update(deltaTime){
+        if(this.isAnimating){
+            this.counter += deltaTime;
+        }
+
         this.traits.forEach(trait => {
             trait.update(deltaTime);
         })
     } 
 
     //this is a temporary solution, should probably have separate classes or something for plants vs creatures or a class for each creature? i don't know yet
+    // drawPlant(context, x, y){
+    //     let i = 0;
+    //     if(this.type === "plant"){
+    //         i = (this.spriteSheet.size() - 1) - Math.floor((this.spriteSheet.size() * this.hunger)/(this.maxHunger));
+    //         if (i > 5){
+    //             i = 5;
+    //         }
+    //     }
+    //     const name = 'frame' + i;
+    //     const buffer = this.spriteSheet.getBuffer(name);
+    //     context.drawImage(buffer, x, y);
+    // }
+    
     draw(context, x, y){
-        let i = 0;
-        if(this.type === "plant"){
-            i = (this.spriteSheet.size() - 1) - Math.floor((this.spriteSheet.size() * this.hunger)/(this.maxHunger));
-            if (i > 5){
-                i = 5;
+        let name = 'frame' + this.currentFrame;
+
+        //advance frames
+        if(this.isAnimating){
+            if(this.counter >= this.spriteSheet.getDuration(name)/1000){
+                this.counter = 0;
+                this.currentFrame += 1;
+                if(this.currentFrame > this.spriteSheet.size()-1){
+                    this.currentFrame = 0;
+                    this.isAnimating = false;
+                }
             }
+        }else{
+            this.counter = 0;
         }
-        const name = 'frame' + i;
+
+        name = 'frame' + this.currentFrame;
         const buffer = this.spriteSheet.getBuffer(name);
         context.drawImage(buffer, x, y);
     }
-    
     playSound(name, delay=0){
         if(this.soundBoard.hasSound(name)){
             this.soundBoard.play(name, delay);

@@ -1,0 +1,29 @@
+{
+    "name": "dragon",
+    "height": 40,
+    "width": 32,
+    "spriteSheetLocation": "/assets/characters/dragon/dragon.png",
+    "frameDataLocation": "/assets/characters/dragon/frame-data.json",
+    "sounds": [
+        {
+            "name": "kill",
+            "location": "/assets/sfx/sfx4.wav"
+        }
+    ],
+    "attributes": {
+        "health": 40,
+        "traits": [
+            {
+                "name": "hit",
+                "rate": 3,
+                "damage": 5
+            }
+        ],
+        "abilities": [
+        ],
+        "type": "enemy"
+    },
+    "subCreature": "protector"
+    
+
+}

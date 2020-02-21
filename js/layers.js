@@ -14,21 +14,6 @@ import Menu from './classes/Menu.js';
 const gameWidth = 640;
 const gameHeight = 360;
 
-//not used anymore
-export function createBackgroundLayer(){
-    const buffer = document.createElement('canvas');
-    buffer.width = gameWidth;
-    buffer.height = gameHeight;
-
-    loadImage('/assets/img/game-layout2.png').then(img => {
-        buffer.getContext('2d').drawImage(img, 0, 0);
-        //console.log(buffer.src);
-        return function drawBackgroundLayer(context) {
-            context.drawImage(buffer, 0, 0);
-        }
-    });
-}
-
 //right now this functinon is not asynchronous, but it probably will be because icons and other images will be added
 export function createDashboardLayer(font, player, game){
  
@@ -41,7 +26,7 @@ export function createStartMenu(font, fontLarge){
     buffer.width = gameWidth;
     buffer.height = gameHeight;
 
-    return loadImage('/assets/img/ui/PauseScreenMockUp.png').then(img => {
+    return loadImage('/assets/ui/PauseScreenMockUp.png').then(img => {
         let options = [
             {
                 'label': 'start'
@@ -59,11 +44,8 @@ export function createLevelMenu(font, fontLarge){
     buffer.width = gameWidth;
     buffer.height = gameHeight;
 
-    return loadImage('/assets/img/ui/PauseScreenMockUp.png').then(img => {
+    return loadImage('/assets/ui/PauseScreenMockUp.png').then(img => {
         let options = [
-            {
-                'label': 'level 4'
-            },
             {
                 'label': 'level 1'
             },
@@ -86,7 +68,7 @@ export function createPauseMenu(font, fontLarge){
     buffer.width = gameWidth;
     buffer.height = gameHeight;
 
-    return loadImage('/assets/img/ui/PauseScreenMockUp.png').then(img => {
+    return loadImage('/assets/ui/PauseScreenMockUp.png').then(img => {
         let options = [
             {
                 'label': 'resume'
@@ -107,7 +89,7 @@ export function createLoseMenu(font, fontLarge){
     buffer.width = gameWidth;
     buffer.height = gameHeight;
 
-    return loadImage('/assets/img/ui/PauseScreenMockUp.png').then(img => {
+    return loadImage('/assets/ui/PauseScreenMockUp.png').then(img => {
         let options = [
             {
                 'label': 'restart'
@@ -125,13 +107,16 @@ export function createWinMenu(font, fontLarge){
     buffer.width = gameWidth;
     buffer.height = gameHeight;
 
-    return loadImage('/assets/img/ui/PauseScreenMockUp.png').then(img => {
+    return loadImage('/assets/ui/PauseScreenMockUp.png').then(img => {
         let options = [
             {
-                'label': 'next'
+                'label': 'next level'
             },
             {
                 'label': 'restart'
+            },
+            {
+                'label': 'quit'
             }
         ]
         return new Menu(font, fontLarge, 'YOU WIN', options);
@@ -139,13 +124,20 @@ export function createWinMenu(font, fontLarge){
 }
 
 export function createCell(name, coordinates, center){
-    return loadImage('/assets/img/background/' + name.toUpperCase() + '.png').then(img => {
-        const buffer = document.createElement('canvas');
-        buffer.width = gameWidth;
-        buffer.height = gameHeight;
-        buffer.getContext('2d').drawImage(img, 0, 0);
+    return Promise.all([
+        loadImage('/assets/background/normal-cells/' + name.toUpperCase() + '.png'),
+        loadImage('/assets/background/hit-cells/' + name.toUpperCase() + '.png')
+    ]).then(imgs => {
+        let buffers = [];
+        imgs.forEach( img => {
+            const buffer = document.createElement('canvas');
+            buffer.width = gameWidth;
+            buffer.height = gameHeight;
+            buffer.getContext('2d').drawImage(img, 0, 0);
+            buffers.push(buffer);
+        });
 
-        return new Cell(name, coordinates, center, buffer)
+        return new Cell(name, coordinates, center, buffers[0], buffers[1]);
     });
 }
 
@@ -198,7 +190,7 @@ export function createAllCells(){
 
 function createLayer(zIndex, cells){
     //zIndex++;
-    return loadImage('/assets/img/background/Layer' + zIndex + '.png').then(img => {
+    return loadImage('/assets/background/layers/Layer' + zIndex + '.png').then(img => {
         const buffer = document.createElement('canvas');
         buffer.width = gameWidth;
         buffer.height = gameHeight;

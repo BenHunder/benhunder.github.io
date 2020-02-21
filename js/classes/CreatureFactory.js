@@ -1,16 +1,21 @@
 import Creature from "./Creature.js";
 import Trait from "./traits/Trait.js";
+import {loadCreature} from "../loaders.js";
 
-import * as allAbilities from '../abilities.js'
+import * as allAbilities from '../abilities.js';
 import Protect from "./traits/Protect.js";
+import Hit from "./traits/Hit.js";
+import Mystery from "./traits/Mystery.js";
 
 //do we need this? or do we just need to pass a function that returns a new creature or something. i am getting confused. this factory thing seems like a lot of unnecessary work
 
 export class CreatureFactory{
     //TODO should spriteSheet and soundBoard really be passed in here? If so, creature should have a function to play sounds like its draw method 
-    constructor(spriteSheet, soundBoard, name, width, height, attributes){
+    constructor(spriteSheet, soundBoard, chance, cluster, name, width, height, attributes, subCreatureFactory){
         this.spriteSheet = spriteSheet;
         this.soundBoard = soundBoard;
+        this.chance = chance;
+        this.cluster = cluster;
         this.name = name;
         this.width = width;
         this.height = height;
@@ -24,6 +29,7 @@ export class CreatureFactory{
         
         this.traits = attributes.traits || [];
         this.abilities = attributes.abilities || [];
+        this.subCreatureFactory = subCreatureFactory
 
     }
 
@@ -41,6 +47,7 @@ export class CreatureFactory{
         creature.scoreValue = this.scoreValue;
         creature.creatureFactory = this;
         creature.abilities = this.abilities;
+        creature.subCreatureFactory = this.subCreatureFactory;
 
         const abilitiesArray = [];
         this.abilities.forEach( ability => {
@@ -48,9 +55,13 @@ export class CreatureFactory{
             abilitiesArray.push(allAbilities[ability](creature));
         });
 
-        this.traits.forEach( traitName => {
-            if(traitName == 'protect'){
+        this.traits.forEach( trait => {
+            if(trait.name === 'protect'){
                 creature.addTrait(new Protect(creature));
+            }else if(trait.name === 'hit'){
+                creature.addTrait(new Hit(creature, trait));
+            }else if(trait.name === 'mystery'){
+                creature.addTrait(new Mystery(creature, trait));
             }
 
             //TODO eventually traits will be defined in the JSON or somehting I guess, but for now, they are just strings. This line is pretty useless rn

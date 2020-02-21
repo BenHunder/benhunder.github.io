@@ -1,69 +1,81 @@
 import {getRandomInt} from '../math.js';
 
 export class Spawner{
-    constructor(cellMap, creatureFactory, spawnRate, spawnVariance, spawnCluster){
+    constructor(cellMap, spawnRate){
         this.cellMap = cellMap;
-        this.creatureFactory = creatureFactory;
+        this.creatureFactories = [];
         this.spawnRate = spawnRate;
-        this.spawnVariance = spawnVariance;
-        this.spawnCluster = spawnCluster;
         this.counter = 0;
-        this.spawnNext = this.calculateSpawnNext();
     }
 
-    calculateSpawnNext(spawner){
-        //random number between 0 and the spawnrate
-        let j = Math.random() * this.spawnRate;
-
-        //shift number back half of spawnrate
-        j = j - (this.spawnRate/2);
-
-        const spawnNext = Math.abs(this.spawnRate + (j * this.spawnVariance));
-        //console.log("spawn rate: " + this.spawnRate + " spawnNext: " + spawnNext);
-        return spawnNext;
+    addCreature(creatureFactory){
+        this.creatureFactories.push(creatureFactory);
     }
+
 
     update(deltaTime){
         this.counter += deltaTime;
-        if(this.counter >= this.spawnNext){
-            this.spawn();
+
+        //raise spawnRate (lower frequency of spawns) when there are more creatures on the board, so players aren't overwhelmed
+        //ie.. start faster, then get slower
+        const thresh = this.spawnRate * (((this.cellMap.numOccupied()*5) + 5) / 29);
+
+        if(this.counter >= thresh){
+            console.log("spawn");
+            this.spawnAll();
             this.counter = 0;
-            this.spawnNext = this.calculateSpawnNext();
         }
     }
 
-    spawn(){
-        if (this.spawnCluster > 1){
-            this.spawnMultiple();
-        }else{
-            let creature = this.creatureFactory.create();
-            let cell = null;
+    spawnAll(){
+        this.creatureFactories.forEach( creatureFactory => {
+            let r = Math.random();
+            if(r <= creatureFactory.chance){
+                if (creatureFactory.cluster > 1){
+                    this.spawnMultiple(creatureFactory);
+                }else{
+                    let creature = creatureFactory.create();
+                    let cell = null;
 
-            if (creature.name == 'protector'){
-                const targetCell = this.cellMap.randomOccupiedCell();
-                if(targetCell){
-                    creature.targetCell = targetCell
-                    cell = this.cellMap.randomAdjacentTo(creature.targetCell, 1)[0];
+                    if (creature.name == 'protector'){
+                        //pick a random occupied cell then spawn a protector next to it, protecting it
+                        const targetCell = this.cellMap.randomOccupiedCell();
+                        if(targetCell){
+                            creature.targetCell = targetCell
+                            cell = this.cellMap.randomAdjacentTo(creature.targetCell, 1)[0];
+                        }
+                    }else if (creature.name == 'dragon'){
+                        //pick a random cell and try to find two available adjacent cells to spawn protectors protecting the dragon
+                        cell = this.cellMap.randomAvailableCell();
+                        if(cell){
+                            const protectorCells = this.cellMap.randomAdjacentTo(cell, 2);
+                            protectorCells.forEach( c => {
+                                let protector = creature.subCreatureFactory.create();
+                                protector.targetCell = cell;
+                                c.spawnNew(protector);
+                            })
+                        }
+                    }else{
+                        cell = this.cellMap.randomAvailableCell();
+                    }
+                    
+                    if(cell){
+                        cell.spawnNew(creature);
+                    }
                 }
-            }else{
-                cell = this.cellMap.randomAvailableCell();
             }
-            
-            if(cell){
-                cell.spawnNew(creature);
-            }
-        }
+        });
     }
 
     //tries to spawn a group of size = spawnCluster
-    spawnMultiple(){
+    spawnMultiple(creatureFactory){
         const firstCell = this.cellMap.randomAvailableCell();
         if(firstCell){
-            const spawns = this.cellMap.randomAdjacentTo(firstCell, this.spawnCluster);
+            const spawns = this.cellMap.randomAdjacentTo(firstCell, creatureFactory.cluster);
 
-            firstCell.spawnNew(this.creatureFactory.create());
+            firstCell.spawnNew(creatureFactory.create());
             spawns.forEach(cell => {
-                cell.spawnNew(this.creatureFactory.create());
+                cell.spawnNew(creatureFactory.create());
             });
         }
     }

@@ -1,0 +1,29 @@
+{
+    "name": "bunbun",
+    "height": 40,
+    "width": 32,
+    "spriteSheetLocation": "/assets/characters/bunbun/bunbun.png",
+    "frameDataLocation": "/assets/characters/bunbun/frame-data.json",
+    "sounds": [
+        {
+            "name": "kill",
+            "location": "/assets/sfx/sfx4.wav"
+        }
+    ],
+    "attributes": {
+        "health": 10,
+        "traits": [
+            {
+                "name": "hit",
+                "rate": 2.5,
+                "damage": 1,
+                "animationOffset": 0.3
+            }
+        ],
+        "abilities": [
+        ],
+        "type": "enemy"
+    }
+    
+
+}

@@ -56,7 +56,7 @@ function resizeGame() {
 //window.addEventListener('orientationchange', resizeGame, false);
 
 export let cellMap;
-let spawnerSet;
+let spawner;
 
 export let globalSoundBoard;
 
@@ -79,26 +79,26 @@ const soundNames = [
 const fontData = [
     {
         'name': 'manaspace',
-        'location': '../assets/img/fonts/manaspace/manaspace.png',
+        'location': '../assets/fonts/manaspace/manaspace.png',
         'charWidth': 16,
         'charHeight': 24
     },
     {
         'name': 'manaspace-large',
-        'location': '../assets/img/fonts/manaspace/manaspace-large.png',
+        'location': '../assets/fonts/manaspace/manaspace-large.png',
         'charWidth': 24,
         'charHeight': 36
     },
     {
         'name': 'lunchtime',
-        'location': '../assets/img/fonts/lunchtime/lunchtime.png',
+        'location': '../assets/fonts/lunchtime/lunchtime.png',
         'charWidth': 18,
         'charHeight': 32
     }
 ]
 
-let player1;
-let game;
+export let player1;
+export let game1;
 let startMenu;
 let levelMenu;
 let pauseMenu;
@@ -138,7 +138,7 @@ async function initialize(){
         createLayer3(cellMap),
         createLayer4(),
         createLayer5(),
-        createDashboardLayer(font, player1, game),
+        createDashboardLayer(font, player1, game1),
         createStartMenu(font, fontLarge),
         createLevelMenu(font, fontLarge),
         createPauseMenu(font, fontLarge),
@@ -189,10 +189,19 @@ async function initialize(){
                     }else if(action === "quit"){
                         resetLevel();
                         comp.setMenu(startMenu)
+                    }else if(action === "next level"){
+                        resetLevel();
+                        const nextLevel = (parseInt(game1.level, 10) + 1)
+                        game1.level = nextLevel;
+                        loadLevel(cellMap, game1.level).then(spwnr => {
+                            spawner = spwnr;
+                            unpause();
+                        });
                     }else if(action.substring(0, 5) === "level"){
                         resetLevel();
-                        loadLevel(cellMap, action).then(spawners => {
-                            spawnerSet = spawners;
+                        game1.level = action.substring(6, 7);
+                        loadLevel(cellMap, game1.level).then(spwnr => {
+                            spawner = spwnr;
                             unpause();
                         });
                         
@@ -256,7 +265,7 @@ function start(comp){
     timer.update = function update(deltaTime){
         if(!paused){
             //spawn creatures
-            spawnerSet.forEach( spawner => spawner.update(deltaTime));
+            spawner.update(deltaTime);
 
             //update layers and cells
             comp.update(deltaTime);
@@ -265,13 +274,16 @@ function start(comp){
             const creatureCells = cellMap.occupiedCells();
             creatureCells.forEach( ([name, cell]) => {
                 if(!cell.duringSinkingAnimation){
-                    cell.creature.update();
+                    cell.creature.update(deltaTime);
                 }
             });
 
             //check win/lose conditions
-            if(player1.health <= 0 || game.timer <= 0){
-                comp.menu = loseMenu;
+            if(player1.health <= 0){
+                comp.setMenu(loseMenu);
+                pause();
+            }else if(game1.timer <= 0){
+                comp.setMenu(winMenu);
                 pause();
             }
 
@@ -292,14 +304,14 @@ initialize().then((comp) => start(comp));
 
 function initializePlayer(){
     player1 = new Player();
-    const basicWeapon = new Weapon("basicWeapon", 10);
+    const basicWeapon = new Weapon("basicWeapon", 20);
     const basicFood = new Food('basicFood', 10);
     player1.weapon = basicWeapon;
     player1.food = basicFood;
 }
 
 function initializeGame(){
-    game = new Game();
+    game1 = new Game();
 
 }
 
@@ -309,7 +321,7 @@ function resetLevel(){
     });
 
     player1.reset();
-    game.reset();
+    game1.reset();
 }
 
 

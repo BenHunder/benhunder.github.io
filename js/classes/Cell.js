@@ -7,11 +7,16 @@ import { globalSoundBoard, cellMap } from '../main.js';
 import { Vec2 } from '../math.js';
 
 export default class Cell{
-    constructor(name, coordinates, center, buffer){
+    constructor(name, coordinates, center, normalBuffer, hitBuffer){
         this.name = name;
         this.coordinates = coordinates;
         this.center = center
-        this.buffer = buffer;
+        this.normalBuffer = normalBuffer;
+        this.hitBuffer = hitBuffer;
+        this.buffer = normalBuffer;
+
+        this.hitTimer = 0;
+        this.trailTime = 1;
 
         this.depth = 50;
         this.maxDepth = 50;
@@ -32,11 +37,21 @@ export default class Cell{
     //TODO if draw coordinates aren't whole numbers the tile/sprites will look blurry. using math.ceil here to avoid that, but I wonder if there is a better solution
     draw(context){
         if(this.depth < this.maxDepth){
-            context.drawImage(this.buffer, 0, Math.ceil(this.depth));
-            
+            if(this.hitTimer > 0){
+                context.globalAlpha = this.hitTimer;
+                context.drawImage(this.hitBuffer, 0, Math.ceil(this.depth));
+                context.globalAlpha = 1;
+            }else{
+                context.drawImage(this.normalBuffer, 0, Math.ceil(this.depth));
+            }
+
             if(this.creature){
                 this.drawSprite(context);
             }
+        }else if(this.hitTimer > 0){
+            context.globalAlpha = this.hitTimer;
+            context.drawImage(this.hitBuffer, 0, 0);
+            context.globalAlpha = 1;
         }
         //context.fillText(this.name, this.center.x - 20, this.center.y + 10);
     }
@@ -44,7 +59,7 @@ export default class Cell{
     //provides coordinates so it appears that the sprite is standing in the center of the tile using the sprites dimensions
     //TODO is this where the animation frame name would be passed in?
     drawSprite(context){
-        const yOffset = 5;
+        const yOffset = 8;
         //rounds down to whole number so sprites aren't drawn looking blurry
 
         //TODO: once board is set, this should draw in the lower left corner of each cell
@@ -65,6 +80,12 @@ export default class Cell{
             trait.update(deltaTime);
         });
         this.isProtected = false;
+
+        if(this.hitTimer > 0){
+            this.hitTimer -= deltaTime;
+        }else{
+            this.hitTimer = 0;
+        }
     }
 
     addTrait(trait){
@@ -75,6 +96,7 @@ export default class Cell{
 
     //routes to appropriate trait based on held item and cell state, then damages player if an inactive cell is pressed or adds score if a creature is killed
     interact(item, player){
+        this.hitTimer = this.trailTime;
         if(this.isActive){
             if(item instanceof Weapon){
                 this.attack.start(item, player);
@@ -83,7 +105,7 @@ export default class Cell{
             }
         }else{
             globalSoundBoard.play('bonkOther');
-            player.damage(5);
+            player.damage(1);
         }
     }
 
@@ -95,10 +117,20 @@ export default class Cell{
 
     spawnNew(creature){
         if(!this.isActive){
+            creature.currentCell = this;
             this.creature = creature;
             this.spawn.start();
         }else{
             console.log("tried to spawn on active cell");
+        }
+    }
+
+    replace(creature){
+        if(this.isActive){
+            creature.currentCell = this;
+            this.creature = creature; 
+        }else{
+            console.log("tried to replace an inactive cell");
         }
     }
 
@@ -118,6 +150,7 @@ export default class Cell{
         this.speed = 50;
         this.duringSinkingAnimation = false;
         this.isActive = false;
+        this.isProtected = false;
         this.creature = null;
     };
 }

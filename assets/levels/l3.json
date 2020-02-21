@@ -1,0 +1,28 @@
+{
+    "timeLimit": 30,
+    "keyboard": {
+        "layout": "mac-qwerty",
+        "location": "/layouts/mac-querty"
+    },
+    "spawner": {
+        "spawnRate": 0.75,
+        "creatures": [
+        {
+            "type": "mushboy",
+            "chance": 0.1
+        },
+        {
+            "type": "bunbun",
+            "chance": 0.05,
+            "cluster": 2
+        },
+        {
+            "type": "protector",
+            "chance": 0.02
+        },
+        {
+            "type": "dragon",
+            "chance": 0.05
+        }]
+    }
+}
