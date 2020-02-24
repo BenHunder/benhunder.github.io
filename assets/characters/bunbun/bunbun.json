@@ -1,6 +1,6 @@
 {
     "name": "bunbun",
-    "height": 40,
+    "height": 32,
     "width": 32,
     "spriteSheetLocation": "/assets/characters/bunbun/bunbun.png",
     "frameDataLocation": "/assets/characters/bunbun/frame-data.json",

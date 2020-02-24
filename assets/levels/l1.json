@@ -5,7 +5,7 @@
         "location": "/layouts/mac-querty"
     },
     "spawner": {
-        "spawnRate": 1.2,
+        "spawnRate": 0.8,
         "creatures": [
         {
             "type": "mushboy",

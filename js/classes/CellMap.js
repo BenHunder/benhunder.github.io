@@ -177,8 +177,8 @@ export default class CellMap{
         return this.allCells().filter(([name,cell]) => cell.isActive && !cell.duringSinkingAnimation);
     }
 
-    numOccupied(){
-        return this.occupiedCells().length;
+    numEnemies(){
+        return this.occupiedCells().filter(([name,cell]) => cell.creature.type == 'enemy').length;
     }
     
     randomAvailableCell(){
@@ -205,5 +205,20 @@ export default class CellMap{
         const y2 = cell2.coordinates.y;
 
         return (Math.abs(x1 - x2) <= 1) && (Math.abs(y1 - y2) <= 1)
+    }
+
+    //picks a random cell, if there is another spider in the row, try (just once for now) a different cell
+    spiderSpawn(){
+        for(let i = 0; i < 2; i++){
+            let tryCell = this.randomAvailableCell();
+            let row = this.grid[tryCell.coordinates.x];
+            let foundSpider = row.filter( cell => {cell.isActive && cell.creature.name == 'spiderboy'});
+            
+            if(foundSpider.length == 0){
+                return tryCell;
+            }
+        }
+
+        return null;
     }
 }

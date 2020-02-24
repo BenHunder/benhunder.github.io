@@ -1,5 +1,5 @@
 import Compositor from './classes/Compositor.js';
-import {loadLevel, loadSounds, loadFont} from './loaders.js';
+import {loadLevel, loadSounds, loadFont, loadImage} from './loaders.js';
 import {createLayer1, createLayer2, createLayer3, createLayer4, createLayer5, createAllCells, createDashboardLayer, createStartMenu, createLevelMenu, createPauseMenu, createLoseMenu, createWinMenu} from './layers.js';
 import Timer from './classes/Timer.js';
 import Controller from "./classes/Controller.js";
@@ -99,6 +99,7 @@ const fontData = [
 
 export let player1;
 export let game1;
+export let healthbar;
 let startMenu;
 let levelMenu;
 let pauseMenu;
@@ -138,6 +139,7 @@ async function initialize(){
         createLayer3(cellMap),
         createLayer4(),
         //createLayer5(),
+        loadImage('../assets/ui/healthbar.png'),
         createDashboardLayer(font, player1, game1),
         createStartMenu(font, fontLarge),
         createLevelMenu(font, fontLarge),
@@ -145,7 +147,7 @@ async function initialize(){
         createLoseMenu(font, fontLarge),
         createWinMenu(font, fontLarge)
     ])
-    .then(([sndBrd, layer1, layer2, layer3, layer4, dashboardLayer, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
+    .then(([sndBrd, layer1, layer2, layer3, layer4, healthbr, dashboardLayer, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
         globalSoundBoard = sndBrd;
 
         const comp = new Compositor();
@@ -155,6 +157,7 @@ async function initialize(){
         comp.layers.push(layer3);
         comp.layers.push(layer4);
         //comp.layers.push(layer5);
+        healthbar = healthbr;
         comp.layers.push(dashboardLayer);
         console.log({comp})
         startMenu = sMenu;

@@ -39,6 +39,7 @@ export class CreatureFactory{
         creature.name = this.name;
         creature.width = this.width;
         creature.height = this.height;
+        creature.maxHealth = this.health;
         creature.health = this.health;
         creature.hunger = this.hunger
         creature.maxHunger = this.maxHunger;

@@ -1,6 +1,6 @@
 {
     "name": "dragon",
-    "height": 40,
+    "height": 64,
     "width": 32,
     "spriteSheetLocation": "/assets/characters/dragon/dragon.png",
     "frameDataLocation": "/assets/characters/dragon/frame-data.json",
@@ -16,7 +16,8 @@
             {
                 "name": "hit",
                 "rate": 3,
-                "damage": 5
+                "damage": 5,
+                "animationOffset": 0.5
             }
         ],
         "abilities": [

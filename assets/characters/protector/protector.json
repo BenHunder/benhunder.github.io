@@ -1,6 +1,6 @@
 {
     "name": "protector",
-    "height": 40,
+    "height": 32,
     "width": 32,
     "spriteSheetLocation": "/assets/characters/protector/protector.png",
     "frameDataLocation": "/assets/characters/protector/frame-data.json",

@@ -1,0 +1,34 @@
+{
+    "name": "spiderboy",
+    "height": 32,
+    "width": 32,
+    "spriteSheetLocation": "/assets/characters/spiderboy/spiderboy.png",
+    "frameDataLocation": "/assets/characters/spiderboy/frame-data.json",
+    "sounds": [
+        {
+            "name": "kill",
+            "location": "/assets/sfx/sfx4.wav"
+        }
+    ],
+    "attributes": {
+        "health": 20,
+        "traits": [
+            {
+                "name": "hit",
+                "rate": 5,
+                "damage": 5,
+                "animationOffset": 5
+            },
+            {
+                "name": "heal",
+                "amount": 1,
+                "rate": 0.1
+            }
+        ],
+        "abilities": [
+        ],
+        "type": "enemy"
+    }
+    
+
+}
