@@ -24,6 +24,10 @@ export default class Creature{
         return delay;
     }
 
+    damage(amount){
+        this.health -= amount;
+    }
+
     update(deltaTime){
         if(this.isAnimating){
             this.counter += deltaTime;

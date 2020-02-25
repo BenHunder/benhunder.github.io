@@ -167,18 +167,18 @@ async function initialize(){
         winMenu = wMenu;
         comp.setMenu(startMenu);
     
-        const input = new Controller();
+        const controller = new Controller();
 
         // spacebar switches weapon and food and vice versa
         //TODO make setMapping take a character instead of the keycode
-        input.setMapping(32, keyState => {
+        controller.setMapping(32, keyState => {
             if(keyState){
                 toggleWeapon();
             }
         });
 
         // enter pauses and selects pauseMenu options
-        input.setMapping(13, keyState => {
+        controller.setMapping(13, keyState => {
             if(keyState){
                 if(paused){
                     let action = comp.menu.selectedOption();
@@ -216,7 +216,7 @@ async function initialize(){
             }
         });
 
-        input.setMapping(40, keyState => {
+        controller.setMapping(40, keyState => {
             if(keyState){
                 if(paused){
                     comp.menu.scrollDown();
@@ -224,7 +224,7 @@ async function initialize(){
             }
         });
 
-        input.setMapping(38, keyState => {
+        controller.setMapping(38, keyState => {
             if(keyState){
                 if(paused){
                     comp.menu.scrollUp();
@@ -243,8 +243,9 @@ async function initialize(){
         
         letters.forEach((key, n) => {
             const cell = cellMap.get(key);
-            input.setMapping(keyCodes[n], keyState => {
+            controller.setMapping(keyCodes[n], keyState => {
                 if(keyState){
+                    console.log("keystate: " + keyState);
                     if(!paused){
                         cell.interact(onWeapon ? player1.weapon : player1.food, player1);
                     }
@@ -253,7 +254,7 @@ async function initialize(){
                 }
             });
         });
-        input.listenTo(window);
+        controller.listenTo(window);
 
         log("cellMap initialized:\n", {cellMap});
         return comp;

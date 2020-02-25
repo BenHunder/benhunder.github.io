@@ -22,7 +22,6 @@ export default class Controller{
 
         event.preventDefault();
         const keyState = event.type === 'keydown' ? PRESSED : RELEASED;
-
         if(keyState === this.keyStates.get(keyCode)){
             return;
         }

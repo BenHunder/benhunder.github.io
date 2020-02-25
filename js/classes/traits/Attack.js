@@ -16,19 +16,13 @@ export default class Attack extends Trait {
     start(weapon, player){
         if(!this.cell.duringSinkingAnimation && !this.cell.isProtected){
             globalSoundBoard.play('bonkEnemy');
-            this.cell.creature.health -= weapon.power;
-            if(this.cell.creature.health <= 0){
-                this.cell.attack.kill(player);
-            }
+            this.cell.creature.damage(weapon.power);
         }
     }
     start2(amount){
         if(!this.cell.duringSinkingAnimation && !this.cell.isProtected){
             globalSoundBoard.play('bonkEnemy');
-            this.cell.creature.health -= amount;
-            if(this.cell.creature.health <= 0){
-                this.cell.attack.kill(player1);
-            }
+            this.cell.creature.damage(amount);
         }
     }
     //kill creature, the player is passed as an argument so their score will be increased
@@ -52,6 +46,10 @@ export default class Attack extends Trait {
     }
 
     update(deltaTime){
+        if(this.cell.creature && this.cell.creature.health <= 0){
+            this.cell.attack.kill(player1);
+        }
+
         if(this.sinkDelay >= 0){
             this.sinkDelay -= deltaTime;
         }else{

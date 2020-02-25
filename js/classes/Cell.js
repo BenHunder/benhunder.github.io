@@ -123,6 +123,7 @@ export default class Cell{
         this.hitTimer = this.trailTime;
         if(this.isActive){
             if(item instanceof Weapon){
+                this.creature.isHeld = true;
                 this.attack.start(item, player);
             }else if(item instanceof Food){
                 this.feed.start(item, player);
@@ -137,6 +138,9 @@ export default class Cell{
     }
 
     released(){
+        if(this.creature){
+            this.creature.isHeld = false;
+        }
     }
 
     spawnNew(creature){

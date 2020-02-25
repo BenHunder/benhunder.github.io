@@ -6,6 +6,7 @@ import * as allAbilities from '../abilities.js';
 import Protect from "./traits/Protect.js";
 import Hit from "./traits/Hit.js";
 import Mystery from "./traits/Mystery.js";
+import Persist from "./traits/Persist.js";
 
 //do we need this? or do we just need to pass a function that returns a new creature or something. i am getting confused. this factory thing seems like a lot of unnecessary work
 
@@ -63,6 +64,10 @@ export class CreatureFactory{
                 creature.addTrait(new Hit(creature, trait));
             }else if(trait.name === 'mystery'){
                 creature.addTrait(new Mystery(creature, trait));
+            }else if(trait.name === 'persist'){
+                creature.addTrait(new Persist(creature, trait));
+                //turn off damage function
+                creature.damage = function(amount){};
             }
 
             //TODO eventually traits will be defined in the JSON or somehting I guess, but for now, they are just strings. This line is pretty useless rn

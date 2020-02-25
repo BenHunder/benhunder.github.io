@@ -1,6 +1,6 @@
 export default class Player{
     constructor(){
-        this.baseHealth = 100;
+        this.baseHealth = 1000;
         this.baseScore = 0;
 
         this.health = this.baseHealth;

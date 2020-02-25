@@ -212,8 +212,7 @@ export default class CellMap{
         for(let i = 0; i < 2; i++){
             let tryCell = this.randomAvailableCell();
             let row = this.grid[tryCell.coordinates.x];
-            let foundSpider = row.filter( cell => {cell.isActive && cell.creature.name == 'spiderboy'});
-            
+            let foundSpider = row.filter(cell => cell.isActive && cell.creature.name == 'spiderboy');
             if(foundSpider.length == 0){
                 return tryCell;
             }

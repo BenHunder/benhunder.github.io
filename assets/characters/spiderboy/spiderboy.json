@@ -20,9 +20,8 @@
                 "animationOffset": 5
             },
             {
-                "name": "heal",
-                "amount": 1,
-                "rate": 0.1
+                "name": "persist",
+                "regainRate": 5
             }
         ],
         "abilities": [
