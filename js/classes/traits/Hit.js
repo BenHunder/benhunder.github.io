@@ -27,14 +27,16 @@ export default class Hit extends Trait {
 
     //update fires an animation offset seconds before it triggers its start functionality. animationFired ensures the animation won't finish and start again until start has completed.
     update(deltaTime){
-        this.counter += deltaTime;
-        if(this.counter >= this.rate){
-            this.start();
-            this.counter = 0;
-            this.animationFired = false;
-        }else if(!this.creature.isAnimating && !this.animationFired && (this.counter >= (this.rate - this.offset))){
-            this.creature.isAnimating = true;
-            this.animationFired = true;
+        if(!this.creature.isHeld){
+            this.counter += deltaTime;
+            if(this.counter >= this.rate){
+                this.start();
+                this.counter = 0;
+                this.animationFired = false;
+            }else if(!this.creature.isAnimating && !this.animationFired && (this.counter >= (this.rate - this.offset))){
+                this.creature.isAnimating = true;
+                this.animationFired = true;
+            }
         }
     }
 }

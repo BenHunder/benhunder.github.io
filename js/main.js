@@ -245,7 +245,6 @@ async function initialize(){
             const cell = cellMap.get(key);
             controller.setMapping(keyCodes[n], keyState => {
                 if(keyState){
-                    console.log("keystate: " + keyState);
                     if(!paused){
                         cell.interact(onWeapon ? player1.weapon : player1.food, player1);
                     }
