@@ -12,11 +12,12 @@ import Persist from "./traits/Persist.js";
 
 export class CreatureFactory{
     //TODO should spriteSheet and soundBoard really be passed in here? If so, creature should have a function to play sounds like its draw method 
-    constructor(spriteSheet, soundBoard, chance, cluster, name, width, height, attributes, subCreatureFactory){
+    constructor(spriteSheet, soundBoard, chance, cluster, selectionCell, name, width, height, attributes, subCreatureFactory){
         this.spriteSheet = spriteSheet;
         this.soundBoard = soundBoard;
         this.chance = chance;
         this.cluster = cluster;
+        this.selectionCell = selectionCell;
         this.name = name;
         this.width = width;
         this.height = height;

@@ -1,0 +1,11 @@
+{
+    "spawner": {
+        "spawnRate": -1,
+        "creatures": [
+        {
+            "type": "sprout",
+            "chance": 0.1,
+            "selectionCell": "z"
+        }]
+    }
+}

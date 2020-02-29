@@ -36,15 +36,19 @@ export default class Menu extends Layer{
         return this.options[this.selected].label;
     }
 
+    setHeader(header){
+        this.header = header;
+    }
+
     draw(context){
 
-        //add white background
-        context.globalAlpha = 0.8;
-        context.fillStyle = "white";
-        const w = context.canvas.width;
-        const h = context.canvas.height;
-        context.fillRect(0,45, w, h-90);
-        context.globalAlpha = 1;
+        //add transparent white background
+        // context.globalAlpha = 0.8;
+        // context.fillStyle = "white";
+        // const w = context.canvas.width;
+        // const h = context.canvas.height;
+        // context.fillRect(0,45, w, h-90);
+        // context.globalAlpha = 1;
 
         //print header
         this.fontLarge.printCentered (this.header, context, 320, 75);

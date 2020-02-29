@@ -1,6 +1,6 @@
 import Compositor from './classes/Compositor.js';
 import {loadLevel, loadSounds, loadFont, loadImage} from './loaders.js';
-import {createLayer1, createLayer2, createLayer3, createLayer4, createLayer5, createAllCells, createDashboardLayer, createStartMenu, createLevelMenu, createPauseMenu, createLoseMenu, createWinMenu} from './layers.js';
+import {createLayer1, createLayer2, createLayer3, createLayer4, createLayer5, createCharacterMenu, createAllCells, createLevelSelection, createDashboardLayer, createStartMenu, createLevelMenu, createPauseMenu, createLoseMenu, createWinMenu} from './layers.js';
 import Timer from './classes/Timer.js';
 import Controller from "./classes/Controller.js";
 import Cell from './classes/Cell.js';
@@ -55,9 +55,6 @@ function resizeGame() {
 //window.addEventListener('resize', resizeGame, false);
 //window.addEventListener('orientationchange', resizeGame, false);
 
-export let cellMap;
-let spawner;
-
 export let globalSoundBoard;
 
 //TODO probably move to another file later
@@ -96,10 +93,14 @@ const fontData = [
         'charHeight': 32
     }
 ]
+export let cellMap;
+let spawner;
 
 export let player1;
 export let game1;
 export let healthbar;
+let levelSelection;
+let creatureMenu;
 let startMenu;
 let levelMenu;
 let pauseMenu;
@@ -124,6 +125,7 @@ function unpause(){
 
 
 async function initialize(){
+    levelSelection = await createLevelSelection();
     cellMap = await createAllCells();
     const font = await loadFont(fontData[0]);
     const fontLarge = await loadFont(fontData[1]);
@@ -141,13 +143,14 @@ async function initialize(){
         //createLayer5(),
         loadImage('../assets/ui/healthbar.png'),
         createDashboardLayer(font, player1, game1),
+        createCharacterMenu(font, fontLarge),
         createStartMenu(font, fontLarge),
         createLevelMenu(font, fontLarge),
         createPauseMenu(font, fontLarge),
         createLoseMenu(font, fontLarge),
         createWinMenu(font, fontLarge)
     ])
-    .then(([sndBrd, layer1, layer2, layer3, layer4, healthbr, dashboardLayer, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
+    .then(([sndBrd, layer1, layer2, layer3, layer4, healthbr, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
         globalSoundBoard = sndBrd;
 
         const comp = new Compositor();
@@ -160,6 +163,7 @@ async function initialize(){
         healthbar = healthbr;
         comp.layers.push(dashboardLayer);
         console.log({comp})
+        creatureMenu = cMenu;
         startMenu = sMenu;
         levelMenu = vMenu;
         pauseMenu = pMenu;
@@ -185,10 +189,15 @@ async function initialize(){
                     if(action === "resume"){
                         unpause();
                     }else if(action === "start"){
-                        comp.setMenu(levelMenu);
+                        unpause();
+                        creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
+                        comp.setMenu(creatureMenu);
+                        loadLevel(cellMap, "characterSelection").then(spwnr => {
+                            spwnr.spawnSelections();
+                        });
                     }else if(action === "restart"){
                         resetLevel();
-                        paused = false;
+                        unpause();
                     }else if(action === "quit"){
                         resetLevel();
                         comp.setMenu(startMenu)
@@ -245,8 +254,14 @@ async function initialize(){
             const cell = cellMap.get(key);
             controller.setMapping(keyCodes[n], keyState => {
                 if(keyState){
-                    if(!paused){
+                    if(!paused && comp.menu != creatureMenu){
                         cell.interact(onWeapon ? player1.weapon : player1.food, player1);
+                    }else if(!paused){
+                        const selection = cell.select();
+                        if(selection){
+                            player1.plantsLeft -= 1;
+                            creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
+                        }
                     }
                 }else{
                     cell.released();
@@ -268,7 +283,9 @@ function start(comp){
     timer.update = function update(deltaTime){
         if(!paused){
             //spawn creatures
-            spawner.update(deltaTime);
+            if(spawner){
+                spawner.update(deltaTime);
+            }
 
             //update layers and cells
             comp.update(deltaTime);
@@ -292,6 +309,10 @@ function start(comp){
 
             //draw everything
             comp.draw(canvas);
+
+            if(comp.menu === creatureMenu){
+                comp.drawMenu(canvas);
+            }
 
             
         }else{

@@ -39,6 +39,19 @@ export function createStartMenu(font, fontLarge){
     });
 }
 
+export function createCharacterMenu(font, fontLarge){
+    const buffer = document.createElement('canvas');
+    buffer.width = gameWidth;
+    buffer.height = gameHeight;
+
+    return loadImage('/assets/ui/PauseScreenMockUp.png').then(img => {
+        let options = [
+            
+        ]
+        return new Menu(font, fontLarge, 'CHOOSE YOUR PLANTS', options);
+    });
+}
+
 export function createLevelMenu(font, fontLarge){
     const buffer = document.createElement('canvas');
     buffer.width = gameWidth;
@@ -191,6 +204,53 @@ export function createCell(name, coordinates, center){
 // }
 
 export function createAllCells(){
+    return Promise.all([
+        createCell('q', new Vec2(0,0), new Vec2(66, 142)),
+        createCell('w', new Vec2(1,0), new Vec2(124, 142)),
+        createCell('e', new Vec2(2,0), new Vec2(179, 142)),
+        createCell('r', new Vec2(3,0), new Vec2(236, 142)),
+        createCell('t', new Vec2(4,0), new Vec2(293, 142)),
+        createCell('y', new Vec2(5,0), new Vec2(347, 142)),
+        createCell('u', new Vec2(6,0), new Vec2(404, 142)),
+        createCell('i', new Vec2(7,0), new Vec2(462, 142)),
+        createCell('o', new Vec2(8,0), new Vec2(517, 142)),
+        createCell('p', new Vec2(9,0), new Vec2(574, 142)),
+        //createCell('[', new Vec2(10,0), new Vec2(532, 155)),
+        //createCell(']', new Vec2(11,0), new Vec2(580, 155)),
+        createCell('a', new Vec2(0,1), new Vec2(53, 190)),
+        createCell('s', new Vec2(1,1), new Vec2(113, 190)),
+        createCell('d', new Vec2(2,1), new Vec2(172, 190)),
+        createCell('f', new Vec2(3,1), new Vec2(232, 190)),
+        createCell('g', new Vec2(4,1), new Vec2(291, 190)),
+        createCell('h', new Vec2(5,1), new Vec2(350, 190)),
+        createCell('j', new Vec2(6,1), new Vec2(409, 190)),
+        createCell('k', new Vec2(7,1), new Vec2(469, 190)),
+        createCell('l', new Vec2(8,1), new Vec2(528, 190)),
+        createCell(';', new Vec2(9,1), new Vec2(587, 190)),
+        //createCell('\'', new Vec2(10,1), new Vec2(557, 204)),
+        createCell('z', new Vec2(0,2), new Vec2(36, 251)),
+        createCell('x', new Vec2(1,2), new Vec2(100, 251)),
+        createCell('c', new Vec2(2,2), new Vec2(163, 251)),
+        createCell('v', new Vec2(3,2), new Vec2(226, 251)),
+        createCell('b', new Vec2(4,2), new Vec2(289, 251)),
+        createCell('n', new Vec2(5,2), new Vec2(353, 251)),
+        createCell('m', new Vec2(6,2), new Vec2(415, 251)),
+        createCell(',', new Vec2(7,2), new Vec2(479, 251)),
+        createCell('PERIOD', new Vec2(8,2), new Vec2(540, 252)),
+        createCell('FSLASH', new Vec2(9,2), new Vec2(604, 252)),
+
+    //]).then(([q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m]) => {
+    ]).then((cells) => {
+        const cellMap = new CellMap(10,3);
+        cells.forEach(cell => {
+            cellMap.set(cell.name, cell.coordinates, cell);
+        })
+
+        return cellMap
+    });
+}
+
+export function createLevelSelection(){
     return Promise.all([
         createCell('q', new Vec2(0,0), new Vec2(66, 142)),
         createCell('w', new Vec2(1,0), new Vec2(124, 142)),

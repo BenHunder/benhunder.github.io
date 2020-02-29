@@ -7,6 +7,11 @@ export default class Player{
         this.score = this.baseScore;
         this.weapon = null;
         this.food = null;
+
+        this.unlocked = new Map();
+        this.unlocked.set("sprout", true);
+
+        this.plantsLeft = 3;
     }
 
     heal(amount){
@@ -24,6 +29,10 @@ export default class Player{
     reset(){
         this.health = this.baseHealth;
         this.score = this.baseScore;
+    }
+
+    hasUnlocked(creature){
+        return this.unlocked.get(creature);
     }
 
 }

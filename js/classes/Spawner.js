@@ -1,4 +1,5 @@
 import {getRandomInt} from '../math.js';
+import {player1} from '../main.js'
 
 export class Spawner{
     constructor(cellMap, spawnRate){
@@ -79,5 +80,13 @@ export class Spawner{
                 cell.spawnNew(creatureFactory.create());
             });
         }
+    }
+
+    spawnSelections(){
+        this.creatureFactories.forEach( creatureFactory => {
+            if(player1.hasUnlocked(creatureFactory.name)){
+                this.cellMap.get(creatureFactory.selectionCell).spawnNew(creatureFactory.create())
+            }
+        });
     }
 }

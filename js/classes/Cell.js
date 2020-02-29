@@ -125,6 +125,7 @@ export default class Cell{
             if(item instanceof Weapon){
                 this.creature.isHeld = true;
                 this.attack.start(item, player);
+                return this.creature.name;
             }else if(item instanceof Food){
                 this.feed.start(item, player);
             }
@@ -135,6 +136,16 @@ export default class Cell{
     }
 
     pressed(){
+    }
+
+    select(){
+        if(this.isActive){
+            globalSoundBoard.play('bonkEnemy');
+            return this.creature.name;
+        }else{
+            globalSoundBoard.play('bonkOther');
+            return null;
+        }
     }
 
     released(){

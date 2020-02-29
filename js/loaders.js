@@ -97,27 +97,27 @@ export async function loadSounds(soundNames){
 
 //loads level json, makes creature factories, returns and array of spawners 
 export function loadLevel(cellMap, lvl){
-    return loadJson("./assets/levels/l" + lvl + ".json")
+    return loadJson("./assets/levels/" + lvl + ".json")
     .then( level => {
         const newSpawner = new Spawner(cellMap, level.spawner.spawnRate);
 
         let promisesArray = [];
         level.spawner.creatures.forEach( creature => {
             promisesArray.push( 
-                loadCreature(creature.type, creature.chance, creature.cluster)
+                loadCreature(creature.type, creature.chance, creature.cluster, creature.selectionCell)
                 .then( creatureFactory => {
                     newSpawner.addCreature(creatureFactory);
                 })
             );
         });
-        Promise.all(promisesArray);
-
-        return newSpawner;
+        return Promise.all(promisesArray).then( x => {
+            return newSpawner;
+        });
     });
 }
 
 //load all character properties (sounds, frames, attributes)
-export function loadCreature(creatureName, creatureChance, creatureCluster){
+export function loadCreature(creatureName, creatureChance, creatureCluster, selectionCell){
     return loadJson("./assets/characters/" + creatureName + "/" + creatureName + ".json",)
     .then( creature => {
         return Promise.all([
@@ -127,10 +127,10 @@ export function loadCreature(creatureName, creatureChance, creatureCluster){
         .then( ([spriteSheet, soundBoard]) => {
             if(creature.subCreature){
                 return loadCreature(creature.subCreature, 0, 0).then( creatureFactory => {
-                    return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, creature.name, creature.width, creature.height, creature.attributes, creatureFactory);
+                    return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, selectionCell, creature.name, creature.width, creature.height, creature.attributes, creatureFactory);
                 })
             }else{
-                return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, creature.name, creature.width, creature.height, creature.attributes, null);
+                return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, selectionCell, creature.name, creature.width, creature.height, creature.attributes, null);
             }
             
         });
