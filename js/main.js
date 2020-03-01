@@ -187,12 +187,16 @@ async function initialize(){
                 if(paused){
                     let action = comp.menu.selectedOption();
                     if(action === "resume"){
+                        if(game1.level === "characterSelection"){
+                            comp.setMenu(creatureMenu);
+                        }
                         unpause();
                     }else if(action === "start"){
                         unpause();
                         creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
                         comp.setMenu(creatureMenu);
-                        loadLevel(cellMap, "characterSelection").then(spwnr => {
+                        game1.level = "characterSelection";
+                        loadLevel(cellMap, game1.level).then(spwnr => {
                             spwnr.spawnSelections();
                         });
                     }else if(action === "restart"){
@@ -254,13 +258,16 @@ async function initialize(){
             const cell = cellMap.get(key);
             controller.setMapping(keyCodes[n], keyState => {
                 if(keyState){
-                    if(!paused && comp.menu != creatureMenu){
-                        cell.interact(onWeapon ? player1.weapon : player1.food, player1);
-                    }else if(!paused){
-                        const selection = cell.select();
-                        if(selection){
+                    if(!paused){
+                        const selection = cell.interact(onWeapon ? player1.weapon : player1.food, player1);
+                        if(selection && game1.level === "characterSelection"){
                             player1.plantsLeft -= 1;
-                            creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
+                            if(player1.plantsLeft <= 0){
+                                pause();
+                                comp.setMenu(levelMenu);
+                            }else{
+                                creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
+                            }
                         }
                     }
                 }else{

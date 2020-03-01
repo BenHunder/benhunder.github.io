@@ -13,10 +13,12 @@ export default class Dashboard extends Layer{
     }
 
     draw(context){
-        this.drawTimer(context);
-        this.drawHealth(context);
-        this.drawLevel(context);
-        this.drawScore(context);
+        if(this.game.level > 0){
+            this.drawTimer(context);
+            this.drawHealth(context);
+            this.drawLevel(context);
+            this.drawScore(context);
+        }
     }
 
     //draws in the top left corner

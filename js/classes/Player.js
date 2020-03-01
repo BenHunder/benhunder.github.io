@@ -11,7 +11,7 @@ export default class Player{
         this.unlocked = new Map();
         this.unlocked.set("sprout", true);
 
-        this.plantsLeft = 3;
+        this.plantsLeft = 1;
     }
 
     heal(amount){
