@@ -197,7 +197,8 @@ async function initialize(){
                         comp.setMenu(creatureMenu);
                         game1.level = "characterSelection";
                         loadLevel(cellMap, game1.level).then(spwnr => {
-                            spwnr.spawnSelections();
+                            spawner = spwnr;
+                            spawner.spawnSelections();
                         });
                     }else if(action === "restart"){
                         resetLevel();
@@ -261,6 +262,11 @@ async function initialize(){
                     if(!paused){
                         const selection = cell.interact(onWeapon ? player1.weapon : player1.food, player1);
                         if(selection && game1.level === "characterSelection"){
+                            spawner.creatureFactories.forEach( cf => {
+                                if(cf.name === selection){
+                                    player1.addCreature(cf);
+                                }
+                            });
                             player1.plantsLeft -= 1;
                             if(player1.plantsLeft <= 0){
                                 pause();
@@ -290,7 +296,7 @@ function start(comp){
     timer.update = function update(deltaTime){
         if(!paused){
             //spawn creatures
-            if(spawner){
+            if(game1.level > 0){
                 spawner.update(deltaTime);
             }
 
@@ -306,12 +312,14 @@ function start(comp){
             });
 
             //check win/lose conditions
-            if(player1.health <= 0){
-                comp.setMenu(loseMenu);
-                pause();
-            }else if(game1.timer <= 0){
-                comp.setMenu(winMenu);
-                pause();
+            if(game1.level > 0){
+                if(player1.health <= 0){
+                    comp.setMenu(loseMenu);
+                    pause();
+                }else if(game1.timer <= 0){
+                    comp.setMenu(winMenu);
+                    pause();
+                }
             }
 
             //draw everything

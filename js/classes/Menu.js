@@ -2,7 +2,7 @@ import Font from './Font.js';
 import Layer from './Layer.js';
 
 export default class Menu extends Layer{
-    constructor(font, fontLarge, header, options){
+    constructor(font, fontLarge, header, options, backgroundOn){
         //menu will go on top of everything else (assuming there won't be more than 100 layers here)
         super(100);
 
@@ -11,6 +11,8 @@ export default class Menu extends Layer{
         this.x = 250;
         this.y = 125;
         this.margin = 10;
+
+        this.backgroundOn = backgroundOn;
 
         //TODO: once art is created for pause menu, that should be stored here and drawn
         //this.backgroundImage = backgroundImage;
@@ -43,12 +45,14 @@ export default class Menu extends Layer{
     draw(context){
 
         //add transparent white background
-        // context.globalAlpha = 0.8;
-        // context.fillStyle = "white";
-        // const w = context.canvas.width;
-        // const h = context.canvas.height;
-        // context.fillRect(0,45, w, h-90);
-        // context.globalAlpha = 1;
+        if(this.backgroundOn){
+            context.globalAlpha = 0.8;
+            context.fillStyle = "white";
+            const w = context.canvas.width;
+            const h = context.canvas.height;
+            context.fillRect(0,45, w, h-90);
+            context.globalAlpha = 1;
+        }
 
         //print header
         this.fontLarge.printCentered (this.header, context, 320, 75);

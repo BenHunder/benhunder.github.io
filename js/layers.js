@@ -35,7 +35,7 @@ export function createStartMenu(font, fontLarge){
                 'label': 'settings'
             }
         ]
-        return new Menu(font, fontLarge, 'GAME TITLE', options);
+        return new Menu(font, fontLarge, 'GAME TITLE', options, true);
     });
 }
 
@@ -48,7 +48,7 @@ export function createCharacterMenu(font, fontLarge){
         let options = [
             
         ]
-        return new Menu(font, fontLarge, 'CHOOSE YOUR PLANTS', options);
+        return new Menu(font, fontLarge, 'CHOOSE YOUR PLANTS', options, false);
     });
 }
 
@@ -72,7 +72,7 @@ export function createLevelMenu(font, fontLarge){
                 'label': 'quit'
             }
         ]
-        return new Menu(font, fontLarge, 'SELECT LEVEL', options);
+        return new Menu(font, fontLarge, 'SELECT LEVEL', options, true);
     });
 }
 
@@ -93,7 +93,7 @@ export function createPauseMenu(font, fontLarge){
                 'label': 'quit'
             }
         ]
-        return new Menu(font, fontLarge, 'PAUSED', options);
+        return new Menu(font, fontLarge, 'PAUSED', options, true);
     });
 }
 
@@ -111,7 +111,7 @@ export function createLoseMenu(font, fontLarge){
                 'label': 'quit'
             }
         ]
-        return new Menu(font, fontLarge, 'YOU LOSE', options);
+        return new Menu(font, fontLarge, 'YOU LOSE', options, true);
     });
 }
 
@@ -132,7 +132,7 @@ export function createWinMenu(font, fontLarge){
                 'label': 'quit'
             }
         ]
-        return new Menu(font, fontLarge, 'YOU WIN', options);
+        return new Menu(font, fontLarge, 'YOU WIN', options, true);
     });
 }
 

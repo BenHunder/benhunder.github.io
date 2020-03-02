@@ -17,5 +17,6 @@ export default class Game{
 
     reset(){
         this.timer = this.baseTimer;
+        this.level = 0;
     }
 }

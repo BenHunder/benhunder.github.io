@@ -3,6 +3,7 @@ import SoundBoard from './classes/SoundBoard.js';
 import { CreatureFactory } from './classes/CreatureFactory.js';
 import { Spawner } from './classes/Spawner.js';
 import Font from './classes/Font.js';
+import { player1 } from './main.js';
 
 
 const levelLocations = {
@@ -111,6 +112,10 @@ export function loadLevel(cellMap, lvl){
             );
         });
         return Promise.all(promisesArray).then( x => {
+            player1.creatureFactories.forEach( cf => {
+                newSpawner.addCreature(cf);
+                console.log({newSpawner});
+            })
             return newSpawner;
         });
     });
