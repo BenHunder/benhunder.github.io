@@ -17,6 +17,7 @@ export default class Dashboard extends Layer{
             this.drawTimer(context);
             this.drawHealth(context);
             this.drawLevel(context);
+            this.drawLetters(context);
             this.drawScore(context);
         }
     }
@@ -46,6 +47,13 @@ export default class Dashboard extends Layer{
         const y = context.canvas.height - this.font.charHeight - this.margin;
 
         this.font.print(string, context, x, y);
+    }
+
+    drawLetters(context){
+        const x = context.canvas.width/2;
+        const y = context.canvas.height - this.font.charHeight - this.margin;
+
+        this.font.printCentered(this.game.letters, context, x, y);
     }
 
     //draws in the bottom right corner

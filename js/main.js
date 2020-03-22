@@ -93,12 +93,12 @@ const fontData = [
         'charHeight': 32
     }
 ]
-export let cellMap;
+export var cellMap;
 let spawner;
 
-export let player1;
-export let game1;
-export let healthbar;
+export var player1;
+export var game1;
+export var healthbar;
 let levelSelection;
 let creatureMenu;
 let startMenu;
@@ -196,6 +196,7 @@ async function initialize(){
                         creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
                         comp.setMenu(creatureMenu);
                         game1.level = "characterSelection";
+                        player1.reset();
                         loadLevel(cellMap, game1.level).then(spwnr => {
                             spawner = spwnr;
                             spawner.spawnSelections();
@@ -205,6 +206,7 @@ async function initialize(){
                         unpause();
                     }else if(action === "quit"){
                         resetLevel();
+                        game1.level = 0;
                         comp.setMenu(startMenu)
                     }else if(action === "next level"){
                         resetLevel();
@@ -322,6 +324,8 @@ function start(comp){
                 }
             }
 
+            game1.letters = cellMap.enemyCells().map(([name, cell]) => name).join('');
+
             //draw everything
             comp.draw(canvas);
 
@@ -358,8 +362,6 @@ function resetLevel(){
     cellMap.allCells().forEach(([name, cell]) => {
         cell.reset();
     });
-
-    player1.reset();
     game1.reset();
 }
 

@@ -19,10 +19,6 @@
             "type": "bunbun",
             "chance": 0.2,
             "cluster": 2
-        },
-        {
-            "type": "sprout",
-            "chance": 0.1
         }]
     }
 }

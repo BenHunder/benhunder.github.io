@@ -103,6 +103,8 @@ export function loadLevel(cellMap, lvl){
         const newSpawner = new Spawner(cellMap, level.spawner.spawnRate);
 
         let promisesArray = [];
+
+        //load creatures in the level.json
         level.spawner.creatures.forEach( creature => {
             promisesArray.push( 
                 loadCreature(creature.type, creature.chance, creature.cluster, creature.selectionCell)
@@ -112,9 +114,10 @@ export function loadLevel(cellMap, lvl){
             );
         });
         return Promise.all(promisesArray).then( x => {
+
+            //add player selections
             player1.creatureFactories.forEach( cf => {
                 newSpawner.addCreature(cf);
-                console.log({newSpawner});
             })
             return newSpawner;
         });

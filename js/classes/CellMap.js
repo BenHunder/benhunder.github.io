@@ -177,6 +177,10 @@ export default class CellMap{
         return this.allCells().filter(([name,cell]) => cell.isActive && !cell.duringSinkingAnimation);
     }
 
+    enemyCells(){
+        return this.occupiedCells().filter(([name, cell]) => cell.creature.type === 'enemy');
+    }
+
     numEnemies(){
         return this.occupiedCells().filter(([name,cell]) => cell.creature.type == 'enemy').length;
     }

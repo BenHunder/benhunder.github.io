@@ -5,20 +5,20 @@
         "location": "/layouts/mac-querty"
     },
     "spawner": {
-        "spawnRate": 1,
+        "spawnRate": 10,
         "creatures": [
         {
             "type": "mushboy",
-            "chance": 0.1
+            "chance": 1
         },
         {
             "type": "bunbun",
-            "chance": 0.05,
+            "chance": 1,
             "cluster": 2
         },
         {
             "type": "protector",
-            "chance": 0.05
+            "chance": 1
         },
         {
             "type": "mysterybox",
@@ -30,7 +30,7 @@
         },
         {
             "type": "dragon",
-            "chance": 0.015
+            "chance": 0.05
         }]
     }
 }
