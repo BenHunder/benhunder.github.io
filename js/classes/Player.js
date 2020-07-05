@@ -31,9 +31,9 @@ export default class Player{
 
     reset(){
         this.health = this.baseHealth;
-        this.score = this.baseScore;
+        //this.score = this.baseScore;
         this.plantsLeft = this.baseNumPlants;
-        this.creatureFactories = [];
+        //this.creatureFactories = [];
     }
 
     addCreature(creatureFactory){

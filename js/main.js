@@ -363,6 +363,7 @@ function resetLevel(){
         cell.reset();
     });
     game1.reset();
+    player1.reset();
 }
 
 

@@ -19,8 +19,8 @@ export class Spawner{
 
         //raise spawnRate (lower frequency of spawns) when there are more creatures on the board, so players aren't overwhelmed
         //ie.. start faster, then get slower
-        //const thresh = this.spawnRate * (((this.cellMap.numEnemies()*5) + 5) / 29);
-        const thresh = this.spawnRate;
+        const thresh = this.spawnRate * (((this.cellMap.numEnemies()*5) + 5) / 29);
+        //const thresh = this.spawnRate;
 
         if(this.counter >= thresh){
             this.spawnAll();
