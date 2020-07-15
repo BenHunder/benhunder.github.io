@@ -14,7 +14,8 @@ export default class Grass extends Creature{
         super(traits, 'grass');
         this.height = 32;
         this.width = 32;
-        this.health = 10;
+        this.maxHealth = 10;
+        this.health = this.maxHealth;
         this.scoreValue = 0;
         this.type =  "pl@nt";
 

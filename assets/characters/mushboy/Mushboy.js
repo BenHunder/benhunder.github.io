@@ -15,13 +15,13 @@ export default class Mushboy extends Creature{
         super(traits, 'mushboy')
         this.height = 40;
         this.width = 32;
-        this.health = 20;
+        this.maxHealth = 20;
+        this.health = this.maxHealth;
         this.scoreValue = 10;
         this.type =  "enemy";
     }
 
     ageMe(){
         this.age += 1;
-        console.log("age mushboy")
     }
 }

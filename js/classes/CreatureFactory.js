@@ -20,9 +20,7 @@ export class CreatureFactory{
     }
 
     create(){
-        console.log('spawning' + this.name);
         const creature = new this.creatureType();
-        console.log([creature]);
         return creature;
     }
 }
