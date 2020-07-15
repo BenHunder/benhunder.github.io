@@ -3,12 +3,14 @@ export default class Player{
         this.baseHealth = 1000;
         this.baseScore = 0;
         this.baseNumPlants = 1;
+        this.maxAmmo = 3;
 
         this.health = this.baseHealth;
         this.score = this.baseScore;
         this.plantsLeft = this.baseNumPlants;
         this.weapon = null;
         this.food = null;
+        this.ammo = this.maxAmmo;
 
         this.unlocked = new Map();
         this.unlocked.set("sprout", true);
@@ -46,6 +48,10 @@ export default class Player{
 
     hasUnlocked(creature){
         return this.unlocked.get(creature);
+    }
+
+    reload(){
+        this.ammo = this.maxAmmo;
     }
 
 }

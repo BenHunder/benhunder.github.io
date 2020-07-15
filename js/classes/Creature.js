@@ -1,12 +1,36 @@
+import { globalSoundBoard, spriteSheetMap } from '../main.js';
+import Protect from "./traits/Protect.js";
+import Hit from "./traits/Hit.js";
+import Mystery from "./traits/Mystery.js";
+import Persist from "./traits/Persist.js";
 
 export default class Creature{
-    constructor(spriteSheet, soundBoard){
-        this.spriteSheet = spriteSheet;
-        this.soundBoard = soundBoard;
+    constructor(traits, name){
+        this.scoreValue = this.type === "enemy" ? 10 : 0;
         this.traits = [];
         this.isAnimating = false;
         this.currentFrame = 0;
+        this.currentCell = null;
         this.counter = 0;
+        this.age = 0;
+        this.name = name;
+
+        traits.forEach( trait => {
+            if(trait.name === 'protect'){
+                this.addTrait(new Protect(this));
+            }else if(trait.name === 'hit'){
+                this.addTrait(new Hit(this, trait));
+            }else if(trait.name === 'mystery'){
+                this.addTrait(new Mystery(this, trait));
+            }else if(trait.name === 'persist'){
+                this.addTrait(new Persist(this, trait));
+                //turn off damage function
+                this.damage = function(amount){};
+            }
+
+            //TODO eventually traits will be defined in the JSON or somehting I guess, but for now, they are just strings. This line is pretty useless rn
+            //creature.addTrait(new Trait(traitName));
+        });
     }
 
     addTrait(trait) {
@@ -28,6 +52,10 @@ export default class Creature{
         this.health -= amount;
     }
 
+    ageMe(){
+        this.age += 1
+    }
+
     update(deltaTime){
         if(this.isAnimating){
             this.counter += deltaTime;
@@ -37,30 +65,17 @@ export default class Creature{
             trait.update(deltaTime);
         })
     } 
-
-    //this is a temporary solution, should probably have separate classes or something for plants vs creatures or a class for each creature? i don't know yet
-    // drawPlant(context, x, y){
-    //     let i = 0;
-    //     if(this.type === "plant"){
-    //         i = (this.spriteSheet.size() - 1) - Math.floor((this.spriteSheet.size() * this.hunger)/(this.maxHunger));
-    //         if (i > 5){
-    //             i = 5;
-    //         }
-    //     }
-    //     const name = 'frame' + i;
-    //     const buffer = this.spriteSheet.getBuffer(name);
-    //     context.drawImage(buffer, x, y);
-    // }
     
     draw(context, x, y){
+        const spriteSheet = spriteSheetMap.get(this.name)
         let name = 'frame' + this.currentFrame;
 
         //advance frames
         if(this.isAnimating){
-            if(this.counter >= this.spriteSheet.getDuration(name)/1000){
+            if(this.counter >= spriteSheet.getDuration(name)/1000){
                 this.counter = 0;
                 this.currentFrame += 1;
-                if(this.currentFrame > this.spriteSheet.size()-1){
+                if(this.currentFrame > spriteSheet.size()-1){
                     this.currentFrame = 0;
                     this.isAnimating = false;
                 }
@@ -70,12 +85,12 @@ export default class Creature{
         }
 
         name = 'frame' + this.currentFrame;
-        const buffer = this.spriteSheet.getBuffer(name);
+        const buffer = spriteSheet.getBuffer(name);
         context.drawImage(buffer, x, y);
     }
     playSound(name, delay=0){
-        if(this.soundBoard.hasSound(name)){
-            this.soundBoard.play(name, delay);
+        if(globalSoundBoard.hasSound(name)){
+            globalSoundBoard.play(name, delay);
         }else{
             console.log(name + " sound missing");
         }

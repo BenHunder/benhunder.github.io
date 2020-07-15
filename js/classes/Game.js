@@ -5,7 +5,7 @@ export default class Game{
         this.cellMap = null;
         this.timer = this.baseTimer;
         this.level = 0;
-        this. letters = '';
+        this.letters = '';
     }
 
     addTime(amount){

@@ -122,7 +122,7 @@ export default class Cell{
     interact(item, player){
         this.hitTimer = this.trailTime;
         if(this.isActive){
-            if(item instanceof Weapon){
+            if(item instanceof Weapon && player.ammo > 0){
                 this.creature.isHeld = true;
                 this.attack.start(item, player);
                 return this.creature.name;
@@ -136,16 +136,6 @@ export default class Cell{
     }
 
     pressed(){
-    }
-
-    select(){
-        if(this.isActive){
-            globalSoundBoard.play('bonkEnemy');
-            return this.creature.name;
-        }else{
-            globalSoundBoard.play('bonkOther');
-            return null;
-        }
     }
 
     released(){

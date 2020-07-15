@@ -10,15 +10,6 @@
         {
             "type": "mushboy",
             "chance": 0.3
-        },
-        {
-            "type": "mysterybox",
-            "chance": 0.05
-        },
-        {
-            "type": "bunbun",
-            "chance": 0.2,
-            "cluster": 2
         }]
     }
 }

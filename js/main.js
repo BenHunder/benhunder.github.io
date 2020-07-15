@@ -1,4 +1,5 @@
 import Compositor from './classes/Compositor.js';
+import SoundBoard from './classes/SoundBoard.js';
 import {loadLevel, loadSounds, loadFont, loadImage} from './loaders.js';
 import {createLayer1, createLayer2, createLayer3, createLayer4, createLayer5, createCharacterMenu, createAllCells, createLevelSelection, createDashboardLayer, createStartMenu, createLevelMenu, createPauseMenu, createLoseMenu, createWinMenu} from './layers.js';
 import Timer from './classes/Timer.js';
@@ -40,7 +41,7 @@ function resizeGame() {
     } else {
         newHeight = newWidth / widthToHeight;
         gameContainer.style.width = newWidth + 'px';
-        gameContainer.style.height = newHeight + 'px';
+        gameContainer.style.height = newHeight + 'px';[]
     }
     
     //gameContainer.style.marginTop = (-newHeight / 2) + 'px';
@@ -55,7 +56,8 @@ function resizeGame() {
 //window.addEventListener('resize', resizeGame, false);
 //window.addEventListener('orientationchange', resizeGame, false);
 
-export let globalSoundBoard;
+export let globalSoundBoard = new SoundBoard(3);
+export let spriteSheetMap = new Map();
 
 //TODO probably move to another file later
 const soundNames = [
@@ -66,6 +68,10 @@ const soundNames = [
     {
         "location": "/assets/sfx/sfx2.wav",
         "name": "bonkOther"
+    },
+    {
+        "name": "kill",
+        "location": "/assets/sfx/sfx4.wav"
     },
     {
         "location": "/assets/sfx/sfx3.wav", 
@@ -135,7 +141,7 @@ async function initialize(){
 
     return Promise.all([
         //loadJson('/assets/levels/testSpawnerObject.json'),
-        loadSounds(soundNames),
+        loadSounds(soundNames, globalSoundBoard),
         createLayer1(cellMap),
         createLayer2(cellMap),
         createLayer3(cellMap),
@@ -151,7 +157,6 @@ async function initialize(){
         createWinMenu(font, fontLarge)
     ])
     .then(([sndBrd, layer1, layer2, layer3, layer4, healthbr, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
-        globalSoundBoard = sndBrd;
 
         const comp = new Compositor();
         
@@ -177,11 +182,11 @@ async function initialize(){
         //TODO make setMapping take a character instead of the keycode
         controller.setMapping(32, keyState => {
             if(keyState){
-                toggleWeapon();
+                player1.reload();
             }
         });
 
-        // enter pauses and selects pauseMenu options
+        // the enter key - pauses and selects pauseMenu options
         controller.setMapping(13, keyState => {
             if(keyState){
                 if(paused){
@@ -232,6 +237,7 @@ async function initialize(){
             }
         });
 
+        // down key
         controller.setMapping(40, keyState => {
             if(keyState){
                 if(paused){
@@ -240,6 +246,7 @@ async function initialize(){
             }
         });
 
+        // up key
         controller.setMapping(38, keyState => {
             if(keyState){
                 if(paused){
@@ -276,6 +283,14 @@ async function initialize(){
                             }else{
                                 creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
                             }
+                        }else{
+                            player1.ammo -= 1;
+                            console.log(player1.ammo)
+                            cellMap.ageCreatures();
+                            if(player1.ammo == 0){
+                                spawner.spawnAll();
+                                player1.reload()
+                            }
                         }
                     }
                 }else{
@@ -297,10 +312,12 @@ function start(comp){
     const timer = new Timer(1/60);
     timer.update = function update(deltaTime){
         if(!paused){
+            // time based version of game
             //spawn creatures
-            if(game1.level > 0){
-                spawner.update(deltaTime);
-            }
+            // if(game1.level > 0){
+                
+            //     spawner.update(deltaTime);
+            // }
 
             //update layers and cells
             comp.update(deltaTime);

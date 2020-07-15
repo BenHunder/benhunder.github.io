@@ -1,9 +1,13 @@
 import SpriteSheet from './classes/SpriteSheet.js';
 import SoundBoard from './classes/SoundBoard.js';
+import { globalSoundBoard, spriteSheetMap } from './main.js';
 import { CreatureFactory } from './classes/CreatureFactory.js';
 import { Spawner } from './classes/Spawner.js';
 import Font from './classes/Font.js';
 import { player1 } from './main.js';
+import Grass from '../assets/characters/grass/Grass.js';
+import Mushboy from '../assets/characters/mushboy/Mushboy.js';
+import Sprout from '../assets/characters/sprout/Sprout.js';
 
 
 const levelLocations = {
@@ -11,6 +15,12 @@ const levelLocations = {
     "level 2": "./assets/levels/testLevel2.json",
     "level 3": "./assets/levels/testLevel3.json",
     "level 4": "./assets/levels/testLevel4.json"
+}
+
+const creatureTypes = {
+    Grass,
+    Mushboy,
+    Sprout
 }
 
 
@@ -41,7 +51,7 @@ export function loadFont(fontData){
 }
 
 //loads character sprite sheet and defines each frame
-export function loadFrames(spriteSheetLocation, frameDataLocation){
+export function loadFrames(spriteSheetLocation, frameDataLocation, creatureName){
 
     return Promise.all([
         loadImage(spriteSheetLocation),
@@ -54,7 +64,7 @@ export function loadFrames(spriteSheetLocation, frameDataLocation){
             const frame = frameData.frames[frameName].frame;
             sprites.define('frame' + n, frame.x, frame.y, frame.w, frame.h, frameData.frames[frameName].duration);
         });
-        return sprites;
+        spriteSheetMap.set(creatureName, sprites);
     })
 }
 
@@ -70,9 +80,9 @@ export function loadSound(url){
 
 //puts all promises from calling loadSounds in array and resolves together.
 //not sure if this makes sense to do with audio elements, but I just want this function to wait until all audio is loaded
-export async function loadSounds(soundNames){
+export async function loadSounds(soundNames, soundBoard){
     //this is the number of audio elements that will be created for each sound. the higher n, the greater the polyphony, the greater the load time
-    const n = 3;
+    const n = soundBoard.n;
 
     let soundNamesTimesN = [];
 
@@ -81,8 +91,6 @@ export async function loadSounds(soundNames){
             soundNamesTimesN.push(soundName);
         }
     })
-    
-    const soundBoard = new SoundBoard(n);
 
     const promisesArray = soundNamesTimesN.map(soundName => {
         return loadSound(soundName.location)
@@ -93,7 +101,6 @@ export async function loadSounds(soundNames){
     });
 
     const resolvedPromises = await Promise.all(promisesArray);
-    return soundBoard;
 }
 
 //loads level json, makes creature factories, returns and array of spawners 
@@ -107,7 +114,7 @@ export function loadLevel(cellMap, lvl){
         //load creatures in the level.json
         level.spawner.creatures.forEach( creature => {
             promisesArray.push( 
-                loadCreature(creature.type, creature.chance, creature.cluster, creature.selectionCell)
+                loadCreatureType(creature.type, creature.chance, creature.cluster, creature.selectionCell)
                 .then( creatureFactory => {
                     newSpawner.addCreature(creatureFactory);
                 })
@@ -125,23 +132,18 @@ export function loadLevel(cellMap, lvl){
 }
 
 //load all character properties (sounds, frames, attributes)
-export function loadCreature(creatureName, creatureChance, creatureCluster, selectionCell){
-    return loadJson("./assets/characters/" + creatureName + "/" + creatureName + ".json",)
-    .then( creature => {
-        return Promise.all([
-            loadFrames(creature.spriteSheetLocation, creature.frameDataLocation),
-            loadSounds(creature.sounds)
-        ])
-        .then( ([spriteSheet, soundBoard]) => {
-            if(creature.subCreature){
-                return loadCreature(creature.subCreature, 0, 0).then( creatureFactory => {
-                    return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, selectionCell, creature.name, creature.width, creature.height, creature.attributes, creatureFactory);
-                })
-            }else{
-                return new CreatureFactory(spriteSheet, soundBoard, creatureChance, creatureCluster, selectionCell, creature.name, creature.width, creature.height, creature.attributes, null);
-            }
-            
-        });
+export function loadCreatureType(creatureName, creatureChance, creatureCluster, selectionCell){
+    const spriteSheetLocation = "/assets/characters/" + creatureName + "/" + creatureName + ".png";
+    const frameDataLocation = "/assets/characters/" + creatureName + "/frame-data.json";
+
+    return loadFrames(spriteSheetLocation, frameDataLocation, creatureName)
+    .then( () => {
+        return new CreatureFactory(creatureTypes[capitalize(creatureName)], creatureChance, creatureCluster, selectionCell, creatureName);
     });
+}
+
+const capitalize = (s) => {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
 }
 

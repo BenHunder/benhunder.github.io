@@ -1,5 +1,8 @@
 import {getRandomInt} from '../math.js';
 import {player1} from '../main.js'
+import Dragon from '../../assets/characters/dragon/Dragon.js';
+import Spiderboy from '../../assets/characters/spiderboy/Spiderboy.js';
+import Protector from '../../assets/characters/protector/Protector.js';
 
 export class Spawner{
     constructor(cellMap, spawnRate){
@@ -38,14 +41,14 @@ export class Spawner{
                     let creature = creatureFactory.create();
                     let cell = null;
 
-                    if (creature.name == 'protector'){
+                    if (creature instanceof Protector){
                         //pick a random occupied cell then spawn a protector next to it, protecting it
                         const targetCell = this.cellMap.randomOccupiedCell();
                         if(targetCell){
                             creature.targetCell = targetCell
                             cell = this.cellMap.randomAdjacentTo(creature.targetCell, 1)[0];
                         }
-                    }else if (creature.name == 'dragon'){
+                    }else if (creature instanceof Dragon){
                         //pick a random cell and try to find two available adjacent cells to spawn protectors protecting the dragon
                         cell = this.cellMap.randomAvailableCell();
                         if(cell){
@@ -56,7 +59,7 @@ export class Spawner{
                                 c.spawnNew(protector);
                             })
                         }
-                    }else if(creature.name == 'spiderboy'){
+                    }else if(creature instanceof Spiderboy){
                         cell = this.cellMap.spiderSpawn();
                     }else{
                         cell = this.cellMap.randomAvailableCell();

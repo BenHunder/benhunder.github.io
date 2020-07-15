@@ -17,7 +17,7 @@ export default class Dashboard extends Layer{
             this.drawTimer(context);
             this.drawHealth(context);
             this.drawLevel(context);
-            this.drawLetters(context);
+            // this.drawLetters(context);
             this.drawScore(context);
         }
     }
