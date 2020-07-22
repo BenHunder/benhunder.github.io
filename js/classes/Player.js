@@ -2,19 +2,19 @@ export default class Player{
     constructor(){
         this.baseHealth = 1000;
         this.baseScore = 0;
-        this.baseNumPlants = 1;
-        this.maxAmmo = 3;
+        this.baseNumAllies = 1;
+        this.maxAmmo = 1;
 
         this.health = this.baseHealth;
         this.score = this.baseScore;
-        this.plantsLeft = this.baseNumPlants;
+        this.alliesLeft = this.baseNumAllies;
         this.weapon = null;
         this.food = null;
         this.ammo = this.maxAmmo;
 
         this.unlocked = new Map();
-        this.unlocked.set("sprout", true);
-        this.unlocked.set("grass", true);
+        this.unlocked.set("mushboy", true);
+        this.unlocked.set("bunbun", true);
 
         this.creatureFactories = [];
     }
@@ -34,7 +34,7 @@ export default class Player{
     reset(){
         this.health = this.baseHealth;
         //this.score = this.baseScore;
-        this.plantsLeft = this.baseNumPlants;
+        this.alliesLeft = this.baseNumAllies;
         //this.creatureFactories = [];
     }
 

@@ -198,7 +198,7 @@ async function initialize(){
                         unpause();
                     }else if(action === "start"){
                         unpause();
-                        creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
+                        creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
                         comp.setMenu(creatureMenu);
                         game1.level = "characterSelection";
                         player1.reset();
@@ -226,6 +226,7 @@ async function initialize(){
                         game1.level = action.substring(6, 7);
                         loadLevel(cellMap, game1.level).then(spwnr => {
                             spawner = spwnr;
+                            spawner.initialSpawn();
                             unpause();
                         });
                         
@@ -276,12 +277,12 @@ async function initialize(){
                                     player1.addCreature(cf);
                                 }
                             });
-                            player1.plantsLeft -= 1;
-                            if(player1.plantsLeft <= 0){
+                            player1.alliesLeft -= 1;
+                            if(player1.alliesLeft <= 0){
                                 pause();
                                 comp.setMenu(levelMenu);
                             }else{
-                                creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
+                                creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
                             }
                         }else{
                             player1.ammo -= 1;

@@ -13,6 +13,7 @@ export default class Creature{
         this.currentCell = null;
         this.counter = 0;
         this.age = 0;
+        this.evolution = 1;
         this.name = name;
 
         traits.forEach( trait => {
@@ -67,7 +68,8 @@ export default class Creature{
     } 
     
     draw(context, x, y){
-        const spriteSheet = spriteSheetMap.get(this.name)
+        const eName = this.name + '-e' + this.evolution;
+        const spriteSheet = spriteSheetMap.get(eName);
         let name = 'frame' + this.currentFrame;
 
         //advance frames

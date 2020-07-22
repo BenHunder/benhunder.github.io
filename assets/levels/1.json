@@ -8,8 +8,14 @@
         "spawnRate": 0.8,
         "creatures": [
         {
-            "type": "mushboy",
-            "chance": 0.3
+            "type": "grass",
+            "evolutions": 3,
+            "chance": 0.5
+        },
+        {
+            "type": "sprout",
+            "evolutions": 1,
+            "chance": 0.5
         }]
     }
 }

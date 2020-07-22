@@ -48,7 +48,7 @@ export function createCharacterMenu(font, fontLarge){
         let options = [
             
         ]
-        return new Menu(font, fontLarge, 'CHOOSE YOUR PLANTS', options, false);
+        return new Menu(font, fontLarge, 'CHOOSE YOUR ALLIES', options, false);
     });
 }
 

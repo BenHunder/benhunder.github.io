@@ -7,6 +7,7 @@ import Font from './classes/Font.js';
 import { player1 } from './main.js';
 import Grass from '../assets/characters/grass/Grass.js';
 import Mushboy from '../assets/characters/mushboy/Mushboy.js';
+import Bunbun from '../../assets/characters/bunbun/Bunbun.js';
 import Sprout from '../assets/characters/sprout/Sprout.js';
 
 
@@ -19,8 +20,10 @@ const levelLocations = {
 
 const creatureTypes = {
     Grass,
+    Sprout,
     Mushboy,
-    Sprout
+    Bunbun
+    
 }
 
 
@@ -114,7 +117,7 @@ export function loadLevel(cellMap, lvl){
         //load creatures in the level.json
         level.spawner.creatures.forEach( creature => {
             promisesArray.push( 
-                loadCreatureType(creature.type, creature.chance, creature.cluster, creature.selectionCell)
+                loadCreatureType(creature.type, creature.evolutions, creature.chance, creature.cluster, creature.selectionCell)
                 .then( creatureFactory => {
                     newSpawner.addCreature(creatureFactory);
                 })
@@ -131,13 +134,22 @@ export function loadLevel(cellMap, lvl){
     });
 }
 
-//load all character properties (sounds, frames, attributes)
-export function loadCreatureType(creatureName, creatureChance, creatureCluster, selectionCell){
-    const spriteSheetLocation = "/assets/characters/" + creatureName + "/" + creatureName + ".png";
-    const frameDataLocation = "/assets/characters/" + creatureName + "/frame-data.json";
+//load spritesheets for all evolutions of creature, then create and return a creatureFactory
+export function loadCreatureType(creatureName, creatureEvolutions, creatureChance, creatureCluster, selectionCell){
+    let promisesArray = [];
 
-    return loadFrames(spriteSheetLocation, frameDataLocation, creatureName)
-    .then( () => {
+    //load spritesheets for each evolution of creature
+    for(let i = 1; i < creatureEvolutions+1; i++) {
+        const spriteSheetLocation = "/assets/characters/" + creatureName + "/" + creatureName + "-e" + i + "-sheet.png";
+        const frameDataLocation = "/assets/characters/" + creatureName + "/" + creatureName + "-e" + i + ".json";
+
+        const eName = creatureName + "-e" + i;
+        promisesArray.push(
+            loadFrames(spriteSheetLocation, frameDataLocation, eName)
+        );
+    };
+
+    return Promise.all(promisesArray).then( () => {
         return new CreatureFactory(creatureTypes[capitalize(creatureName)], creatureChance, creatureCluster, selectionCell, creatureName);
     });
 }

@@ -31,6 +31,13 @@ export class Spawner{
         }
     }
 
+    initialSpawn(){
+        const density = 10;
+        for (let i = 0; i < density; i++) {
+            this.spawnAll();
+        }
+    }
+
     spawnAll(){
         this.creatureFactories.forEach( creatureFactory => {
             let r = Math.random();
