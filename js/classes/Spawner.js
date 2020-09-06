@@ -32,15 +32,18 @@ export class Spawner{
     }
 
     initialSpawn(){
-        const density = 10;
+        //spawn random placements
+        const density = 32;
         for (let i = 0; i < density; i++) {
             this.spawnAll();
+            this.cellMap.ageCreatures();
         }
     }
 
     spawnAll(){
+        console.log("spawn all!");
         this.creatureFactories.forEach( creatureFactory => {
-            let r = Math.random();
+            const r = Math.random();
             if(r <= creatureFactory.chance){
                 if (creatureFactory.cluster > 1){
                     this.spawnMultiple(creatureFactory);
@@ -78,6 +81,23 @@ export class Spawner{
                 }
             }
         });
+    }
+
+    propogate(creature){
+        const firstCell = creature.currentCell;
+        if(firstCell){
+            for (let i = 0; i < this.creatureFactories.length; i++) {
+                const cf = this.creatureFactories[i];
+                if(creature instanceof cf.creatureType){
+                    const targetCell = this.cellMap.randomAdjacentTo(firstCell, 1)[0];
+                    if(targetCell){
+                        targetCell.spawnNew(cf.create());
+                        console.log(firstCell.name + " propogated to " + targetCell.name);
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     //tries to spawn a group of size = spawnCluster

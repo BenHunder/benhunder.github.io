@@ -1,4 +1,5 @@
 import { globalSoundBoard, spriteSheetMap } from '../main.js';
+import { spawner } from '../main.js';
 import Protect from "./traits/Protect.js";
 import Hit from "./traits/Hit.js";
 import Mystery from "./traits/Mystery.js";
@@ -14,6 +15,7 @@ export default class Creature{
         this.counter = 0;
         this.age = 0;
         this.evolution = 1;
+        this.spawnRate = 0;
         this.name = name;
 
         traits.forEach( trait => {
@@ -54,7 +56,14 @@ export default class Creature{
     }
 
     ageMe(){
-        this.age += 1
+        this.age += 1;
+    }
+
+    attemptPropogation(){
+        const r = Math.random();
+        if(r <= this.propogationRate){
+            spawner.propogate(this);
+        }
     }
 
     update(deltaTime){

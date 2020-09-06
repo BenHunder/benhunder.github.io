@@ -17,8 +17,24 @@ export default class Grass extends Creature{
         this.maxHealth = 10;
         this.health = this.maxHealth;
         this.scoreValue = 0;
-        this.type =  "pl@nt";
+        this.propogationRate = 0.05;
+        this.type =  "enemy";
 
         
+    }
+
+    ageMe(){
+        this.age += 1;
+        if(this.age%10 == 0 && this.evolution < 3){
+            this.evolve();
+        }
+        super.attemptPropogation();
+    }
+
+    evolve(){
+        this.evolution += 1;
+        const currentDamage = this.maxHealth - this.health;
+        this.maxHealth += 10;
+        this.health = this.maxHealth - currentDamage;
     }
 }

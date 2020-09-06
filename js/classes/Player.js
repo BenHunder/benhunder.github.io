@@ -34,7 +34,6 @@ export default class Player{
     reset(){
         this.health = this.baseHealth;
         //this.score = this.baseScore;
-        this.alliesLeft = this.baseNumAllies;
         //this.creatureFactories = [];
     }
 
@@ -43,7 +42,8 @@ export default class Player{
     }
 
     clearCreatures(){
-        this.creatureFactory = [];
+        this.creatureFactories = [];
+        this.alliesLeft = this.baseNumAllies;
     }
 
     hasUnlocked(creature){

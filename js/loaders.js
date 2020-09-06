@@ -18,14 +18,12 @@ const levelLocations = {
     "level 4": "./assets/levels/testLevel4.json"
 }
 
-const creatureTypes = {
+export const creatureTypes = {
     Grass,
     Sprout,
     Mushboy,
-    Bunbun
-    
+    Bunbun 
 }
-
 
 export function loadJson(path){
     return fetch(path)
@@ -117,7 +115,7 @@ export function loadLevel(cellMap, lvl){
         //load creatures in the level.json
         level.spawner.creatures.forEach( creature => {
             promisesArray.push( 
-                loadCreatureType(creature.type, creature.evolutions, creature.chance, creature.cluster, creature.selectionCell)
+                loadCreatureType(creature.type, creature.evolutions, creature.initialChance, creature.cluster, creature.selectionCell)
                 .then( creatureFactory => {
                     newSpawner.addCreature(creatureFactory);
                 })

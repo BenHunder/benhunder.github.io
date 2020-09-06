@@ -10,12 +10,12 @@
         {
             "type": "grass",
             "evolutions": 3,
-            "chance": 0.5
+            "initialChance": 0.1
         },
         {
             "type": "sprout",
             "evolutions": 1,
-            "chance": 0.5
+            "initialChance": 0.05
         }]
     }
 }

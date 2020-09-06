@@ -19,6 +19,6 @@ export default class Bunbun extends Creature{
         this.maxHealth = 10;
         this.health = this.maxHealth;
         this.scoreValue = 10;
-        this.type =  "enemy";
+        this.type =  "ally";
     }
 }

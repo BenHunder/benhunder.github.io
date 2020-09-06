@@ -100,7 +100,7 @@ const fontData = [
     }
 ]
 export var cellMap;
-let spawner;
+export var spawner;
 
 export var player1;
 export var game1;
@@ -192,44 +192,17 @@ async function initialize(){
                 if(paused){
                     let action = comp.menu.selectedOption();
                     if(action === "resume"){
-                        if(game1.level === "characterSelection"){
-                            comp.setMenu(creatureMenu);
-                        }
-                        unpause();
+                        resumeButton(comp);
                     }else if(action === "start"){
-                        unpause();
-                        creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
-                        comp.setMenu(creatureMenu);
-                        game1.level = "characterSelection";
-                        player1.reset();
-                        loadLevel(cellMap, game1.level).then(spwnr => {
-                            spawner = spwnr;
-                            spawner.spawnSelections();
-                        });
+                        startButton(comp);
                     }else if(action === "restart"){
-                        resetLevel();
-                        unpause();
+                        restartButton(comp);
                     }else if(action === "quit"){
-                        resetLevel();
-                        game1.level = 0;
-                        comp.setMenu(startMenu)
+                        quitButton(comp);
                     }else if(action === "next level"){
-                        resetLevel();
-                        const nextLevel = (parseInt(game1.level, 10) + 1)
-                        game1.level = nextLevel;
-                        loadLevel(cellMap, game1.level).then(spwnr => {
-                            spawner = spwnr;
-                            unpause();
-                        });
+                        nextLevelButton(comp);
                     }else if(action.substring(0, 5) === "level"){
-                        resetLevel();
-                        game1.level = action.substring(6, 7);
-                        loadLevel(cellMap, game1.level).then(spwnr => {
-                            spawner = spwnr;
-                            spawner.initialSpawn();
-                            unpause();
-                        });
-                        
+                        levelButton(comp, action);
                     }
                 }else{
                     comp.setMenu(pauseMenu);
@@ -288,7 +261,6 @@ async function initialize(){
                             player1.ammo -= 1;
                             cellMap.ageCreatures();
                             if(player1.ammo == 0){
-                                spawner.spawnAll();
                                 player1.reload()
                             }
                         }
@@ -382,6 +354,67 @@ function resetLevel(){
     game1.reset();
     player1.reset();
 }
+
+function initializeLevel(){
+    resetLevel();
+    spawner.initialSpawn();
+    console.log({player1});
+    console.log({spawner});
+}
+
+function resumeButton(comp){
+    if(game1.level === "characterSelection"){
+        comp.setMenu(creatureMenu);
+    }
+    unpause();
+}
+
+function startButton(comp){
+    unpause();
+    creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
+    comp.setMenu(creatureMenu);
+    game1.level = "characterSelection";
+    resetLevel();
+    player1.clearCreatures();
+    loadLevel(cellMap, game1.level).then(spwnr => {
+        spawner = spwnr;
+        spawner.spawnSelections();
+    });
+}
+
+function restartButton(comp){
+    initializeLevel();
+    unpause();
+}
+
+function quitButton(comp){
+    game1.level = 0;
+    comp.setMenu(startMenu);
+}
+
+function nextLevelButton(comp){
+    const nextLevel = (parseInt(game1.level, 10) + 1)
+    game1.level = nextLevel;
+    loadLevel(cellMap, game1.level).then(spwnr => {
+        spawner = spwnr;
+        initializeLevel();
+        unpause();
+    });
+}
+
+function levelButton(comp, action){
+    if(game1.level == "characterSelection"){
+        spawner.creatureFactories = [];
+    }
+    game1.level = action.substring(6, 7);
+    loadLevel(cellMap, game1.level).then(spwnr => {
+        spawner = spwnr;
+        initializeLevel();
+        unpause();
+    });
+}
+
+
 
 
 
