@@ -225,7 +225,12 @@ export default class CellMap{
         return null;
     }
 
-    // calls the 
+    //TODO: test this function
+    findAllCreaturesOfType(creatureType){
+        return this.occupiedCells().forEach(([name, cell]) => cell.creaure instanceof creautreType)
+    }
+
+    // calls the age function of every active creature
     ageCreatures(){
         this.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe())
     }

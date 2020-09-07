@@ -14,8 +14,13 @@
         },
         {
             "type": "sprout",
-            "evolutions": 1,
+            "evolutions": 3,
             "initialChance": 0.05
+        },
+        {
+            "type": "achilia",
+            "evolutions": 1,
+            "initialChance": 0.04
         }]
     }
 }

@@ -6,7 +6,7 @@ import Mystery from "./traits/Mystery.js";
 import Persist from "./traits/Persist.js";
 
 export default class Creature{
-    constructor(traits, name){
+    constructor(traits, name, isMaster = false){
         this.scoreValue = this.type === "enemy" ? 10 : 0;
         this.traits = [];
         this.isAnimating = false;
@@ -16,6 +16,7 @@ export default class Creature{
         this.age = 0;
         this.evolution = 1;
         this.spawnRate = 0;
+        this.isMaster = isMaster;
         this.name = name;
 
         traits.forEach( trait => {

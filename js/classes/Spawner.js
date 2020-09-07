@@ -33,7 +33,7 @@ export class Spawner{
 
     initialSpawn(){
         //spawn random placements
-        const density = 32;
+        const density = 20;
         for (let i = 0; i < density; i++) {
             this.spawnAll();
             this.cellMap.ageCreatures();
