@@ -14,13 +14,6 @@ import Game from './classes/Game.js';
 let log = console.log;
 const canvas = document.getElementById('gameCanvas').getContext('2d');
 
-//shows the mouse coordinates in chrome
-document.onmousemove = function(e){
-    var x = e.pageX;
-    var y = e.pageY;
-    e.target.title = "X is "+x+" and Y is "+y;
-};
-
 function resizeGame() {
     const gameContainer = document.getElementById('gameContainer');
     const widthToHeight = 16 / 9;
@@ -237,51 +230,99 @@ async function initialize(){
         //]'/ removed
         const letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',';','\,','PERIOD','FSLASH'];
         const keyCodes = [65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,186,188,190,191];
+        const keyCoordinates = [    
+            [ 24, 80, 178, 205 ],
+            [ 261, 314, 238, 267 ],
+            [ 134, 189, 238, 267 ],
+            [ 145, 197, 178, 205 ], 
+            [ 155, 203, 132, 154 ],
+            [ 206, 256, 178, 205 ], 
+            [ 266, 316, 178, 205 ], 
+            [ 324, 374, 178, 205 ],
+            [ 437, 485, 132, 154 ],
+            [ 384, 434, 178, 205 ], 
+            [ 443, 495, 178, 205 ], 
+            [ 501, 554, 178, 205 ],
+            [ 389, 442, 238, 267 ],
+            [ 326, 379, 238, 267 ], 
+            [ 492, 542, 132, 154 ], 
+            [ 548, 599, 132, 154 ],
+            [ 41, 92, 132, 154 ],
+            [ 212, 260, 132, 154 ],
+            [ 86, 139, 178, 205 ],
+            [ 269, 316, 132, 154 ],
+            [ 380, 428, 132, 154 ],
+            [ 198, 251, 238, 267 ], 
+            [ 98, 148, 132, 154 ],
+            [ 71, 128, 238, 267 ], 
+            [ 324, 371, 132, 154 ],
+            [ 6, 65, 238, 267 ],
+            [ 560, 616, 178, 205 ],
+            [ 451, 506, 238, 267 ],
+            [ 512, 569, 238, 267 ], 
+            [ 575, 634, 238, 267 ],
+        ]
         
+        controller.onClick = (x, y) => {
+            for(let i = 0; i < keyCoordinates.length; i++){
+                const [x1, x2, y1, y2] = keyCoordinates[i];
+                if(x >= x1 && x <= x2 && y >= y1 && y <= y2){
+                    const cell = cellMap.get(letters[i]);
+                    clickCell(cell);
+                    break;
+                }
+            }
+            
+        }
+
         letters.forEach((key, n) => {
             const cell = cellMap.get(key);
             controller.setMapping(keyCodes[n], keyState => {
                 if(keyState){
-                    if(!paused){
-                        //age all cells
-                        cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
-
-                        //interact with cell
-                        const selection = cell.interact(onWeapon ? player1.weapon : player1.food, player1);
-
-                        
-                        //character selection interaction
-                        if(selection && game1.level === "characterSelection"){
-                            spawner.creatureFactories.forEach( cf => {
-                                if(cf.name === selection){
-                                    player1.addCreature(cf);
-                                }
-                            });
-                            player1.alliesLeft -= 1;
-                            if(player1.alliesLeft <= 0){
-                                pause();
-                                comp.setMenu(levelMenu);
-                            }else{
-                                creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
-                            }
-                        }else{
-                            player1.ammo -= 1;
-                            if(player1.ammo == 0){
-                                player1.reload()
-                            }
-
-                            //advance ally ready counter
-                            if(player1.allyReadyCounter > 0){
-                                player1.allyReadyCounter -= 1;
-                            }
-                        }
-                    }
+                    clickCell(cell);
                 }else{
                     cell.released();
                 }
             });
         });
         controller.listenTo(window);
+
+        function clickCell(cell){
+            if(!paused){
+                //age all cells
+                cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
+
+                //interact with cell
+                const selection = cell.interact(onWeapon ? player1.weapon : player1.food, player1);
+
+                
+                //character selection interaction
+                if(selection && game1.level === "characterSelection"){
+                    spawner.creatureFactories.forEach( cf => {
+                        if(cf.name === selection){
+                            player1.addCreature(cf);
+                        }
+                    });
+                    player1.alliesLeft -= 1;
+                    if(player1.alliesLeft <= 0){
+                        pause();
+                        comp.setMenu(levelMenu);
+                    }else{
+                        creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
+                    }
+                }else{
+                    player1.ammo -= 1;
+                    if(player1.ammo == 0){
+                        player1.reload()
+                    }
+
+                    //advance ally ready counter
+                    if(player1.allyReadyCounter > 0){
+                        player1.allyReadyCounter -= 1;
+                    }
+                }
+            }
+        }
 
         log("cellMap initialized:\n", {cellMap});
         return comp;

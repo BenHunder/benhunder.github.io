@@ -13,10 +13,8 @@ export default class Controller{
 
     handleEvent(event){
         let {keyCode} = event;
-        
-        console.log(keyCode);
+
         if(keyCode){
-         
             if(!this.keyMap.has(keyCode)){
                 return;
             }
@@ -44,6 +42,6 @@ export default class Controller{
     }
 
     onClick(x, y){
-        console.log("clicked " + x + " " + y)
+        console.log("default");
     }
 }
