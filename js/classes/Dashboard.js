@@ -18,7 +18,7 @@ export default class Dashboard extends Layer{
             this.drawHealth(context);
             this.drawLevel(context);
             // this.drawLetters(context);
-            this.drawScore(context);
+            this.drawAllyReadyCounter(context);
         }
     }
 
@@ -57,8 +57,8 @@ export default class Dashboard extends Layer{
     }
 
     //draws in the bottom right corner
-    drawScore(context){
-        const string = 'score: ' + String(this.player.score);
+    drawAllyReadyCounter(context){
+        const string = 'ally ready in: ' + String(this.player.allyReadyCounter);
         const x = context.canvas.width - string.length * this.font.charWidth - this.margin;
         const y = this.margin;
 

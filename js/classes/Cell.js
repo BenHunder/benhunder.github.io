@@ -49,8 +49,8 @@ export default class Cell{
             if(this.creature){
                 this.drawSprite(context);
 
-                //draw healthbar if its an enemy or something that needs a health bar
-                if(this.creature.type == 'enemy'){
+                //draw healthbar. some things might not need a healthbar, thats what the if would be for
+                if(true){
                     const x = this.center.x - 10;
                     const y = this.center.y + 3 + Math.ceil(this.depth);
                     context.drawImage(healthbar, x, y);
@@ -131,7 +131,12 @@ export default class Cell{
             }
         }else{
             globalSoundBoard.play('bonkOther');
-            player.damage(1);
+            //player.damage(1);
+            if(player.allyReadyCounter == 0){
+                const newCreature = player.creatureFactories[0].create();
+                this.spawnNew(newCreature);
+                player.allyReadyCounter = 20;
+            }
         }
     }
 

@@ -134,14 +134,8 @@ export default class CellMap{
         return this.adjacentTo(cell).filter(cell => !cell.isActive);
     }
 
-    randomActiveTarget(cell){
-        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive);
-        let r = getRandomInt(occupied.length);
-        return occupied.length > 0 ? occupied[r]:null;
-    }
-
-    randomAdjacentPlant(cell){
-        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.type === 'pl@nt');
+    randomAdjacentTarget(cell, alignment = "enemy"){
+        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.alignment === alignment);
         let r = getRandomInt(occupied.length);
         return occupied.length > 0 ? occupied[r]:null;
     }
@@ -178,11 +172,11 @@ export default class CellMap{
     }
 
     enemyCells(){
-        return this.occupiedCells().filter(([name, cell]) => cell.creature.type === 'enemy');
+        return this.occupiedCells().filter(([name, cell]) => cell.creature.alignment === "enemy");
     }
 
     numEnemies(){
-        return this.occupiedCells().filter(([name,cell]) => cell.creature.type == 'enemy').length;
+        return this.occupiedCells().filter(([name,cell]) => cell.creature.alignment == "enemy").length;
     }
     
     randomAvailableCell(){
@@ -223,15 +217,5 @@ export default class CellMap{
         }
 
         return null;
-    }
-
-    //TODO: test this function
-    findAllCreaturesOfType(creatureType){
-        return this.occupiedCells().forEach(([name, cell]) => cell.creaure instanceof creautreType)
-    }
-
-    // calls the age function of every active creature
-    ageCreatures(){
-        this.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe())
     }
 }

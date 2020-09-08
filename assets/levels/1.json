@@ -7,20 +7,26 @@
     "spawner": {
         "spawnRate": 0.8,
         "creatures": [
-        {
-            "type": "grass",
-            "evolutions": 3,
-            "initialChance": 0.1
-        },
-        {
-            "type": "sprout",
-            "evolutions": 3,
-            "initialChance": 0.05
-        },
-        {
-            "type": "achilia",
-            "evolutions": 1,
-            "initialChance": 0.04
-        }]
+            {
+                "type": "grass",
+                "evolutions": 3,
+                "initialChance": 0.1
+            },
+            {
+                "type": "sprout",
+                "evolutions": 3,
+                "initialChance": 0.05
+            },
+            {
+                "type": "achilia",
+                "evolutions": 1,
+                "initialChance": 0.04
+            },
+            {
+                "type": "orchill",
+                "evolutions": 3,
+                "initialChance": 0.04
+            }
+        ]
     }
 }

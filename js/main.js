@@ -243,7 +243,14 @@ async function initialize(){
             controller.setMapping(keyCodes[n], keyState => {
                 if(keyState){
                     if(!paused){
+                        //age all cells
+                        cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
+
+                        //interact with cell
                         const selection = cell.interact(onWeapon ? player1.weapon : player1.food, player1);
+
+                        
+                        //character selection interaction
                         if(selection && game1.level === "characterSelection"){
                             spawner.creatureFactories.forEach( cf => {
                                 if(cf.name === selection){
@@ -259,9 +266,13 @@ async function initialize(){
                             }
                         }else{
                             player1.ammo -= 1;
-                            cellMap.ageCreatures();
                             if(player1.ammo == 0){
                                 player1.reload()
+                            }
+
+                            //advance ally ready counter
+                            if(player1.allyReadyCounter > 0){
+                                player1.allyReadyCounter -= 1;
                             }
                         }
                     }
@@ -308,6 +319,9 @@ function start(comp){
                     comp.setMenu(loseMenu);
                     pause();
                 }else if(game1.timer <= 0){
+                    comp.setMenu(winMenu);
+                    pause();
+                }else if(cellMap.numEnemies() == 0){
                     comp.setMenu(winMenu);
                     pause();
                 }

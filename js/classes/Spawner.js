@@ -33,10 +33,12 @@ export class Spawner{
 
     initialSpawn(){
         //spawn random placements
-        const density = 20;
+        const density = 30;
         for (let i = 0; i < density; i++) {
             this.spawnAll();
-            this.cellMap.ageCreatures();
+            if(i%2 == 0){
+                this.cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
+            }
         }
     }
 
@@ -48,7 +50,7 @@ export class Spawner{
                 if (creatureFactory.cluster > 1){
                     this.spawnMultiple(creatureFactory);
                 }else{
-                    let creature = creatureFactory.create();
+                    let creature = creatureFactory.create(true);
                     let cell = null;
 
                     if (creature instanceof Protector){

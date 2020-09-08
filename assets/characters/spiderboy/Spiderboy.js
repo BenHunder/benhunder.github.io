@@ -23,6 +23,6 @@ export default class Spiderboy extends Creature{
         this.maxHealth = 20;
         this.health = this.maxHealth;
         this.scoreValue = 10;
-        this.type =  "ally";
+        this.alignment =  "ally";
     }
 }

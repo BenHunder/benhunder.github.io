@@ -16,6 +16,8 @@ export default class Player{
         this.unlocked.set("mushboy", true);
         this.unlocked.set("bunbun", true);
 
+        this.allyReadyCounter = 0;
+
         this.creatureFactories = [];
     }
 
@@ -33,6 +35,7 @@ export default class Player{
 
     reset(){
         this.health = this.baseHealth;
+        this.allyReadyCounter = 0;
         //this.score = this.baseScore;
         //this.creatureFactories = [];
     }

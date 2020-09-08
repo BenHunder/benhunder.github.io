@@ -12,30 +12,38 @@ export default class Controller{
     }
 
     handleEvent(event){
-        const {keyCode} = event;
+        let {keyCode} = event;
         
-        //console.log(event);
+        console.log(keyCode);
+        if(keyCode){
+         
+            if(!this.keyMap.has(keyCode)){
+                return;
+            }
 
-        if(!this.keyMap.has(keyCode)){
-            return;
+            event.preventDefault();
+            const keyState = event.type === 'keydown' ? PRESSED : RELEASED;
+            if(keyState === this.keyStates.get(keyCode)){
+                return;
+            }
+
+            this.keyStates.set(keyCode, keyState);
+
+            this.keyMap.get(keyCode)(keyState);
+        }else{
+            this.onClick(event.layerX, event.layerY);
         }
-
-        event.preventDefault();
-        const keyState = event.type === 'keydown' ? PRESSED : RELEASED;
-        if(keyState === this.keyStates.get(keyCode)){
-            return;
-        }
-
-        this.keyStates.set(keyCode, keyState);
-
-        this.keyMap.get(keyCode)(keyState);
     }
 
     listenTo(window){
-        ['keydown', 'keyup'].forEach(eventName => {
+        ['keydown', 'keyup', 'click'].forEach(eventName => {
             window.addEventListener(eventName, event => {
                 this.handleEvent(event);
             });
         });
+    }
+
+    onClick(x, y){
+        console.log("clicked " + x + " " + y)
     }
 }

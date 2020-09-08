@@ -26,7 +26,8 @@ export default class Attack extends Trait {
         }
     }
     //kill creature, the player is passed as an argument so their score will be increased
-    kill(player){
+    //todo: added the default player just to make achilia work, revist score later
+    kill(player = player1){
         if(!this.cell.duringSinkingAnimation){
             this.cell.creature.playSound('kill', 80);
             const delay = this.cell.creature.kill();

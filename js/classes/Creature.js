@@ -7,7 +7,7 @@ import Persist from "./traits/Persist.js";
 
 export default class Creature{
     constructor(traits, name, isMaster = false){
-        this.scoreValue = this.type === "enemy" ? 10 : 0;
+        this.scoreValue = this.alignment === "enemy" ? 10 : 0;
         this.traits = [];
         this.isAnimating = false;
         this.currentFrame = 0;
@@ -42,13 +42,14 @@ export default class Creature{
         this[trait.NAME] = trait;
     }
 
+    //this function just adds a delay so a creature will pause for a second before it sinks after being killed. this was just for the mystery box
     kill(){
         let delay = 0;
         this.traits.forEach( trait => {
             if(typeof trait.kill === 'function'){
                 delay += trait.kill();
             }
-        })
+        });
         return delay;
     }
 
@@ -72,9 +73,9 @@ export default class Creature{
             this.counter += deltaTime;
         }
 
-        this.traits.forEach(trait => {
-            trait.update(deltaTime);
-        })
+        // this.traits.forEach(trait => {
+        //     trait.update(deltaTime);
+        // })
     } 
     
     draw(context, x, y){

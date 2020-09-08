@@ -19,8 +19,8 @@ export class CreatureFactory{
         this.name = creatureName
     }
 
-    create(){
-        const creature = new this.creatureType();
+    create(isMaster = false){
+        const creature = new this.creatureType(isMaster);
         return creature;
     }
 }

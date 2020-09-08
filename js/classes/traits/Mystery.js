@@ -51,7 +51,7 @@ export default class Mystery extends Trait {
 
     lightning(){
         cellMap.occupiedCells().forEach( ([name, cell]) => {
-            if(cell.creature.type === "enemy"){
+            if(cell.creature.alighnment === "enemy"){
                 cell.attack.kill(player1);
             }
         });

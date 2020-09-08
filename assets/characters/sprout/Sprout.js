@@ -11,7 +11,7 @@ export default class Sprout extends Creature{
         this.maxHunger = 40;
         this.scoreValue = 0;
         this.propogationRate = 0.02
-        this.type =  "enemy";
+        this.alignment =  "enemy";
     }
 
     ageMe(){

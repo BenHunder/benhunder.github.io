@@ -5,6 +5,7 @@ import { CreatureFactory } from './classes/CreatureFactory.js';
 import { Spawner } from './classes/Spawner.js';
 import Font from './classes/Font.js';
 import { player1 } from './main.js';
+import Orchill from '../assets/characters/orchill/Orchill.js';
 import Achilia from '../assets/characters/achilia/Achilia.js';
 import Grass from '../assets/characters/grass/Grass.js';
 import Mushboy from '../assets/characters/mushboy/Mushboy.js';
@@ -21,6 +22,7 @@ const levelLocations = {
 
 export const creatureTypes = {
     Achilia,
+    Orchill,
     Grass,
     Sprout,
     Mushboy,

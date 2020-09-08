@@ -18,6 +18,6 @@ export default class Protector extends Creature{
         this.width = 32;
         this.health = 20;
         this.scoreValue = 10;
-        this.type =  "ally";
+        this.alignment =  "ally";
     }
 }

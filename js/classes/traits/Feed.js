@@ -27,7 +27,7 @@ export default class Feed extends Trait {
     }
 
     update(deltaTime){
-        if(this.cell.isActive && this.cell.creature.type === "plant"){
+        if(this.cell.isActive && this.cell.creature.alignment === "plant"){
             this.cell.creature.hunger -= this.cell.creature.hungerRate * deltaTime;
             if(!this.cell.duringSinkingAnimation && this.cell.creature.hunger <= 0){
                 this.cell.feed.kill();
