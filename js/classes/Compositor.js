@@ -1,14 +1,23 @@
+
+
 export default class Compositor{
     constructor(){
-        this.layers = [];  
+        this.layers = [];
+        this.level = null;  
         this.menu = null;    
         this.paused = false;  
     }
 
     draw(context) {
-        this.layers.forEach(layer => {
-            layer.draw(context);
-        })
+        if(this.level){
+            const layers = level.cellMap.grid;
+            layers.forEach(layer => {
+                const cells = layer;
+                cells.forEach(cell => {
+                    cell.draw();
+                });
+            });
+        }
     }
 
     drawMenu(context){

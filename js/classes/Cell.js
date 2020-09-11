@@ -9,6 +9,7 @@ import { healthbar } from '../main.js'
 
 export default class Cell{
     constructor(name, coordinates, center, normalBuffer, hitBuffer){
+
         this.name = name;
         this.coordinates = coordinates;
         this.center = center

@@ -42,6 +42,6 @@ export default class Controller{
     }
 
     onClick(x, y){
-        console.log("default");
+        console.log("click! (no click function defined");
     }
 }

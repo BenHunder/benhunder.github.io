@@ -1,10 +1,10 @@
 import SpriteSheet from './classes/SpriteSheet.js';
-import SoundBoard from './classes/SoundBoard.js';
-import { globalSoundBoard, spriteSheetMap } from './main.js';
+import CellMap from './classes/CellMap.js';
+import { globalSoundBoard, spriteSheetMap, player1, tileSheet } from './main.js';
 import { CreatureFactory } from './classes/CreatureFactory.js';
 import { Spawner } from './classes/Spawner.js';
 import Font from './classes/Font.js';
-import { player1 } from './main.js';
+import Cell from './classes/Cell.js';
 import Orchill from '../assets/characters/orchill/Orchill.js';
 import Achilia from '../assets/characters/achilia/Achilia.js';
 import Grass from '../assets/characters/grass/Grass.js';
@@ -12,13 +12,6 @@ import Mushboy from '../assets/characters/mushboy/Mushboy.js';
 import Bunbun from '../../assets/characters/bunbun/Bunbun.js';
 import Sprout from '../assets/characters/sprout/Sprout.js';
 
-
-const levelLocations = {
-    "level 1": "./assets/levels/testLevel1.json",
-    "level 2": "./assets/levels/testLevel2.json",
-    "level 3": "./assets/levels/testLevel3.json",
-    "level 4": "./assets/levels/testLevel4.json"
-}
 
 export const creatureTypes = {
     Achilia,
@@ -108,10 +101,37 @@ export async function loadSounds(soundNames, soundBoard){
     const resolvedPromises = await Promise.all(promisesArray);
 }
 
+//loads tiles image and defines each tile based on frameData json
+export function loadTiles(tileImageLocation, tileDataLocation){
+    console.log("loadin tiles");
+    return Promise.all([
+        loadImage(tileImageLocation),
+        loadJson(tileDataLocation)
+    ])
+    .then(([image, tileData]) => {
+        const tileSheet = new SpriteSheet(image);
+        tileData.tiles.forEach( (tile) => {
+            tileSheet.define(tile.name, tile.x, tile.y, tile.w, tile.h);
+        });
+        return tileSheet;
+    })
+}
+
 //loads level json, makes creature factories, returns and array of spawners 
-export function loadLevel(cellMap, lvl){
+export function loadLevel(lvl){
+    console.log("loadin level " + lvl);
     return loadJson("./assets/levels/" + lvl + ".json")
     .then( level => {
+        const cellWidth = level.map[0].length;
+        const cellHeight = level.map.length;
+        const cellMap = new CellMap(cellWidth, cellHeight);
+
+        for(let i=0; i < cellHeight; i++){
+            for(let j=0; j < cellWidth; j++){
+                const cell = new Cell(i + "-" + j, new Vec2(i, j), new Vec2(i*32,j*32), tileSheet.getBuffer(terrain), tileSheet.getBuffer('desert'));
+                cellMap.set(cell.name, cell.coordinates, cell);
+            }
+        }
         const newSpawner = new Spawner(cellMap, level.spawner.spawnRate);
 
         let promisesArray = [];
@@ -131,7 +151,7 @@ export function loadLevel(cellMap, lvl){
             player1.creatureFactories.forEach( cf => {
                 newSpawner.addCreature(cf);
             })
-            return newSpawner;
+            return new Level(cellMap, newSpawner);
         });
     });
 }

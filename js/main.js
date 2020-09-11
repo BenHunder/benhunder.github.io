@@ -1,6 +1,6 @@
 import Compositor from './classes/Compositor.js';
 import SoundBoard from './classes/SoundBoard.js';
-import {loadLevel, loadSounds, loadFont, loadImage} from './loaders.js';
+import {loadLevel, loadSounds, loadFont, loadImage, loadTiles} from './loaders.js';
 import {createLayer1, createLayer2, createLayer3, createLayer4, createLayer5, createCharacterMenu, createAllCells, createLevelSelection, createDashboardLayer, createStartMenu, createLevelMenu, createPauseMenu, createLoseMenu, createWinMenu} from './layers.js';
 import Timer from './classes/Timer.js';
 import Controller from "./classes/Controller.js";
@@ -94,6 +94,7 @@ const fontData = [
 ]
 export var cellMap;
 export var spawner;
+export var tileSheet;
 
 export var player1;
 export var game1;
@@ -124,8 +125,6 @@ function unpause(){
 
 
 async function initialize(){
-    levelSelection = await createLevelSelection();
-    cellMap = await createAllCells();
     const font = await loadFont(fontData[0]);
     const fontLarge = await loadFont(fontData[1]);
 
@@ -133,11 +132,8 @@ async function initialize(){
     initializeGame();
 
     return Promise.all([
-        //loadJson('/assets/levels/testSpawnerObject.json'),
+        loadTiles('../assets/tiles/hex-tiles.png', '../assets/tiles/hex-tiles.json'),
         loadSounds(soundNames, globalSoundBoard),
-        createLayer1(cellMap),
-        createLayer2(cellMap),
-        createLayer3(cellMap),
         createLayer4(),
         //createLayer5(),
         loadImage('../assets/ui/healthbar.png'),
@@ -149,15 +145,12 @@ async function initialize(){
         createLoseMenu(font, fontLarge),
         createWinMenu(font, fontLarge)
     ])
-    .then(([sndBrd, layer1, layer2, layer3, layer4, healthbr, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
+    .then(([tiles, sndBrd, layer4, healthbr, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
 
+        tileSheet = tiles;
         const comp = new Compositor();
-        
-        comp.layers.push(layer1);
-        comp.layers.push(layer2);
-        comp.layers.push(layer3);
+
         comp.layers.push(layer4);
-        //comp.layers.push(layer5);
         healthbar = healthbr;
         comp.layers.push(dashboardLayer);
         console.log({comp})
@@ -263,34 +256,34 @@ async function initialize(){
             [ 575, 634, 238, 267 ],
         ]
         
-        controller.onClick = (x, y) => {
-            for(let i = 0; i < keyCoordinates.length; i++){
-                const [x1, x2, y1, y2] = keyCoordinates[i];
-                if(x >= x1 && x <= x2 && y >= y1 && y <= y2){
-                    const cell = cellMap.get(letters[i]);
-                    clickCell(cell);
-                    break;
-                }
-            }
+        // controller.onClick = (x, y) => {
+        //     for(let i = 0; i < keyCoordinates.length; i++){
+        //         const [x1, x2, y1, y2] = keyCoordinates[i];
+        //         if(x >= x1 && x <= x2 && y >= y1 && y <= y2){
+        //             const cell = cellMap.get(letters[i]);
+        //             clickCell(cell);
+        //             break;
+        //         }
+        //     }
             
-        }
+        // }
 
-        letters.forEach((key, n) => {
-            const cell = cellMap.get(key);
-            controller.setMapping(keyCodes[n], keyState => {
-                if(keyState){
-                    clickCell(cell);
-                }else{
-                    cell.released();
-                }
-            });
-        });
+        // letters.forEach((key, n) => {
+        //     const cell = cellMap.get(key);
+        //     controller.setMapping(keyCodes[n], keyState => {
+        //         if(keyState){
+        //             clickCell(cell);
+        //         }else{
+        //             cell.released();
+        //         }
+        //     });
+        // });
         controller.listenTo(window);
 
         function clickCell(cell){
             if(!paused){
                 //age all cells
-                cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
+                //cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
 
                 //interact with cell
                 const selection = cell.interact(onWeapon ? player1.weapon : player1.food, player1);
@@ -347,19 +340,19 @@ function start(comp){
             comp.update(deltaTime);
 
             //update creatures
-            const creatureCells = cellMap.occupiedCells();
-            creatureCells.forEach( ([name, cell]) => {
-                if(!cell.duringSinkingAnimation){
-                    cell.creature.update(deltaTime);
-                }
-            });
+            //const creatureCells = cellMap.occupiedCells();
+            // creatureCells.forEach( ([name, cell]) => {
+            //     if(!cell.duringSinkingAnimation){
+            //         cell.creature.update(deltaTime);
+            //     }
+            // });
 
             //check win/lose conditions
             if(game1.level > 0){
                 if(player1.health <= 0){
                     comp.setMenu(loseMenu);
                     pause();
-                }else if(game1.timer <= 0){
+                }else if(false){
                     comp.setMenu(winMenu);
                     pause();
                 }else if(cellMap.numEnemies() == 0){
@@ -367,8 +360,6 @@ function start(comp){
                     pause();
                 }
             }
-
-            game1.letters = cellMap.enemyCells().map(([name, cell]) => name).join('');
 
             //draw everything
             comp.draw(canvas);
@@ -403,9 +394,9 @@ function initializeGame(){
 }
 
 function resetLevel(){
-    cellMap.allCells().forEach(([name, cell]) => {
-        cell.reset();
-    });
+    // cellMap.allCells().forEach(([name, cell]) => {
+    //     cell.reset();
+    // });
     game1.reset();
     player1.reset();
 }
@@ -431,8 +422,9 @@ function startButton(comp){
     game1.level = "characterSelection";
     resetLevel();
     player1.clearCreatures();
-    loadLevel(cellMap, game1.level).then(spwnr => {
-        spawner = spwnr;
+    loadLevel(game1.level).then(level => {
+        comp.level = level;
+        spawner = level.spawnr;
         spawner.spawnSelections();
     });
 }

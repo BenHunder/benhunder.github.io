@@ -136,10 +136,8 @@ export function createWinMenu(font, fontLarge){
     });
 }
 
-export function createCell(name, coordinates, center){
+export function createCellOld(name, coordinates, center){
     return Promise.all([
-        // loadImage('/assets/background/ortholinear-cells/' + name.toUpperCase() + '.png'),
-        // loadImage('/assets/background/ortholinear-hit-cells/' + name.toUpperCase() + '.png')
         loadImage('/assets/background/ortholinear-cells/' + name + '.png'),
         loadImage('/assets/background/ortholinear-hit-cells/' + name + '.png')
     ]).then(imgs => {
@@ -156,52 +154,9 @@ export function createCell(name, coordinates, center){
     });
 }
 
-// export function createAllCells(){
-//     return Promise.all([
-//         createCell('q', new Vec2(0,0), new Vec2(59, 155)),
-//         createCell('w', new Vec2(1,0), new Vec2(108, 155)),
-//         createCell('e', new Vec2(2,0), new Vec2(156, 155)),
-//         createCell('r', new Vec2(3,0), new Vec2(203, 155)),
-//         createCell('t', new Vec2(4,0), new Vec2(250, 155)),
-//         createCell('y', new Vec2(5,0), new Vec2(298, 155)),
-//         createCell('u', new Vec2(6,0), new Vec2(343, 155)),
-//         createCell('i', new Vec2(7,0), new Vec2(391, 155)),
-//         createCell('o', new Vec2(8,0), new Vec2(438, 155)),
-//         createCell('p', new Vec2(9,0), new Vec2(485, 155)),
-//         //createCell('[', new Vec2(10,0), new Vec2(532, 155)),
-//         //createCell(']', new Vec2(11,0), new Vec2(580, 155)),
-//         createCell('a', new Vec2(0,1), new Vec2(83, 204)),
-//         createCell('s', new Vec2(1,1), new Vec2(131, 204)),
-//         createCell('d', new Vec2(2,1), new Vec2(179, 204)),
-//         createCell('f', new Vec2(3,1), new Vec2(226, 204)),
-//         createCell('g', new Vec2(4,1), new Vec2(274, 204)),
-//         createCell('h', new Vec2(5,1), new Vec2(320, 204)),
-//         createCell('j', new Vec2(6,1), new Vec2(367, 204)),
-//         createCell('k', new Vec2(7,1), new Vec2(414, 204)),
-//         createCell('l', new Vec2(8,1), new Vec2(462, 204)),
-//         createCell(';', new Vec2(9,1), new Vec2(509, 204)),
-//         //createCell('\'', new Vec2(10,1), new Vec2(557, 204)),
-//         createCell('z', new Vec2(0,2), new Vec2(107, 252)),
-//         createCell('x', new Vec2(1,2), new Vec2(154, 252)),
-//         createCell('c', new Vec2(2,2), new Vec2(201, 252)),
-//         createCell('v', new Vec2(3,2), new Vec2(249, 252)),
-//         createCell('b', new Vec2(4,2), new Vec2(296, 252)),
-//         createCell('n', new Vec2(5,2), new Vec2(343, 252)),
-//         createCell('m', new Vec2(6,2), new Vec2(391, 252)),
-//         createCell(',', new Vec2(7,2), new Vec2(438, 252)),
-//         createCell('PERIOD', new Vec2(8,2), new Vec2(486, 252)),
-//         createCell('/', new Vec2(9,2), new Vec2(533, 252)),
-
-//     //]).then(([q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m]) => {
-//     ]).then((cells) => {
-//         const cellMap = new CellMap(11,3);
-//         cells.forEach(cell => {
-//             cellMap.set(cell.name, cell.coordinates, cell);
-//         })
-
-//         return cellMap
-//     });
-// }
+export function createCell(name, coordinates, center, terrain){
+    
+}
 
 export function createAllCells(){
     return Promise.all([
