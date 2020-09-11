@@ -409,8 +409,6 @@ function resetLevel(){
 function initializeLevel(){
     resetLevel();
     spawner.initialSpawn();
-    console.log({player1});
-    console.log({spawner});
 }
 
 function resumeButton(comp){
@@ -449,8 +447,10 @@ function quitButton(comp){
 function nextLevelButton(comp){
     const nextLevel = (parseInt(game1.level, 10) + 1)
     game1.level = nextLevel;
-    loadLevel(cellMap, game1.level).then(spwnr => {
-        spawner = spwnr;
+    loadLevel(game1.level).then(level => {
+        comp.level = level;
+        cellMap = level.cellMap;
+        spawner = level.spawner;
         initializeLevel();
         unpause();
     });
@@ -461,8 +461,10 @@ function levelButton(comp, action){
         spawner.creatureFactories = [];
     }
     game1.level = action.substring(6, 7);
-    loadLevel(cellMap, game1.level).then(spwnr => {
-        spawner = spwnr;
+    loadLevel(game1.level).then(level => {
+        comp.level = level;
+        cellMap = level.cellMap;
+        spawner = level.spawner;
         initializeLevel();
         unpause();
     });

@@ -23,8 +23,7 @@
                 "evolutions": 1,
                 "chance": 0.04,
                 "selectionCell": "5-6"
-            }
-            
+            }  
         ]
     }
 }
