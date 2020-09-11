@@ -6,7 +6,7 @@ import { Spawner } from './classes/Spawner.js';
 import Font from './classes/Font.js';
 import Cell from './classes/Cell.js';
 import Level from './classes/Level.js';
-import { Vec2 } from './math.js';
+import { Vec2, indicesToCoordinates } from './math.js';
 import Orchill from '../assets/characters/orchill/Orchill.js';
 import Achilia from '../assets/characters/achilia/Achilia.js';
 import Grass from '../assets/characters/grass/Grass.js';
@@ -137,14 +137,9 @@ export function loadLevel(lvl){
         const cellHeight = level.map.length;
         const cellMap = new CellMap(cellWidth, cellHeight);
         for(let i=0; i < cellHeight; i++){
-            for(let j=0; j < cellWidth; j++){
-                //TODO: move these offsets somewhere else!
-                const xOff = 100;
-                const yOff = 60;
-                const x = j*32 + yOff + ((i%2) * 16);
-                const y = i*21 + xOff;
-                const cell = new Cell(i + "-" + j, new Vec2(i, j), new Vec2(x, y), tileSheet.getBuffer(level.map[i][j]), tileSheet.getBuffer('desert'));
-                cellMap.set(cell.name, cell.coordinates, cell);
+            for(let j=0; j < cellWidth; j++){ 
+                const cell = new Cell(i + "-" + j, new Vec2(i, j), indicesToCoordinates(new Vec2(j, i)), level.map[i][j]);
+                cellMap.set(cell.name, cell.indices, cell);
             }
         }
         const newSpawner = new Spawner(cellMap, level.spawner.spawnRate);

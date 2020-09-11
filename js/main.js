@@ -9,6 +9,7 @@ import Player from './classes/Player.js';
 import Weapon from './classes/Weapon.js';
 import Food from './classes/Food.js';
 import Game from './classes/Game.js';
+import { Vec2, coordinatesToIndices } from './math.js';
 
  
 let log = console.log;
@@ -262,6 +263,14 @@ async function initialize(){
             
         // }
 
+        controller.onClick = (x, y) => {
+            const indices = coordinatesToIndices(new Vec2(x, y));
+
+            //TODO: go through all x,ys and i,js and try to make sense of it/fix it
+            const cell = cellMap.get(indices.y + "-" + indices.x);
+            clickCell(cell);
+        }
+
         // letters.forEach((key, n) => {
         //     const cell = cellMap.get(key);
         //     controller.setMapping(keyCodes[n], keyState => {
@@ -277,7 +286,7 @@ async function initialize(){
         function clickCell(cell){
             if(!paused){
                 //age all cells
-                //cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
+                cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
 
                 //interact with cell
                 const selection = cell.interact(onWeapon ? player1.weapon : player1.food, player1);
