@@ -1,7 +1,7 @@
 import Compositor from './classes/Compositor.js';
 import SoundBoard from './classes/SoundBoard.js';
 import {loadLevel, loadSounds, loadFont, loadImage, loadTiles} from './loaders.js';
-import {createLayer1, createLayer2, createLayer3, createLayer4, createLayer5, createCharacterMenu, createAllCells, createLevelSelection, createDashboardLayer, createStartMenu, createLevelMenu, createPauseMenu, createLoseMenu, createWinMenu} from './layers.js';
+import { createCharacterMenu, createDashboardLayer, createStartMenu, createLevelMenu, createPauseMenu, createLoseMenu, createWinMenu} from './layers.js';
 import Timer from './classes/Timer.js';
 import Controller from "./classes/Controller.js";
 import Cell from './classes/Cell.js';
@@ -98,7 +98,6 @@ export var tileSheet;
 
 export var player1;
 export var game1;
-export var healthbar;
 let levelSelection;
 let creatureMenu;
 let startMenu;
@@ -132,11 +131,8 @@ async function initialize(){
     initializeGame();
 
     return Promise.all([
-        loadTiles('../assets/tiles/hex-tiles.png', '../assets/tiles/hex-tiles.json'),
+        loadTiles('../assets/tiles/hex-tiles.png', '../assets/tiles/hex-tiles-data.json'),
         loadSounds(soundNames, globalSoundBoard),
-        createLayer4(),
-        //createLayer5(),
-        loadImage('../assets/ui/healthbar.png'),
         createDashboardLayer(font, player1, game1),
         createCharacterMenu(font, fontLarge),
         createStartMenu(font, fontLarge),
@@ -145,13 +141,11 @@ async function initialize(){
         createLoseMenu(font, fontLarge),
         createWinMenu(font, fontLarge)
     ])
-    .then(([tiles, sndBrd, layer4, healthbr, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
+    .then(([tiles, sndBrd, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
 
         tileSheet = tiles;
         const comp = new Compositor();
 
-        comp.layers.push(layer4);
-        healthbar = healthbr;
         comp.layers.push(dashboardLayer);
         console.log({comp})
         creatureMenu = cMenu;
@@ -331,21 +325,23 @@ function start(comp){
         if(!paused){
             // time based version of game
             //spawn creatures
-            // if(game1.level > 0){
+            if(game1.level > 0){
                 
-            //     spawner.update(deltaTime);
-            // }
+                spawner.update(deltaTime);
+            }
 
             //update layers and cells
             comp.update(deltaTime);
 
             //update creatures
-            //const creatureCells = cellMap.occupiedCells();
-            // creatureCells.forEach( ([name, cell]) => {
-            //     if(!cell.duringSinkingAnimation){
-            //         cell.creature.update(deltaTime);
-            //     }
-            // });
+            if(cellMap){
+                const creatureCells = cellMap.occupiedCells();
+                creatureCells.forEach( ([name, cell]) => {
+                    if(!cell.duringSinkingAnimation){
+                        cell.creature.update(deltaTime);
+                    }
+                });
+            }
 
             //check win/lose conditions
             if(game1.level > 0){
@@ -423,8 +419,10 @@ function startButton(comp){
     resetLevel();
     player1.clearCreatures();
     loadLevel(game1.level).then(level => {
+        console.log({level});
         comp.level = level;
-        spawner = level.spawnr;
+        cellMap = level.cellMap;
+        spawner = level.spawner;
         spawner.spawnSelections();
     });
 }

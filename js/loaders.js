@@ -5,6 +5,8 @@ import { CreatureFactory } from './classes/CreatureFactory.js';
 import { Spawner } from './classes/Spawner.js';
 import Font from './classes/Font.js';
 import Cell from './classes/Cell.js';
+import Level from './classes/Level.js';
+import { Vec2 } from './math.js';
 import Orchill from '../assets/characters/orchill/Orchill.js';
 import Achilia from '../assets/characters/achilia/Achilia.js';
 import Grass from '../assets/characters/grass/Grass.js';
@@ -12,6 +14,9 @@ import Mushboy from '../assets/characters/mushboy/Mushboy.js';
 import Bunbun from '../../assets/characters/bunbun/Bunbun.js';
 import Sprout from '../assets/characters/sprout/Sprout.js';
 
+
+const gameWidth = 640;
+const gameHeight = 360;
 
 export const creatureTypes = {
     Achilia,
@@ -119,16 +124,26 @@ export function loadTiles(tileImageLocation, tileDataLocation){
 
 //loads level json, makes creature factories, returns and array of spawners 
 export function loadLevel(lvl){
-    console.log("loadin level " + lvl);
-    return loadJson("./assets/levels/" + lvl + ".json")
-    .then( level => {
+    return Promise.all([
+        loadImage("./assets/levels/test-background.png"),
+        loadJson("./assets/levels/" + lvl + ".json")
+    ]).then( ([img, level]) => {
+        const backgroundBuffer = document.createElement('canvas');
+        backgroundBuffer.width = gameWidth;
+        backgroundBuffer.height = gameHeight;
+        backgroundBuffer.getContext('2d').drawImage(img, 0, 0);
+        
         const cellWidth = level.map[0].length;
         const cellHeight = level.map.length;
         const cellMap = new CellMap(cellWidth, cellHeight);
-
         for(let i=0; i < cellHeight; i++){
             for(let j=0; j < cellWidth; j++){
-                const cell = new Cell(i + "-" + j, new Vec2(i, j), new Vec2(i*32,j*32), tileSheet.getBuffer(terrain), tileSheet.getBuffer('desert'));
+                //TODO: move these offsets somewhere else!
+                const xOff = 100;
+                const yOff = 60;
+                const x = j*32 + yOff + ((i%2) * 16);
+                const y = i*21 + xOff;
+                const cell = new Cell(i + "-" + j, new Vec2(i, j), new Vec2(x, y), tileSheet.getBuffer(level.map[i][j]), tileSheet.getBuffer('desert'));
                 cellMap.set(cell.name, cell.coordinates, cell);
             }
         }
@@ -151,7 +166,7 @@ export function loadLevel(lvl){
             player1.creatureFactories.forEach( cf => {
                 newSpawner.addCreature(cf);
             })
-            return new Level(cellMap, newSpawner);
+            return new Level(backgroundBuffer, cellMap, newSpawner);
         });
     });
 }

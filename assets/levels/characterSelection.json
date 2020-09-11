@@ -1,15 +1,13 @@
 {
     "map": [ 
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"]
+        ["grassland", "grassland", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"]
     ],
     "spawner": {
         "spawnRate": -1,
@@ -18,13 +16,13 @@
                 "type": "mushboy",
                 "evolutions": 1,
                 "chance": 0.03,
-                "selectionCell": "z"
+                "selectionCell": "5-5"
             },
             {
                 "type": "bunbun",
                 "evolutions": 1,
                 "chance": 0.04,
-                "selectionCell": "x"
+                "selectionCell": "5-6"
             }
             
         ]

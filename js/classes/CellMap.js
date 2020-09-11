@@ -12,9 +12,9 @@ export default class CellMap{
         this.gridHeight = gridHeight;
         this.letterMap = new Map();
         this.grid = [];
-        for(let i = 0; i < gridWidth; i++){
+        for(let i = 0; i < gridHeight; i++){
             this.grid[i] = new Array();
-            for(let j = 0; j < gridHeight; j++){
+            for(let j = 0; j < gridWidth; j++){
                 this.grid[i][j] = {i, j};
             }
         }

@@ -10,11 +10,15 @@ export default class Compositor{
 
     draw(context) {
         if(this.level){
-            const layers = level.cellMap.grid;
+            //draw level's background
+            context.drawImage(this.level.backgroundBuffer, 0, 0);
+
+            //draw all cells
+            const layers = this.level.cellMap.grid;
             layers.forEach(layer => {
                 const cells = layer;
                 cells.forEach(cell => {
-                    cell.draw();
+                    cell.draw(context);
                 });
             });
         }
@@ -25,9 +29,15 @@ export default class Compositor{
     }
 
     update(deltaTime){
-        this.layers.forEach(layer => {
-            layer.update(deltaTime)
-        });
+        if(this.level){
+            const layers = this.level.cellMap.grid;
+            layers.forEach(layer => {
+                const cells = layer;
+                cells.forEach(cell => {
+                    cell.update(deltaTime);
+                });
+            });
+        }
     }
 
     setMenu(menu){

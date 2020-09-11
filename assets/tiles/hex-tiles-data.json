@@ -1,0 +1,123 @@
+{ "tiles": [
+  {
+    "name": "grassland",
+    "type": "terrain",
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "desert",
+    "type": "terrain",
+    "x": 32,
+    "y": 0,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "water",
+    "type": "terrain",
+    "x": 64,
+    "y": 0,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "mountain",
+    "type": "terrain",
+    "x": 96,
+    "y": 0,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "outpost",
+    "type": "terrain",
+    "x": 128,
+    "y": 0,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "grassland",
+    "type": "terrain",
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "standard",
+    "type": "frame",
+    "x": 0,
+    "y": 32,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "standard2",
+    "type": "frame",
+    "x": 32,
+    "y": 32,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "burned",
+    "type": "status",
+    "x": 64,
+    "y": 32,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "poisoned",
+    "type": "status",
+    "x": 96,
+    "y": 32,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "frozen",
+    "type": "status",
+    "x": 128,
+    "y": 32,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "wireframe",
+    "type": "frame",
+    "x": 0,
+    "y": 64,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "wireframe2",
+    "type": "frame",
+    "x": 32,
+    "y": 64,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "wireframe3",
+    "type": "frame",
+    "x": 64,
+    "y": 64,
+    "w": 32,
+    "h": 32
+  },
+  {
+    "name": "wireframe4",
+    "type": "frame",
+    "x": 96,
+    "y": 64,
+    "w": 32,
+    "h": 32
+  }
+]
+}
