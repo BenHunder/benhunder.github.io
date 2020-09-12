@@ -1,6 +1,6 @@
 {
     "map": [ 
-        ["grassland", "grassland", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
         ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
         ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
         ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
@@ -16,13 +16,15 @@
                 "type": "mushboy",
                 "evolutions": 1,
                 "chance": 0.03,
-                "selectionCell": "5-5"
+                "selectionCell": "0-0",
+                "cost": 50
             },
             {
                 "type": "bunbun",
                 "evolutions": 1,
                 "chance": 0.04,
-                "selectionCell": "5-6"
+                "selectionCell": "1-0",
+                "cost": 20
             }  
         ]
     }

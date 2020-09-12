@@ -1,5 +1,5 @@
 import Creature from '/js/classes/Creature.js';
-import { cellMap } from '../../../js/main.js';
+import { currentLevel } from '../../../js/main.js';
 
 export default class Orchill extends Creature{
     constructor(isMaster = false){
@@ -35,10 +35,9 @@ export default class Orchill extends Creature{
     }
 
     attack(){
-        const targetCell = cellMap.randomAdjacentTarget(this.currentCell, "ally");
-        console.log(this.currentCell.name + " attacks ");
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "ally");
         if(targetCell){
-            console.log(targetCell.name);
+            console.log(this.currentCell.name + " attacks " + targetCell.name);
             targetCell.attack.start2(this.power);
         }
     }

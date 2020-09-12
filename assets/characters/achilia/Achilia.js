@@ -1,5 +1,5 @@
 import Creature from '/js/classes/Creature.js';
-import { cellMap } from '../../../js/main.js';
+import { currentLevel } from '../../../js/main.js';
 
 export default class Achilia extends Creature{
     constructor(isMaster = false){
@@ -35,7 +35,7 @@ export default class Achilia extends Creature{
     //todo? fix this so its possible to determine all of one achilia's offspring
     kill(){
         if(this.isMaster){
-            cellMap.occupiedCells().forEach(([name, cell]) => {
+            currentLevel.cellMap.occupiedCells().forEach((cell) => {
                 //check if creatures are the same class
                 //todo: issue how to deal with multiple master creatures
                 if(cell.creature.constructor === this.constructor && cell.name != this.currentCell.name && !cell.creature.isMaster){

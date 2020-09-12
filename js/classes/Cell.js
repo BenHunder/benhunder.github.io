@@ -1,9 +1,7 @@
 import Attack from './traits/Attack.js';
-import Feed from './traits/Feed.js';
 import Spawn from './traits/Spawn.js';
 import Weapon from './Weapon.js';
-import Food from './Food.js';
-import { globalSoundBoard, cellMap, tileSheet } from '../main.js';
+import { globalSoundBoard, tileSheet } from '../main.js';
 import { Vec2 } from '../math.js';
 
 export default class Cell{
@@ -30,7 +28,6 @@ export default class Cell{
         this.traits = [];
 
         this.addTrait(new Attack(this));
-        this.addTrait(new Feed(this));
         this.addTrait(new Spawn(this));
         
     }
@@ -64,16 +61,15 @@ export default class Cell{
                 this.creature.isHeld = true;
                 this.attack.start(item, player);
                 return this.creature.name;
-            }else if(item instanceof Food){
-                this.feed.start(item, player);
             }
         }else{
             globalSoundBoard.play('bonkOther');
             //player.damage(1);
-            if(player.allyReadyCounter == 0){
-                const newCreature = player.creatureFactories[0].create();
+            const special = player.selectedSpecial();
+            if(player.energy >= special.cost){
+                const newCreature = special.create();
                 this.spawnNew(newCreature);
-                player.allyReadyCounter = 20;
+                player.energy -= special.cost + 1;
             }
         }
     }
@@ -88,13 +84,17 @@ export default class Cell{
     }
 
     spawnNew(creature){
-        if(!this.isActive){
+        if(this.isSpawnable()){
             creature.currentCell = this;
             this.creature = creature;
             this.spawn.start();
         }else{
             console.log("tried to spawn on active cell");
         }
+    }
+
+    isSpawnable(){
+        return !this.isActive && this.terrain != "water" && this.terrain != "mountain" && this.terrain != "outpost"
     }
 
     replace(creature){
@@ -132,26 +132,35 @@ export default class Cell{
     draw(context){
         // if(this.depth < this.maxDepth){
             this.drawTerrain(context);
-            this.drawClickedFrame(context);
+
             if(this.creature){
                 this.drawStatus(context);
+            }
+
+            this.drawClickedFrame(context);
+
+            if(this.creature){
                 this.drawCreature(context);
             }
     }
 
     drawTerrain(context){
         // context.drawImage(this.normalBuffer, this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
-        context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y);
+        if(this.isActive){
+           context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
+        }else{
+            context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y);
+        }
     }
 
     drawStatus(context){
         //draw frame
-        context.drawImage(tileSheet.getBuffer('standard2'), this.coordinates.x, this.coordinates.y);
+        context.drawImage(tileSheet.getBuffer('standard2'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
 
         //draw status conditions
         if(this.status === "frozen"){
             context.globalAlpha = 0.25;
-            context.drawImage(tileSheet.getBuffer('frozen'), this.coordinates.x, this.coordinates.y);
+            context.drawImage(tileSheet.getBuffer('frozen'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
             context.globalAlpha = 1;
         }
 
@@ -160,16 +169,23 @@ export default class Cell{
         const y = this.coordinates.y + 27;
 
         const xHealth = Math.ceil((this.creature.health / this.creature.maxHealth) * 12);
-        if(xHealth > 0){
-            if(xHealth < 10){
-                context.strokeStyle = "#AC3232";
-            }else{
-                context.strokeStyle = "#6ABE30";
-            }
-            context.lineWidth = 2;
+
+        if(xHealth < 5){
+            context.strokeStyle = "#D72727";
+        }else{
+            context.strokeStyle = "#6ABE30";
+        }
+        context.lineWidth = 2;
+        context.beginPath();
+        context.moveTo(x, y + Math.ceil(this.depth));
+        context.lineTo(x + xHealth, y + Math.ceil(this.depth));
+        context.stroke();
+
+        if(xHealth < 12){
+            context.strokeStyle = "#302C2E";
             context.beginPath();
-            context.moveTo(x, y);
-            context.lineTo(x + xHealth, y);
+            context.moveTo(x + xHealth, y + Math.ceil(this.depth));
+            context.lineTo(x+12, y + Math.ceil(this.depth));
             context.stroke();
         }
 
@@ -179,7 +195,7 @@ export default class Cell{
         if(this.hitTimer > 0){
             context.globalAlpha = this.hitTimer;
             // context.drawImage(this.hitBuffer, 0, Math.ceil(this.depth));
-            context.drawImage(tileSheet.getBuffer('wireframe4'), this.coordinates.x, this.coordinates.y);
+            context.drawImage(tileSheet.getBuffer('wireframe4'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
             context.globalAlpha = 1;
         }
     }
@@ -202,6 +218,6 @@ export default class Cell{
             context.lineWidth = 2;         // thickness
             context.strokeRect(x, y, 32, 32);
         }
-        this.creature.draw(context, x, y);
+        this.creature.draw(context, x, y + Math.ceil(this.depth));
     }
 }

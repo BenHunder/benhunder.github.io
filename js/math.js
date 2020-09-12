@@ -17,7 +17,7 @@ export function getRandomInt(max) {
 export function indicesToCoordinates(ivec){
     //TODO: move these offsets somewhere else!
     const xOff = 60;
-    const yOff = 100;
+    const yOff = 75;
     const x = ivec.x*32 + xOff + ((ivec.y%2) * 16);
     const y = ivec.y*21 + yOff;
 
@@ -28,11 +28,11 @@ export function indicesToCoordinates(ivec){
 export function coordinatesToIndices(cvec){
     //TODO: move these offsets somewhere else!
     const xOff = 60;
-    const yOff = 100;
+    const yOff = 75;
 
     const y = Math.floor((cvec.y - yOff)/21);
     const x = Math.floor((cvec.x - xOff - ((y%2) * 16))/32);
     
-    console.log(`in: ${cvec.x}, ${cvec.y} out: ${x}, ${y}` )
+    //console.log(`in: ${cvec.x}, ${cvec.y} out: ${x}, ${y}` )
     return {x, y}
 }

@@ -7,7 +7,6 @@ import Controller from "./classes/Controller.js";
 import Cell from './classes/Cell.js';
 import Player from './classes/Player.js';
 import Weapon from './classes/Weapon.js';
-import Food from './classes/Food.js';
 import Game from './classes/Game.js';
 import { Vec2, coordinatesToIndices } from './math.js';
 
@@ -69,7 +68,7 @@ const soundNames = [
     },
     {
         "location": "/assets/sfx/sfx3.wav", 
-        "name": "feed"
+        "name": "other"
     }
 ];
 
@@ -93,8 +92,7 @@ const fontData = [
         'charHeight': 32
     }
 ]
-export var cellMap;
-export var spawner;
+export var currentLevel;
 export var tileSheet;
 
 export var player1;
@@ -112,14 +110,15 @@ let onWeapon = true;
 function toggleWeapon(){
     onWeapon = !onWeapon;
 }
-function togglePause(){
-    paused = !paused;
-}
-function pause(){
+
+function pause(comp){
     paused = true;
+    comp.paused = true;
 }
-function unpause(){
+function unpause(comp){
     paused = false;
+    comp.paused = false;
+
 }
 
 
@@ -131,6 +130,8 @@ async function initialize(){
     initializePlayer();
     initializeGame();
 
+    game1.level = "characterSelection";
+
     return Promise.all([
         loadTiles('../assets/tiles/hex-tiles.png', '../assets/tiles/hex-tiles-data.json'),
         loadSounds(soundNames, globalSoundBoard),
@@ -140,14 +141,15 @@ async function initialize(){
         createLevelMenu(font, fontLarge),
         createPauseMenu(font, fontLarge),
         createLoseMenu(font, fontLarge),
-        createWinMenu(font, fontLarge)
+        createWinMenu(font, fontLarge),
+        loadLevel(game1.level)
     ])
-    .then(([tiles, sndBrd, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
+    .then(([tiles, sndBrd, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu, csLevel]) => {
 
         tileSheet = tiles;
         const comp = new Compositor();
 
-        comp.layers.push(dashboardLayer);
+        comp.dashboard = dashboardLayer;
         console.log({comp})
         creatureMenu = cMenu;
         startMenu = sMenu;
@@ -156,11 +158,16 @@ async function initialize(){
         loseMenu = lMenu;
         winMenu = wMenu;
         comp.setMenu(startMenu);
+
+        
+        currentLevel = csLevel;
+        log("level initialized:\n", {currentLevel});
+
+        comp.level = currentLevel;
     
         const controller = new Controller();
 
-        // spacebar switches weapon and food and vice versa
-        //TODO make setMapping take a character instead of the keycode
+        // spacebar reloads.. maybe
         controller.setMapping(32, keyState => {
             if(keyState){
                 player1.reload();
@@ -187,7 +194,7 @@ async function initialize(){
                     }
                 }else{
                     comp.setMenu(pauseMenu);
-                    pause();
+                    pause(comp);
                 }
             }
         });
@@ -218,44 +225,12 @@ async function initialize(){
         //]'/ removed
         const letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',';','\,','PERIOD','FSLASH'];
         const keyCodes = [65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,186,188,190,191];
-        const keyCoordinates = [    
-            [ 24, 80, 178, 205 ],
-            [ 261, 314, 238, 267 ],
-            [ 134, 189, 238, 267 ],
-            [ 145, 197, 178, 205 ], 
-            [ 155, 203, 132, 154 ],
-            [ 206, 256, 178, 205 ], 
-            [ 266, 316, 178, 205 ], 
-            [ 324, 374, 178, 205 ],
-            [ 437, 485, 132, 154 ],
-            [ 384, 434, 178, 205 ], 
-            [ 443, 495, 178, 205 ], 
-            [ 501, 554, 178, 205 ],
-            [ 389, 442, 238, 267 ],
-            [ 326, 379, 238, 267 ], 
-            [ 492, 542, 132, 154 ], 
-            [ 548, 599, 132, 154 ],
-            [ 41, 92, 132, 154 ],
-            [ 212, 260, 132, 154 ],
-            [ 86, 139, 178, 205 ],
-            [ 269, 316, 132, 154 ],
-            [ 380, 428, 132, 154 ],
-            [ 198, 251, 238, 267 ], 
-            [ 98, 148, 132, 154 ],
-            [ 71, 128, 238, 267 ], 
-            [ 324, 371, 132, 154 ],
-            [ 6, 65, 238, 267 ],
-            [ 560, 616, 178, 205 ],
-            [ 451, 506, 238, 267 ],
-            [ 512, 569, 238, 267 ], 
-            [ 575, 634, 238, 267 ],
-        ]
         
         // controller.onClick = (x, y) => {
         //     for(let i = 0; i < keyCoordinates.length; i++){
         //         const [x1, x2, y1, y2] = keyCoordinates[i];
         //         if(x >= x1 && x <= x2 && y >= y1 && y <= y2){
-        //             const cell = cellMap.get(letters[i]);
+        //             const cell = currentLevel.cellMap.get(letters[i]);
         //             clickCell(cell);
         //             break;
         //         }
@@ -266,13 +241,14 @@ async function initialize(){
         controller.onClick = (x, y) => {
             const indices = coordinatesToIndices(new Vec2(x, y));
 
-            //TODO: go through all x,ys and i,js and try to make sense of it/fix it
-            const cell = cellMap.get(indices.y + "-" + indices.x);
-            clickCell(cell);
+            const cell = currentLevel.cellMap.get(indices.x + "-" + indices.y);
+            if(cell){
+                clickCell(cell);
+            }
         }
 
         // letters.forEach((key, n) => {
-        //     const cell = cellMap.get(key);
+        //     const cell = currentLevel.cellMap.get(key);
         //     controller.setMapping(keyCodes[n], keyState => {
         //         if(keyState){
         //             clickCell(cell);
@@ -286,23 +262,23 @@ async function initialize(){
         function clickCell(cell){
             if(!paused){
                 //age all cells
-                cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
+                currentLevel.cellMap.occupiedCells().forEach((cell) => cell.creature.ageMe());
 
                 //interact with cell
-                const selection = cell.interact(onWeapon ? player1.weapon : player1.food, player1);
+                const selection = cell.interact(player1.weapon, player1);
 
                 
                 //character selection interaction
                 if(selection && game1.level === "characterSelection"){
-                    spawner.creatureFactories.forEach( cf => {
+                    currentLevel.spawner.creatureFactories.forEach( cf => {
                         if(cf.name === selection){
                             player1.addCreature(cf);
                         }
                     });
                     player1.alliesLeft -= 1;
                     if(player1.alliesLeft <= 0){
-                        pause();
                         comp.setMenu(levelMenu);
+                        pause(comp);
                     }else{
                         creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
                     }
@@ -312,15 +288,12 @@ async function initialize(){
                         player1.reload()
                     }
 
-                    //advance ally ready counter
-                    if(player1.allyReadyCounter > 0){
-                        player1.allyReadyCounter -= 1;
-                    }
+                    //increment energy by one each turn
+                    player1.addEnergy();
                 }
             }
         }
 
-        log("cellMap initialized:\n", {cellMap});
         return comp;
     });
 }
@@ -334,18 +307,18 @@ function start(comp){
         if(!paused){
             // time based version of game
             //spawn creatures
-            if(game1.level > 0){
+            // if(game1.level > 0){
                 
-                spawner.update(deltaTime);
-            }
+            //     currentLevel.spawner.update(deltaTime);
+            // }
 
             //update layers and cells
             comp.update(deltaTime);
 
             //update creatures
-            if(cellMap){
-                const creatureCells = cellMap.occupiedCells();
-                creatureCells.forEach( ([name, cell]) => {
+            if(currentLevel){
+                const creatureCells = currentLevel.cellMap.occupiedCells();
+                creatureCells.forEach( (cell) => {
                     if(!cell.duringSinkingAnimation){
                         cell.creature.update(deltaTime);
                     }
@@ -354,15 +327,17 @@ function start(comp){
 
             //check win/lose conditions
             if(game1.level > 0){
-                if(player1.health <= 0){
-                    comp.setMenu(loseMenu);
-                    pause();
-                }else if(false){
-                    comp.setMenu(winMenu);
-                    pause();
-                }else if(cellMap.numEnemies() == 0){
-                    comp.setMenu(winMenu);
-                    pause();
+                const outpostsUnderSiege = []
+                currentLevel.cellMap.findOutposts().forEach(outpost => {
+                    //if it can find an enemy target adjacent to it, that means it is under siege and you lose
+                    if(currentLevel.cellMap.randomAdjacentTarget(outpost)){
+                        outpostsUnderSiege.push(outpost);
+                    }
+                });
+                if(currentLevel.cellMap.numEnemies() == 0){
+                    win(comp);
+                }else if(outpostsUnderSiege.length > 0){
+                    lose(comp);
                 }
             }
 
@@ -385,12 +360,20 @@ function start(comp){
 
 initialize().then((comp) => start(comp));
 
+function win(comp){
+    comp.setMenu(winMenu);
+    pause(comp);
+}
+
+function lose(comp){
+    comp.setMenu(loseMenu);
+    pause(comp);
+}
+
 function initializePlayer(){
     player1 = new Player();
     const basicWeapon = new Weapon("basicWeapon", 10);
-    const basicFood = new Food('basicFood', 10);
     player1.weapon = basicWeapon;
-    player1.food = basicFood;
 }
 
 function initializeGame(){
@@ -399,44 +382,35 @@ function initializeGame(){
 }
 
 function resetLevel(){
-    // cellMap.allCells().forEach(([name, cell]) => {
-    //     cell.reset();
-    // });
+    currentLevel.cellMap.allCells().forEach((cell) => {
+        cell.reset();
+    });
     game1.reset();
     player1.reset();
 }
 
 function initializeLevel(){
     resetLevel();
-    spawner.initialSpawn();
+    currentLevel.spawner.initialSpawn();
 }
 
 function resumeButton(comp){
     if(game1.level === "characterSelection"){
         comp.setMenu(creatureMenu);
     }
-    unpause();
+    unpause(comp);
 }
 
 function startButton(comp){
-    unpause();
     creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
     comp.setMenu(creatureMenu);
-    game1.level = "characterSelection";
-    resetLevel();
-    player1.clearCreatures();
-    loadLevel(game1.level).then(level => {
-        console.log({level});
-        comp.level = level;
-        cellMap = level.cellMap;
-        spawner = level.spawner;
-        spawner.spawnSelections();
-    });
+    unpause(comp);
+    currentLevel.spawner.spawnSelections();
 }
 
 function restartButton(comp){
     initializeLevel();
-    unpause();
+    unpause(comp);
 }
 
 function quitButton(comp){
@@ -449,26 +423,25 @@ function nextLevelButton(comp){
     game1.level = nextLevel;
     loadLevel(game1.level).then(level => {
         comp.level = level;
-        cellMap = level.cellMap;
-        spawner = level.spawner;
+        currentLevel = level;
         initializeLevel();
-        unpause();
+        unpause(comp);
     });
 }
 
 function levelButton(comp, action){
     if(game1.level == "characterSelection"){
-        spawner.creatureFactories = [];
+        currentLevel.spawner.creatureFactories = [];
     }
     game1.level = action.substring(6, 7);
     loadLevel(game1.level).then(level => {
+        currentLevel = level;
         comp.level = level;
-        cellMap = level.cellMap;
-        spawner = level.spawner;
         initializeLevel();
-        unpause();
+        unpause(comp);
     });
 }
+
 
 
 

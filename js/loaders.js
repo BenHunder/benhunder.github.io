@@ -108,7 +108,6 @@ export async function loadSounds(soundNames, soundBoard){
 
 //loads tiles image and defines each tile based on frameData json
 export function loadTiles(tileImageLocation, tileDataLocation){
-    console.log("loadin tiles");
     return Promise.all([
         loadImage(tileImageLocation),
         loadJson(tileDataLocation)
@@ -138,7 +137,7 @@ export function loadLevel(lvl){
         const cellMap = new CellMap(cellWidth, cellHeight);
         for(let i=0; i < cellHeight; i++){
             for(let j=0; j < cellWidth; j++){ 
-                const cell = new Cell(i + "-" + j, new Vec2(i, j), indicesToCoordinates(new Vec2(j, i)), level.map[i][j]);
+                const cell = new Cell(j + "-" + i, new Vec2(j, i), indicesToCoordinates(new Vec2(j, i)), level.map[i][j]);
                 cellMap.set(cell.name, cell.indices, cell);
             }
         }
@@ -147,9 +146,9 @@ export function loadLevel(lvl){
         let promisesArray = [];
 
         //load creatures in the level.json
-        level.spawner.creatures.forEach( creature => {
+        level.spawner.creatures.forEach( creatureSpec => {
             promisesArray.push( 
-                loadCreatureType(creature.type, creature.evolutions, creature.initialChance, creature.cluster, creature.selectionCell)
+                loadCreatureType(creatureSpec.type, creatureSpec.evolutions, creatureSpec.initialChance, creatureSpec.cluster, creatureSpec.selectionCell, creatureSpec.cost)
                 .then( creatureFactory => {
                     newSpawner.addCreature(creatureFactory);
                 })
@@ -167,7 +166,7 @@ export function loadLevel(lvl){
 }
 
 //load spritesheets for all evolutions of creature, then create and return a creatureFactory
-export function loadCreatureType(creatureName, creatureEvolutions, creatureChance, creatureCluster, selectionCell){
+export function loadCreatureType(creatureName, creatureEvolutions, creatureChance, creatureCluster, selectionCell, creatureCost){
     let promisesArray = [];
 
     //load spritesheets for each evolution of creature
@@ -182,7 +181,7 @@ export function loadCreatureType(creatureName, creatureEvolutions, creatureChanc
     };
 
     return Promise.all(promisesArray).then( () => {
-        return new CreatureFactory(creatureTypes[capitalize(creatureName)], creatureChance, creatureCluster, selectionCell, creatureName);
+        return new CreatureFactory(creatureTypes[capitalize(creatureName)], creatureName, creatureChance, creatureCluster, selectionCell, creatureCost);
     });
 }
 

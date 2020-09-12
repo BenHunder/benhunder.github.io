@@ -1,9 +1,7 @@
 import { globalSoundBoard, spriteSheetMap } from '../main.js';
-import { spawner } from '../main.js';
-import Protect from "./traits/Protect.js";
 import Hit from "./traits/Hit.js";
 import Mystery from "./traits/Mystery.js";
-import Persist from "./traits/Persist.js";
+import { currentLevel } from '../../../js/main.js';
 
 export default class Creature{
     constructor(traits, name, isMaster = false){
@@ -20,16 +18,10 @@ export default class Creature{
         this.name = name;
 
         traits.forEach( trait => {
-            if(trait.name === 'protect'){
-                this.addTrait(new Protect(this));
-            }else if(trait.name === 'hit'){
+            if(trait.name === 'hit'){
                 this.addTrait(new Hit(this, trait));
             }else if(trait.name === 'mystery'){
                 this.addTrait(new Mystery(this, trait));
-            }else if(trait.name === 'persist'){
-                this.addTrait(new Persist(this, trait));
-                //turn off damage function
-                this.damage = function(amount){};
             }
 
             //TODO eventually traits will be defined in the JSON or somehting I guess, but for now, they are just strings. This line is pretty useless rn
@@ -55,6 +47,9 @@ export default class Creature{
 
     damage(amount){
         this.health -= amount;
+        if(this.health < 0){
+            this.health = 0;
+        }
     }
 
     ageMe(){
@@ -64,7 +59,7 @@ export default class Creature{
     attemptPropogation(){
         const r = Math.random();
         if(r <= this.propogationRate){
-            spawner.propogate(this);
+            currentLevel.spawner.propogate(this);
         }
     }
 
@@ -77,10 +72,13 @@ export default class Creature{
         //     trait.update(deltaTime);
         // })
     } 
+
+    eName(){
+        return this.name + '-e' + this.evolution;
+    }
     
     draw(context, x, y){
-        const eName = this.name + '-e' + this.evolution;
-        const spriteSheet = spriteSheetMap.get(eName);
+        const spriteSheet = spriteSheetMap.get(this.eName());
         let name = 'frame' + this.currentFrame;
 
         //advance frames

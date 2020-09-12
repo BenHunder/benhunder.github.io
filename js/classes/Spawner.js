@@ -37,13 +37,12 @@ export class Spawner{
         for (let i = 0; i < density; i++) {
             this.spawnAll();
             if(i%2 == 0){
-                this.cellMap.occupiedCells().forEach(([name, cell]) => cell.creature.ageMe());
+                this.cellMap.occupiedCells().forEach((cell) => cell.creature.ageMe());
             }
         }
     }
 
     spawnAll(){
-        console.log("spawn all!");
         this.creatureFactories.forEach( creatureFactory => {
             const r = Math.random();
             if(r <= creatureFactory.chance){

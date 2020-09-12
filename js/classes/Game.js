@@ -1,8 +1,9 @@
 export default class Game{
     constructor(){
         this.baseTimer = 100;
-
-        this.cellMap = null;
+        
+        //change 
+        this.level2 = null;
         this.timer = this.baseTimer;
         this.level = 0;
         this.letters = '';

@@ -1,5 +1,5 @@
 import Creature from '/js/classes/Creature.js'
-import { cellMap } from '../../../js/main.js';
+import { currentLevel } from '../../../js/main.js';
 
 export default class Bunbun extends Creature{
     constructor(creatureChance, creatureCluster, selectionCell){
@@ -29,7 +29,7 @@ export default class Bunbun extends Creature{
     }
 
     ageMe(){
-        const targetCell = cellMap.randomAdjacentTarget(this.currentCell, "enemy");
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "enemy");
         if(targetCell){
             targetCell.attack.start2(this.power);
         }
