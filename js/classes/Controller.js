@@ -12,30 +12,44 @@ export default class Controller{
     }
 
     handleEvent(event){
-        const {keyCode} = event;
-        
-        //console.log(event);
+        let {keyCode} = event;
 
-        if(!this.keyMap.has(keyCode)){
-            return;
+        if(keyCode){
+            if(!this.keyMap.has(keyCode)){
+                return;
+            }
+
+            event.preventDefault();
+            const keyState = event.type === 'keydown' ? PRESSED : RELEASED;
+            if(keyState === this.keyStates.get(keyCode)){
+                return;
+            }
+
+            this.keyStates.set(keyCode, keyState);
+
+            this.keyMap.get(keyCode)(keyState);
+        }else{
+            if(event.type == "mousemove"){
+                this.onMouseMove(event.layerX, event.layerY);
+            }else{
+                this.onClick(event.layerX, event.layerY);
+            }
         }
-
-        event.preventDefault();
-        const keyState = event.type === 'keydown' ? PRESSED : RELEASED;
-        if(keyState === this.keyStates.get(keyCode)){
-            return;
-        }
-
-        this.keyStates.set(keyCode, keyState);
-
-        this.keyMap.get(keyCode)(keyState);
     }
 
     listenTo(window){
-        ['keydown', 'keyup'].forEach(eventName => {
+        ['keydown', 'keyup', 'click', 'mousemove'].forEach(eventName => {
             window.addEventListener(eventName, event => {
                 this.handleEvent(event);
             });
         });
+    }
+
+    onClick(x, y){
+        console.log("click! (no click function defined");
+    }
+
+    onMouseMove(x, y){
+        console.log("no hover function defined");
     }
 }

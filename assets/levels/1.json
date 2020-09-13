@@ -1,24 +1,38 @@
 {
-    "timeLimit": 30,
-    "keyboard": {
-        "layout": "mac-qwerty",
-        "location": "/layouts/mac-querty"
-    },
+    "map": [ 
+        ["grassland", "grassland", "grassland", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "outpost", "grassland", "grassland", "grassland"],
+        ["grassland", "water", "water", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "water", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "water", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "mountain", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "outpost", "grassland", "grassland", "grassland", "grassland", "mountain", "mountain", "water", "mountain", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "mountain", "water", "mountain", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "mountain", "mountain", "grassland", "grassland", "grassland", "grassland"]
+        
+    ],
     "spawner": {
         "spawnRate": 0.8,
         "creatures": [
-        {
-            "type": "mushboy",
-            "chance": 0.3
-        },
-        {
-            "type": "mysterybox",
-            "chance": 0.05
-        },
-        {
-            "type": "bunbun",
-            "chance": 0.2,
-            "cluster": 2
-        }]
+            {
+                "type": "grass",
+                "evolutions": 3,
+                "initialChance": 0.1
+            },
+            {
+                "type": "sprout",
+                "evolutions": 3,
+                "initialChance": 0.05
+            },
+            {
+                "type": "achilia",
+                "evolutions": 1,
+                "initialChance": 0.04
+            },
+            {
+                "type": "orchill",
+                "evolutions": 3,
+                "initialChance": 0.04
+            }
+        ]
     }
 }

@@ -1,28 +1,24 @@
 export default class Player{
     constructor(){
-        this.baseHealth = 1000;
         this.baseScore = 0;
-        this.baseNumPlants = 1;
+        this.baseNumAllies = 2;
+        this.maxAmmo = 1;
 
-        this.health = this.baseHealth;
         this.score = this.baseScore;
-        this.plantsLeft = this.baseNumPlants;
+        this.alliesLeft = this.baseNumAllies;
         this.weapon = null;
-        this.food = null;
+        this.ammo = this.maxAmmo;
 
         this.unlocked = new Map();
-        this.unlocked.set("sprout", true);
-        this.unlocked.set("grass", true);
+        this.unlocked.set("protector", true);
+        this.unlocked.set("bunbun", true);
+
+        this.startingEnergy = 20;
+        this.energy = this.startingEnergy;
+        this.maxEnergy = 100;
 
         this.creatureFactories = [];
-    }
-
-    heal(amount){
-        this.health += amount;    
-    }
-
-    damage(amount){
-        this.health -= amount;
+        this.specialSelection = 0;
     }
 
     addScore(amount){
@@ -30,9 +26,8 @@ export default class Player{
     }
 
     reset(){
-        this.health = this.baseHealth;
+        this.energy = this.startingEnergy;
         //this.score = this.baseScore;
-        this.plantsLeft = this.baseNumPlants;
         //this.creatureFactories = [];
     }
 
@@ -41,11 +36,34 @@ export default class Player{
     }
 
     clearCreatures(){
-        this.creatureFactory = [];
+        this.creatureFactories = [];
+        this.alliesLeft = this.baseNumAllies;
     }
 
     hasUnlocked(creature){
         return this.unlocked.get(creature);
+    }
+
+    reload(){
+        this.ammo = this.maxAmmo;
+    }
+
+    nextSpecial(){
+        this.specialSelection += 1;
+        if(this.specialSelection == this.creatureFactories.length){
+            this.specialSelection = 0;
+        }
+    }
+
+    selectedSpecial(){
+        return this.creatureFactories[this.specialSelection];
+    }
+
+    addEnergy(amount=1){
+        this.energy += amount;
+        if(this.energy > this.maxEnergy){
+            this.energy = this.maxEnergy;
+        }
     }
 
 }

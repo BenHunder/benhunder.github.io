@@ -1,18 +1,31 @@
 {
+    "map": [ 
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
+        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"]
+    ],
     "spawner": {
         "spawnRate": -1,
         "creatures": [
             {
-                "type": "grass",
-                "chance": 0.1,
-                "selectionCell": "z"
+                "type": "protector",
+                "evolutions": 1,
+                "chance": 0.03,
+                "selectionCell": "0-0",
+                "cost": 10
             },
             {
-                "type": "sprout",
-                "chance": 0.07,
-                "selectionCell": "x"
-            }
-            
+                "type": "bunbun",
+                "evolutions": 1,
+                "chance": 0.04,
+                "selectionCell": "1-0",
+                "cost": 25
+            }  
         ]
     }
 }

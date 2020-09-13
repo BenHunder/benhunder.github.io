@@ -1,24 +1,18 @@
 import Compositor from './classes/Compositor.js';
-import {loadLevel, loadSounds, loadFont, loadImage} from './loaders.js';
-import {createLayer1, createLayer2, createLayer3, createLayer4, createLayer5, createCharacterMenu, createAllCells, createLevelSelection, createDashboardLayer, createStartMenu, createLevelMenu, createPauseMenu, createLoseMenu, createWinMenu} from './layers.js';
+import SoundBoard from './classes/SoundBoard.js';
+import {loadLevel, loadSounds, loadFont, loadImage, loadTiles} from './loaders.js';
+import { createCharacterMenu, createDashboardLayer, createStartMenu, createLevelMenu, createPauseMenu, createLoseMenu, createWinMenu} from './layers.js';
 import Timer from './classes/Timer.js';
 import Controller from "./classes/Controller.js";
 import Cell from './classes/Cell.js';
 import Player from './classes/Player.js';
 import Weapon from './classes/Weapon.js';
-import Food from './classes/Food.js';
 import Game from './classes/Game.js';
+import { Vec2, coordinatesToIndices } from './math.js';
 
  
 let log = console.log;
 const canvas = document.getElementById('gameCanvas').getContext('2d');
-
-//shows the mouse coordinates in chrome
-document.onmousemove = function(e){
-    var x = e.pageX;
-    var y = e.pageY;
-    e.target.title = "X is "+x+" and Y is "+y;
-};
 
 function resizeGame() {
     const gameContainer = document.getElementById('gameContainer');
@@ -40,7 +34,7 @@ function resizeGame() {
     } else {
         newHeight = newWidth / widthToHeight;
         gameContainer.style.width = newWidth + 'px';
-        gameContainer.style.height = newHeight + 'px';
+        gameContainer.style.height = newHeight + 'px';[]
     }
     
     //gameContainer.style.marginTop = (-newHeight / 2) + 'px';
@@ -55,7 +49,8 @@ function resizeGame() {
 //window.addEventListener('resize', resizeGame, false);
 //window.addEventListener('orientationchange', resizeGame, false);
 
-export let globalSoundBoard;
+export let globalSoundBoard = new SoundBoard(3);
+export let spriteSheetMap = new Map();
 
 //TODO probably move to another file later
 const soundNames = [
@@ -68,8 +63,12 @@ const soundNames = [
         "name": "bonkOther"
     },
     {
+        "name": "kill",
+        "location": "/assets/sfx/sfx4.wav"
+    },
+    {
         "location": "/assets/sfx/sfx3.wav", 
-        "name": "feed"
+        "name": "other"
     }
 ];
 
@@ -93,12 +92,11 @@ const fontData = [
         'charHeight': 32
     }
 ]
-export var cellMap;
-let spawner;
+export var currentLevel;
+export var tileSheet;
 
 export var player1;
 export var game1;
-export var healthbar;
 let levelSelection;
 let creatureMenu;
 let startMenu;
@@ -109,59 +107,51 @@ let winMenu;
 let paused = true;
 let pauseIndex = 0;
 let onWeapon = true;
+
+let currentHoveredCell;
 function toggleWeapon(){
     onWeapon = !onWeapon;
 }
-function togglePause(){
-    paused = !paused;
-}
-function pause(){
+
+function pause(comp){
     paused = true;
+    comp.paused = true;
 }
-function unpause(){
+function unpause(comp){
     paused = false;
+    comp.paused = false;
+
 }
 
 
 
 async function initialize(){
-    levelSelection = await createLevelSelection();
-    cellMap = await createAllCells();
     const font = await loadFont(fontData[0]);
     const fontLarge = await loadFont(fontData[1]);
 
     initializePlayer();
     initializeGame();
 
+    game1.level = "characterSelection";
+
     return Promise.all([
-        //loadJson('/assets/levels/testSpawnerObject.json'),
-        loadSounds(soundNames),
-        createLayer1(cellMap),
-        createLayer2(cellMap),
-        createLayer3(cellMap),
-        createLayer4(),
-        //createLayer5(),
-        loadImage('../assets/ui/healthbar.png'),
+        loadTiles('../assets/tiles/hex-tiles.png', '../assets/tiles/hex-tiles-data.json'),
+        loadSounds(soundNames, globalSoundBoard),
         createDashboardLayer(font, player1, game1),
         createCharacterMenu(font, fontLarge),
         createStartMenu(font, fontLarge),
         createLevelMenu(font, fontLarge),
         createPauseMenu(font, fontLarge),
         createLoseMenu(font, fontLarge),
-        createWinMenu(font, fontLarge)
+        createWinMenu(font, fontLarge),
+        loadLevel(game1.level)
     ])
-    .then(([sndBrd, layer1, layer2, layer3, layer4, healthbr, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu]) => {
-        globalSoundBoard = sndBrd;
+    .then(([tiles, sndBrd, dashboardLayer, cMenu, sMenu, vMenu, pMenu, lMenu, wMenu, csLevel]) => {
 
+        tileSheet = tiles;
         const comp = new Compositor();
-        
-        comp.layers.push(layer1);
-        comp.layers.push(layer2);
-        comp.layers.push(layer3);
-        comp.layers.push(layer4);
-        //comp.layers.push(layer5);
-        healthbar = healthbr;
-        comp.layers.push(dashboardLayer);
+
+        comp.dashboard = dashboardLayer;
         console.log({comp})
         creatureMenu = cMenu;
         startMenu = sMenu;
@@ -170,68 +160,48 @@ async function initialize(){
         loseMenu = lMenu;
         winMenu = wMenu;
         comp.setMenu(startMenu);
+
+        
+        currentLevel = csLevel;
+        log("level initialized:\n", {currentLevel});
+
+        comp.level = currentLevel;
     
         const controller = new Controller();
 
-        // spacebar switches weapon and food and vice versa
-        //TODO make setMapping take a character instead of the keycode
+        // spacebar reloads.. maybe
         controller.setMapping(32, keyState => {
             if(keyState){
-                toggleWeapon();
+                player1.nextSpecial();
             }
         });
 
-        // enter pauses and selects pauseMenu options
+        // the enter key - pauses and selects pauseMenu options
         controller.setMapping(13, keyState => {
             if(keyState){
                 if(paused){
                     let action = comp.menu.selectedOption();
                     if(action === "resume"){
-                        if(game1.level === "characterSelection"){
-                            comp.setMenu(creatureMenu);
-                        }
-                        unpause();
+                        resumeButton(comp);
                     }else if(action === "start"){
-                        unpause();
-                        creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
-                        comp.setMenu(creatureMenu);
-                        game1.level = "characterSelection";
-                        player1.reset();
-                        loadLevel(cellMap, game1.level).then(spwnr => {
-                            spawner = spwnr;
-                            spawner.spawnSelections();
-                        });
+                        startButton(comp);
                     }else if(action === "restart"){
-                        resetLevel();
-                        unpause();
+                        restartButton(comp);
                     }else if(action === "quit"){
-                        resetLevel();
-                        game1.level = 0;
-                        comp.setMenu(startMenu)
+                        quitButton(comp);
                     }else if(action === "next level"){
-                        resetLevel();
-                        const nextLevel = (parseInt(game1.level, 10) + 1)
-                        game1.level = nextLevel;
-                        loadLevel(cellMap, game1.level).then(spwnr => {
-                            spawner = spwnr;
-                            unpause();
-                        });
+                        nextLevelButton(comp);
                     }else if(action.substring(0, 5) === "level"){
-                        resetLevel();
-                        game1.level = action.substring(6, 7);
-                        loadLevel(cellMap, game1.level).then(spwnr => {
-                            spawner = spwnr;
-                            unpause();
-                        });
-                        
+                        levelButton(comp, action);
                     }
                 }else{
                     comp.setMenu(pauseMenu);
-                    pause();
+                    pause(comp);
                 }
             }
         });
 
+        // down key
         controller.setMapping(40, keyState => {
             if(keyState){
                 if(paused){
@@ -240,6 +210,7 @@ async function initialize(){
             }
         });
 
+        // up key
         controller.setMapping(38, keyState => {
             if(keyState){
                 if(paused){
@@ -257,35 +228,104 @@ async function initialize(){
         const letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',';','\,','PERIOD','FSLASH'];
         const keyCodes = [65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,186,188,190,191];
         
-        letters.forEach((key, n) => {
-            const cell = cellMap.get(key);
-            controller.setMapping(keyCodes[n], keyState => {
-                if(keyState){
-                    if(!paused){
-                        const selection = cell.interact(onWeapon ? player1.weapon : player1.food, player1);
-                        if(selection && game1.level === "characterSelection"){
-                            spawner.creatureFactories.forEach( cf => {
-                                if(cf.name === selection){
-                                    player1.addCreature(cf);
-                                }
-                            });
-                            player1.plantsLeft -= 1;
-                            if(player1.plantsLeft <= 0){
-                                pause();
-                                comp.setMenu(levelMenu);
-                            }else{
-                                creatureMenu.setHeader("CHOOSE " + player1.plantsLeft + " PLANTS");
-                            }
-                        }
-                    }
-                }else{
-                    cell.released();
+        // controller.onClick = (x, y) => {
+        //     for(let i = 0; i < keyCoordinates.length; i++){
+        //         const [x1, x2, y1, y2] = keyCoordinates[i];
+        //         if(x >= x1 && x <= x2 && y >= y1 && y <= y2){
+        //             const cell = currentLevel.cellMap.get(letters[i]);
+        //             clickCell(cell);
+        //             break;
+        //         }
+        //     }
+            
+        // }
+
+        controller.onClick = (x, y) => {
+            const xMin = 0;
+            const xMax = currentLevel.cellMap.gridWidth;
+            const yMin = 0;
+            const yMax = currentLevel.cellMap.gridHeight;
+
+            const newIndices = coordinatesToIndices(new Vec2(x, y));
+            if(newIndices.x >= xMin && newIndices.x < xMax && newIndices.y >= yMin && newIndices.y < yMax){
+
+                const cell = currentLevel.cellMap.get(newIndices.x + "-" + newIndices.y);
+                if(cell){
+                    clickCell(cell);
                 }
-            });
-        });
+            }
+        }
+
+        //this function is probably pretty expensive to call as often as it gets called
+        controller.onMouseMove = (x, y) => {
+            const xMin = 0;
+            const xMax = currentLevel.cellMap.gridWidth;
+            const yMin = 0;
+            const yMax = currentLevel.cellMap.gridHeight;
+
+            const newIndices = coordinatesToIndices(new Vec2(x, y));
+            if(newIndices.x >= xMin && newIndices.x < xMax && newIndices.y >= yMin && newIndices.y < yMax){
+                
+                //unhover old cell
+                if(currentHoveredCell){
+                    currentHoveredCell.isHovered = false;
+                }
+
+                //hover new cell
+                const newCell = currentLevel.cellMap.get(newIndices.x + "-" + newIndices.y);
+                newCell.isHovered = true;
+                currentHoveredCell = newCell;
+            }
+            
+        }
+
+        // letters.forEach((key, n) => {
+        //     const cell = currentLevel.cellMap.get(key);
+        //     controller.setMapping(keyCodes[n], keyState => {
+        //         if(keyState){
+        //             clickCell(cell);
+        //         }else{
+        //             cell.released();
+        //         }
+        //     });
+        // });
         controller.listenTo(window);
 
-        log("cellMap initialized:\n", {cellMap});
+        function clickCell(cell){
+            if(!paused){
+                //age all cells
+                currentLevel.cellMap.occupiedCells().forEach((cell) => cell.creature.ageMe());
+
+                //interact with cell
+                const selection = cell.interact(player1.weapon, player1);
+
+                
+                //character selection interaction
+                if(selection && game1.level === "characterSelection"){
+                    currentLevel.spawner.creatureFactories.forEach( cf => {
+                        if(cf.name === selection){
+                            player1.addCreature(cf);
+                        }
+                    });
+                    player1.alliesLeft -= 1;
+                    if(player1.alliesLeft <= 0){
+                        comp.setMenu(levelMenu);
+                        pause(comp);
+                    }else{
+                        creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
+                    }
+                }else{
+                    player1.ammo -= 1;
+                    if(player1.ammo == 0){
+                        player1.reload()
+                    }
+
+                    //increment energy by one each turn
+                    player1.addEnergy();
+                }
+            }
+        }
+
         return comp;
     });
 }
@@ -297,34 +337,41 @@ function start(comp){
     const timer = new Timer(1/60);
     timer.update = function update(deltaTime){
         if(!paused){
+            // time based version of game
             //spawn creatures
-            if(game1.level > 0){
-                spawner.update(deltaTime);
-            }
+            // if(game1.level > 0){
+                
+            //     currentLevel.spawner.update(deltaTime);
+            // }
 
             //update layers and cells
             comp.update(deltaTime);
 
             //update creatures
-            const creatureCells = cellMap.occupiedCells();
-            creatureCells.forEach( ([name, cell]) => {
-                if(!cell.duringSinkingAnimation){
-                    cell.creature.update(deltaTime);
-                }
-            });
+            if(currentLevel){
+                const creatureCells = currentLevel.cellMap.occupiedCells();
+                creatureCells.forEach( (cell) => {
+                    if(!cell.duringSinkingAnimation){
+                        cell.creature.update(deltaTime);
+                    }
+                });
+            }
 
             //check win/lose conditions
             if(game1.level > 0){
-                if(player1.health <= 0){
-                    comp.setMenu(loseMenu);
-                    pause();
-                }else if(game1.timer <= 0){
-                    comp.setMenu(winMenu);
-                    pause();
+                const outpostsUnderSiege = []
+                currentLevel.cellMap.findOutposts().forEach(outpost => {
+                    //if it can find an enemy target adjacent to it, that means it is under siege and you lose
+                    if(currentLevel.cellMap.randomAdjacentTarget(outpost)){
+                        outpostsUnderSiege.push(outpost);
+                    }
+                });
+                if(currentLevel.cellMap.numEnemies() == 0){
+                    win(comp);
+                }else if(outpostsUnderSiege.length > 0){
+                    lose(comp);
                 }
             }
-
-            game1.letters = cellMap.enemyCells().map(([name, cell]) => name).join('');
 
             //draw everything
             comp.draw(canvas);
@@ -345,12 +392,20 @@ function start(comp){
 
 initialize().then((comp) => start(comp));
 
+function win(comp){
+    comp.setMenu(winMenu);
+    pause(comp);
+}
+
+function lose(comp){
+    comp.setMenu(loseMenu);
+    pause(comp);
+}
+
 function initializePlayer(){
     player1 = new Player();
-    const basicWeapon = new Weapon("basicWeapon", 20);
-    const basicFood = new Food('basicFood', 10);
+    const basicWeapon = new Weapon("basicWeapon", 10);
     player1.weapon = basicWeapon;
-    player1.food = basicFood;
 }
 
 function initializeGame(){
@@ -359,12 +414,68 @@ function initializeGame(){
 }
 
 function resetLevel(){
-    cellMap.allCells().forEach(([name, cell]) => {
+    currentLevel.cellMap.allCells().forEach((cell) => {
         cell.reset();
     });
     game1.reset();
     player1.reset();
 }
+
+function initializeLevel(){
+    resetLevel();
+    currentLevel.spawner.initialSpawn();
+}
+
+function resumeButton(comp){
+    if(game1.level === "characterSelection"){
+        comp.setMenu(creatureMenu);
+    }
+    unpause(comp);
+}
+
+function startButton(comp){
+    creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
+    comp.setMenu(creatureMenu);
+    unpause(comp);
+    currentLevel.spawner.spawnSelections();
+}
+
+function restartButton(comp){
+    initializeLevel();
+    unpause(comp);
+}
+
+function quitButton(comp){
+    game1.level = 0;
+    comp.setMenu(startMenu);
+}
+
+function nextLevelButton(comp){
+    const nextLevel = (parseInt(game1.level, 10) + 1)
+    game1.level = nextLevel;
+    loadLevel(game1.level).then(level => {
+        comp.level = level;
+        currentLevel = level;
+        initializeLevel();
+        unpause(comp);
+    });
+}
+
+function levelButton(comp, action){
+    if(game1.level == "characterSelection"){
+        currentLevel.spawner.creatureFactories = [];
+    }
+    game1.level = action.substring(6, 7);
+    loadLevel(game1.level).then(level => {
+        currentLevel = level;
+        comp.level = level;
+        initializeLevel();
+        unpause(comp);
+    });
+}
+
+
+
 
 
 

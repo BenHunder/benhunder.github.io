@@ -20,9 +20,7 @@
                 "animationOffset": 0.5
             }
         ],
-        "abilities": [
-        ],
-        "type": "enemy"
+        "alignment": "enemy"
     },
     "subCreature": "protector"
     

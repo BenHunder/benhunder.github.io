@@ -1,12 +1,32 @@
+import { globalSoundBoard, spriteSheetMap } from '../main.js';
+import Hit from "./traits/Hit.js";
+import Mystery from "./traits/Mystery.js";
+import { currentLevel } from '../../../js/main.js';
 
 export default class Creature{
-    constructor(spriteSheet, soundBoard){
-        this.spriteSheet = spriteSheet;
-        this.soundBoard = soundBoard;
+    constructor(traits, name, isMaster = false){
+        this.scoreValue = this.alignment === "enemy" ? 10 : 0;
         this.traits = [];
         this.isAnimating = false;
         this.currentFrame = 0;
+        this.currentCell = null;
         this.counter = 0;
+        this.age = 0;
+        this.evolution = 1;
+        this.spawnRate = 0;
+        this.isMaster = isMaster;
+        this.name = name;
+
+        traits.forEach( trait => {
+            if(trait.name === 'hit'){
+                this.addTrait(new Hit(this, trait));
+            }else if(trait.name === 'mystery'){
+                this.addTrait(new Mystery(this, trait));
+            }
+
+            //TODO eventually traits will be defined in the JSON or somehting I guess, but for now, they are just strings. This line is pretty useless rn
+            //creature.addTrait(new Trait(traitName));
+        });
     }
 
     addTrait(trait) {
@@ -14,18 +34,33 @@ export default class Creature{
         this[trait.NAME] = trait;
     }
 
+    //this function just adds a delay so a creature will pause for a second before it sinks after being killed. this was just for the mystery box
     kill(){
         let delay = 0;
         this.traits.forEach( trait => {
             if(typeof trait.kill === 'function'){
                 delay += trait.kill();
             }
-        })
+        });
         return delay;
     }
 
     damage(amount){
         this.health -= amount;
+        if(this.health < 0){
+            this.health = 0;
+        }
+    }
+
+    ageMe(){
+        this.age += 1;
+    }
+
+    attemptPropogation(){
+        const r = Math.random();
+        if(r <= this.propogationRate){
+            currentLevel.spawner.propogate(this);
+        }
     }
 
     update(deltaTime){
@@ -33,34 +68,25 @@ export default class Creature{
             this.counter += deltaTime;
         }
 
-        this.traits.forEach(trait => {
-            trait.update(deltaTime);
-        })
+        // this.traits.forEach(trait => {
+        //     trait.update(deltaTime);
+        // })
     } 
 
-    //this is a temporary solution, should probably have separate classes or something for plants vs creatures or a class for each creature? i don't know yet
-    // drawPlant(context, x, y){
-    //     let i = 0;
-    //     if(this.type === "plant"){
-    //         i = (this.spriteSheet.size() - 1) - Math.floor((this.spriteSheet.size() * this.hunger)/(this.maxHunger));
-    //         if (i > 5){
-    //             i = 5;
-    //         }
-    //     }
-    //     const name = 'frame' + i;
-    //     const buffer = this.spriteSheet.getBuffer(name);
-    //     context.drawImage(buffer, x, y);
-    // }
+    eName(){
+        return this.name + '-e' + this.evolution;
+    }
     
     draw(context, x, y){
+        const spriteSheet = spriteSheetMap.get(this.eName());
         let name = 'frame' + this.currentFrame;
 
         //advance frames
         if(this.isAnimating){
-            if(this.counter >= this.spriteSheet.getDuration(name)/1000){
+            if(this.counter >= spriteSheet.getDuration(name)/1000){
                 this.counter = 0;
                 this.currentFrame += 1;
-                if(this.currentFrame > this.spriteSheet.size()-1){
+                if(this.currentFrame > spriteSheet.size()-1){
                     this.currentFrame = 0;
                     this.isAnimating = false;
                 }
@@ -70,12 +96,12 @@ export default class Creature{
         }
 
         name = 'frame' + this.currentFrame;
-        const buffer = this.spriteSheet.getBuffer(name);
+        const buffer = spriteSheet.getBuffer(name);
         context.drawImage(buffer, x, y);
     }
     playSound(name, delay=0){
-        if(this.soundBoard.hasSound(name)){
-            this.soundBoard.play(name, delay);
+        if(globalSoundBoard.hasSound(name)){
+            globalSoundBoard.play(name, delay);
         }else{
             console.log(name + " sound missing");
         }

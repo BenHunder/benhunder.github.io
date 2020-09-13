@@ -20,9 +20,7 @@
                 "animationOffset": 0.3
             }
         ],
-        "abilities": [
-        ],
-        "type": "enemy"
+        "alignment": "enemy"
     }
     
 

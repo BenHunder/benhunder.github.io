@@ -2,7 +2,7 @@ import Trait from './Trait.js';
 import {globalSoundBoard} from '../../main.js';
 import {player1} from '../../main.js';
 import {game1} from '../../main.js';
-import {cellMap} from '../../main.js';
+import {currentLevel} from '../../main.js';
 
 export default class Mystery extends Trait {
     constructor(creature, trait){
@@ -50,8 +50,8 @@ export default class Mystery extends Trait {
     }
 
     lightning(){
-        cellMap.occupiedCells().forEach( ([name, cell]) => {
-            if(cell.creature.type === "enemy"){
+        currentLevel.cellMap.occupiedCells().forEach( (cell) => {
+            if(cell.creature.alighnment === "enemy"){
                 cell.attack.kill(player1);
             }
         });
