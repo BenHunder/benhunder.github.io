@@ -1,5 +1,5 @@
 { "frames": {
-   "grass-e3.png": {
+   "grass-e1-sheet.png": {
     "frame": { "x": 0, "y": 0, "w": 32, "h": 32 },
     "rotated": false,
     "trimmed": false,
@@ -11,7 +11,7 @@
  "meta": {
   "app": "http://www.aseprite.org/",
   "version": "1.2.15",
-  "image": "grass-e3.png",
+  "image": "grass-e3-sheet.png",
   "format": "RGBA8888",
   "size": { "w": 32, "h": 32 },
   "scale": "1",

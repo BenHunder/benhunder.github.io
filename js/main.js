@@ -107,6 +107,8 @@ let winMenu;
 let paused = true;
 let pauseIndex = 0;
 let onWeapon = true;
+
+let currentHoveredCell;
 function toggleWeapon(){
     onWeapon = !onWeapon;
 }
@@ -170,7 +172,7 @@ async function initialize(){
         // spacebar reloads.. maybe
         controller.setMapping(32, keyState => {
             if(keyState){
-                player1.reload();
+                player1.nextSpecial();
             }
         });
 
@@ -239,12 +241,42 @@ async function initialize(){
         // }
 
         controller.onClick = (x, y) => {
-            const indices = coordinatesToIndices(new Vec2(x, y));
+            const xMin = 0;
+            const xMax = currentLevel.cellMap.gridWidth;
+            const yMin = 0;
+            const yMax = currentLevel.cellMap.gridHeight;
 
-            const cell = currentLevel.cellMap.get(indices.x + "-" + indices.y);
-            if(cell){
-                clickCell(cell);
+            const newIndices = coordinatesToIndices(new Vec2(x, y));
+            if(newIndices.x >= xMin && newIndices.x < xMax && newIndices.y >= yMin && newIndices.y < yMax){
+
+                const cell = currentLevel.cellMap.get(newIndices.x + "-" + newIndices.y);
+                if(cell){
+                    clickCell(cell);
+                }
             }
+        }
+
+        //this function is probably pretty expensive to call as often as it gets called
+        controller.onMouseMove = (x, y) => {
+            const xMin = 0;
+            const xMax = currentLevel.cellMap.gridWidth;
+            const yMin = 0;
+            const yMax = currentLevel.cellMap.gridHeight;
+
+            const newIndices = coordinatesToIndices(new Vec2(x, y));
+            if(newIndices.x >= xMin && newIndices.x < xMax && newIndices.y >= yMin && newIndices.y < yMax){
+                
+                //unhover old cell
+                if(currentHoveredCell){
+                    currentHoveredCell.isHovered = false;
+                }
+
+                //hover new cell
+                const newCell = currentLevel.cellMap.get(newIndices.x + "-" + newIndices.y);
+                newCell.isHovered = true;
+                currentHoveredCell = newCell;
+            }
+            
         }
 
         // letters.forEach((key, n) => {

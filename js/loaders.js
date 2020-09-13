@@ -11,6 +11,7 @@ import Orchill from '../assets/characters/orchill/Orchill.js';
 import Achilia from '../assets/characters/achilia/Achilia.js';
 import Grass from '../assets/characters/grass/Grass.js';
 import Mushboy from '../assets/characters/mushboy/Mushboy.js';
+import Protector from '../assets/characters/protector/Protector.js';
 import Bunbun from '../../assets/characters/bunbun/Bunbun.js';
 import Sprout from '../assets/characters/sprout/Sprout.js';
 
@@ -24,6 +25,7 @@ export const creatureTypes = {
     Grass,
     Sprout,
     Mushboy,
+    Protector,
     Bunbun 
 }
 

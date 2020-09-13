@@ -1,5 +1,5 @@
 { "frames": {
-   "grass-e2.png": {
+   "grass-e1-sheet.png": {
     "frame": { "x": 0, "y": 0, "w": 32, "h": 32 },
     "rotated": false,
     "trimmed": false,

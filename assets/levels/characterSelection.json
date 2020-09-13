@@ -13,18 +13,18 @@
         "spawnRate": -1,
         "creatures": [
             {
-                "type": "mushboy",
+                "type": "protector",
                 "evolutions": 1,
                 "chance": 0.03,
                 "selectionCell": "0-0",
-                "cost": 50
+                "cost": 10
             },
             {
                 "type": "bunbun",
                 "evolutions": 1,
                 "chance": 0.04,
                 "selectionCell": "1-0",
-                "cost": 20
+                "cost": 25
             }  
         ]
     }

@@ -1,5 +1,5 @@
 { "frames": {
-   "grass-e1.png": {
+   "grass-e1-sheet.png": {
     "frame": { "x": 0, "y": 0, "w": 32, "h": 32 },
     "rotated": false,
     "trimmed": false,
@@ -18,7 +18,7 @@
   "frameTags": [
   ],
   "layers": [
-   { "name": "e1", "opacity": 255, "blendMode": "normal" }
+   { "name": "Layer", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [
   ]

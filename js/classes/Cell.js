@@ -19,6 +19,7 @@ export default class Cell{
         this.speed = 50;
         this.duringSinkingAnimation = false;
         this.isActive = false;
+        this.isHovered = false;
         this.isProtected = false;
         this.creature = null;
 
@@ -137,7 +138,7 @@ export default class Cell{
                 this.drawStatus(context);
             }
 
-            this.drawClickedFrame(context);
+            this.drawMouseFrame(context);
 
             if(this.creature){
                 this.drawCreature(context);
@@ -145,12 +146,7 @@ export default class Cell{
     }
 
     drawTerrain(context){
-        // context.drawImage(this.normalBuffer, this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
-        if(this.isActive){
-           context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
-        }else{
-            context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y);
-        }
+        context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y + (this.isActive?Math.ceil(this.depth):0));
     }
 
     drawStatus(context){
@@ -191,11 +187,15 @@ export default class Cell{
 
     }
 
-    drawClickedFrame(context){
+    drawMouseFrame(context){
+
+        if(this.isHovered){
+            context.drawImage(tileSheet.getBuffer('wireframe5'), this.coordinates.x, this.coordinates.y + (this.isActive?Math.ceil(this.depth):0));
+        }
         if(this.hitTimer > 0){
             context.globalAlpha = this.hitTimer;
             // context.drawImage(this.hitBuffer, 0, Math.ceil(this.depth));
-            context.drawImage(tileSheet.getBuffer('wireframe4'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
+            context.drawImage(tileSheet.getBuffer('wireframe4'), this.coordinates.x, this.coordinates.y + (this.isActive?Math.ceil(this.depth):0));
             context.globalAlpha = 1;
         }
     }

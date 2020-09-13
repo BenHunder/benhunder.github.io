@@ -29,12 +29,16 @@ export default class Controller{
 
             this.keyMap.get(keyCode)(keyState);
         }else{
-            this.onClick(event.layerX, event.layerY);
+            if(event.type == "mousemove"){
+                this.onMouseMove(event.layerX, event.layerY);
+            }else{
+                this.onClick(event.layerX, event.layerY);
+            }
         }
     }
 
     listenTo(window){
-        ['keydown', 'keyup', 'click'].forEach(eventName => {
+        ['keydown', 'keyup', 'click', 'mousemove'].forEach(eventName => {
             window.addEventListener(eventName, event => {
                 this.handleEvent(event);
             });
@@ -43,5 +47,9 @@ export default class Controller{
 
     onClick(x, y){
         console.log("click! (no click function defined");
+    }
+
+    onMouseMove(x, y){
+        console.log("no hover function defined");
     }
 }

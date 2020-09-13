@@ -1,7 +1,7 @@
 export default class Player{
     constructor(){
         this.baseScore = 0;
-        this.baseNumAllies = 1;
+        this.baseNumAllies = 2;
         this.maxAmmo = 1;
 
         this.score = this.baseScore;
@@ -10,7 +10,7 @@ export default class Player{
         this.ammo = this.maxAmmo;
 
         this.unlocked = new Map();
-        this.unlocked.set("mushboy", true);
+        this.unlocked.set("protector", true);
         this.unlocked.set("bunbun", true);
 
         this.startingEnergy = 20;
@@ -46,6 +46,13 @@ export default class Player{
 
     reload(){
         this.ammo = this.maxAmmo;
+    }
+
+    nextSpecial(){
+        this.specialSelection += 1;
+        if(this.specialSelection == this.creatureFactories.length){
+            this.specialSelection = 0;
+        }
     }
 
     selectedSpecial(){

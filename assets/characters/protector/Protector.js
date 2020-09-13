@@ -1,23 +1,37 @@
 import Creature from '/js/classes/Creature.js'
+import { currentLevel } from '../../../js/main.js';
 
 export default class Protector extends Creature{
-    constructor(spriteSheet, creatureChance, creatureCluster, selectionCell){
+    constructor(creatureChance, creatureCluster, selectionCell){
 
-        traits = [
+        const traits = [
             {
                 "name": "hit",
-                "rate": 5,
-                "damage": 5,
-                "animationOffset": 2.75
+                "rate": 2.5,
+                "damage": 1,
+                "animationOffset": 0.3
             }
         ];
 
-        super(spriteSheet, traits)
-        this.name = "mushboy";
-        this.height = 40;
+        super(traits)
+        this.name = "protector";
+        this.height = 32;
         this.width = 32;
-        this.health = 20;
-        this.scoreValue = 10;
+
         this.alignment =  "ally";
+        this.scoreValue = 10;
+
+        this.maxHealth = 50;
+        this.health = this.maxHealth;
+        
+        this.power = 0;
+        
+    }
+
+    ageMe(){
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "enemy");
+        if(targetCell){
+            targetCell.attack.start2(this.power);
+        }
     }
 }
