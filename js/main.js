@@ -413,19 +413,6 @@ function initializeGame(){
 
 }
 
-function resetLevel(){
-    currentLevel.cellMap.allCells().forEach((cell) => {
-        cell.reset();
-    });
-    game1.reset();
-    player1.reset();
-}
-
-function initializeLevel(){
-    resetLevel();
-    currentLevel.spawner.initialSpawn();
-}
-
 function resumeButton(comp){
     if(game1.level === "characterSelection"){
         comp.setMenu(creatureMenu);
@@ -436,29 +423,28 @@ function resumeButton(comp){
 function startButton(comp){
     creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
     comp.setMenu(creatureMenu);
+    game1.level = "characterSelection"
+    player1.clearCreatures();
+    player1.resetEnergy();
+    setLevel(comp, game1.level);
     unpause(comp);
-    currentLevel.spawner.spawnSelections();
+    //currentLevel.spawner.spawnSelections();
 }
 
 function restartButton(comp){
-    initializeLevel();
+    setLevel(comp, game1.level);
+    player1.resetEnergy();
     unpause(comp);
 }
 
 function quitButton(comp){
-    game1.level = 0;
     comp.setMenu(startMenu);
 }
 
 function nextLevelButton(comp){
     const nextLevel = (parseInt(game1.level, 10) + 1)
     game1.level = nextLevel;
-    loadLevel(game1.level).then(level => {
-        comp.level = level;
-        currentLevel = level;
-        initializeLevel();
-        unpause(comp);
-    });
+    setLevel(game1.level)
 }
 
 function levelButton(comp, action){
@@ -466,10 +452,13 @@ function levelButton(comp, action){
         currentLevel.spawner.creatureFactories = [];
     }
     game1.level = action.substring(6, 7);
+    setLevel(comp, game1.level);
+}
+
+function setLevel(comp, level){
     loadLevel(game1.level).then(level => {
         currentLevel = level;
         comp.level = level;
-        initializeLevel();
         unpause(comp);
     });
 }

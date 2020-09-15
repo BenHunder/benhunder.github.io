@@ -128,8 +128,10 @@ export default class Cell{
         this.hitTimer = 0;
         this.duringSinkingAnimation = false;
         this.isActive = false;
+        this.isHovered = false;
         this.isProtected = false;
         this.creature = null;
+        this.terrain = null;
     };
 
 

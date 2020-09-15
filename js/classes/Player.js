@@ -66,4 +66,8 @@ export default class Player{
         }
     }
 
+    resetEnergy(){
+        this.energy = this.startingEnergy;
+    }
+
 }

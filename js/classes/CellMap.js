@@ -58,28 +58,28 @@ export default class CellMap{
     }
 
     upperRight(cell){
-        const x = cell.indices.x + 1;
+        const x = cell.indices.x % 2 == 0 ? cell.indices.x : cell.indices.x + 1;
         const y = cell.indices.y - 1;
 
         return this.get(new Vec2(x, y));
     }
 
     lowerRight(cell){
-        const x = cell.indices.x + 1;
+        const x = cell.indices.x % 2 == 0 ? cell.indices.x : cell.indices.x + 1;
         const y = cell.indices.y + 1;
 
         return this.get(new Vec2(x, y));
     }
 
     upperLeft(cell){
-        const x = cell.indices.x;
+        const x = cell.indices.x % 2 == 0 ? cell.indices.x - 1 : cell.indices.x;
         const y = cell.indices.y - 1;
 
         return this.get(new Vec2(x, y));
     }
 
     lowerLeft(cell){
-        const x = cell.indices.x;
+        const x = cell.indices.x % 2 == 0 ? cell.indices.x - 1 : cell.indices.x;
         const y = cell.indices.y + 1;
 
         return this.get(new Vec2(x, y));

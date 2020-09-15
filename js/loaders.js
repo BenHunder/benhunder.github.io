@@ -173,11 +173,7 @@ export function loadLevel(lvl){
                             cell = new Cell(j + "-" + i, new Vec2(j, i), indicesToCoordinates(new Vec2(j, i)), level.cellmap.key["default"]);
                             cellMap.set(cell.name, cell.indices, cell);
                             
-                            console.log("match", cellFill);
-                            const cell2 = cellMap.get(cell.indices)
-                            const newCreature = cf.create()
-                            console.log("attemping to spawn ", newCreature, " on ", cell2);
-                            cell2.spawnNew(newCreature);
+                            cell.spawnNew(cf.create());
                         }
                     });
                     if(!isACreature){
