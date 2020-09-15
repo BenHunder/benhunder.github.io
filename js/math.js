@@ -30,7 +30,7 @@ export function coordinatesToIndices(cvec){
     const xOff = 60;
     const yOff = 100;
 
-    const y = Math.floor((cvec.y - yOff)/21);
+    const y = Math.floor((cvec.y - yOff - 6)/21);
     const x = Math.floor((cvec.x - xOff - ((y%2) * 16))/32);
     
     //console.log(`in: ${cvec.x}, ${cvec.y} out: ${x}, ${y}` )

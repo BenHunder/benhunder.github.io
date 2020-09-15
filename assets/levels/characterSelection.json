@@ -1,14 +1,25 @@
 {
-    "map": [ 
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"]
-    ],
+    "cellmap": {
+        "map": [ 
+            ["p1", "b1", "g1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "o1", "g1", "g1", "g1"],
+            ["g1", "w1", "w1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "w1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+            ["g1", "w1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "m1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "o1", "g1", "g1", "g1", "g1", "m1", "m1", "w1", "m1", "g1", "g1", "g1"],
+            ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "m1", "w1", "m1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "m1", "m1", "g1", "g1", "g1", "g1"]
+        ],
+        "key": {
+            "g1": "grassland",
+            "w1": "water",
+            "m1": "mountain",
+            "o1": "outpost",
+            "p1": "protector",
+            "b1": "bunbun",
+            "default": "grassland"
+        }   
+    },
     "spawner": {
         "spawnRate": -1,
         "creatures": [

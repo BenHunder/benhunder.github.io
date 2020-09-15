@@ -90,7 +90,11 @@ export default class Cell{
             this.creature = creature;
             this.spawn.start();
         }else{
-            console.log("tried to spawn on active cell");
+            if(this.creature){
+                console.log("tried to spawn a " + creature.name + " on active cell " + this.name + " which already contained " + this.creature.name);
+            }else{
+                console.log("tried to spawn a " + creature.name + " on a non-spawnable cell " + this.name);
+            }
         }
     }
 

@@ -19,6 +19,7 @@ import Sprout from '../assets/characters/sprout/Sprout.js';
 const gameWidth = 640;
 const gameHeight = 360;
 
+// this is called ES6 Object Literal Property Value Shorthand
 export const creatureTypes = {
     Achilia,
     Orchill,
@@ -133,37 +134,61 @@ export function loadLevel(lvl){
         backgroundBuffer.width = gameWidth;
         backgroundBuffer.height = gameHeight;
         backgroundBuffer.getContext('2d').drawImage(img, 0, 0);
-        
-        const cellWidth = level.map[0].length;
-        const cellHeight = level.map.length;
-        const cellMap = new CellMap(cellWidth, cellHeight);
-        for(let i=0; i < cellHeight; i++){
-            for(let j=0; j < cellWidth; j++){ 
-                const cell = new Cell(j + "-" + i, new Vec2(j, i), indicesToCoordinates(new Vec2(j, i)), level.map[i][j]);
-                cellMap.set(cell.name, cell.indices, cell);
-            }
-        }
-        const newSpawner = new Spawner(cellMap, level.spawner.spawnRate);
 
+        //initialize cellmap
+        const cellWidth = level.cellmap.map[0].length;
+        const cellHeight = level.cellmap.map.length;
+        const cellMap = new CellMap(cellWidth, cellHeight);
+
+        //load creature (factories) from level.spawner into Spawner object
+        const spawner = new Spawner(cellMap, level.spawner.spawnRate);
         let promisesArray = [];
 
-        //load creatures in the level.json
         level.spawner.creatures.forEach( creatureSpec => {
             promisesArray.push( 
                 loadCreatureType(creatureSpec.type, creatureSpec.evolutions, creatureSpec.initialChance, creatureSpec.cluster, creatureSpec.selectionCell, creatureSpec.cost)
                 .then( creatureFactory => {
-                    newSpawner.addCreature(creatureFactory);
+                    spawner.addCreature(creatureFactory);
                 })
             );
         });
         return Promise.all(promisesArray).then( x => {
 
-            //add player selections
+            //add player ally selections to spawner
             player1.creatureFactories.forEach( cf => {
-                newSpawner.addCreature(cf);
+                spawner.addCreature(cf);
             })
-            return new Level(backgroundBuffer, cellMap, newSpawner);
-        });
+
+            //load terrains and predetermined creatures into cellmap
+            for(let i=0; i < cellHeight; i++){
+                for(let j=0; j < cellWidth; j++){ 
+
+                    const cellFill = level.cellmap.key[level.cellmap.map[i][j]];
+                    let cell = null;
+
+                    let isACreature = false
+                    spawner.creatureFactories.forEach(cf => {
+                        if(cf.name == cellFill){
+                            isACreature = true;
+                            cell = new Cell(j + "-" + i, new Vec2(j, i), indicesToCoordinates(new Vec2(j, i)), level.cellmap.key["default"]);
+                            cellMap.set(cell.name, cell.indices, cell);
+                            
+                            console.log("match", cellFill);
+                            const cell2 = cellMap.get(cell.indices)
+                            const newCreature = cf.create()
+                            console.log("attemping to spawn ", newCreature, " on ", cell2);
+                            cell2.spawnNew(newCreature);
+                        }
+                    });
+                    if(!isACreature){
+                        cell = new Cell(j + "-" + i, new Vec2(j, i), indicesToCoordinates(new Vec2(j, i)), cellFill);
+                        cellMap.set(cell.name, cell.indices, cell);
+                    }                }
+            }
+
+            return new Level(backgroundBuffer, cellMap, spawner);
+
+        });  
     });
 }
 

@@ -1,0 +1,47 @@
+{
+    "spawner": {
+        "spawnRate": 0.8,
+        "creatures": [
+            {
+                "type": "grass",
+                "evolutions": 3,
+                "initialChance": 0.1
+            },
+            {
+                "type": "sprout",
+                "evolutions": 3,
+                "initialChance": 0.05
+            },
+            {
+                "type": "achilia",
+                "evolutions": 1,
+                "initialChance": 0.04
+            },
+            {
+                "type": "orchill",
+                "evolutions": 3,
+                "initialChance": 0.04
+            }
+        ]
+    },
+    "cellmap": {
+        "map": [ 
+            ["w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1"],
+                ["g1", "g1", "g1", "g1", "g1", "w1", "w1", "w1", "w1", "g1", "g1", "g1", "o1", "g1", "g1", "g1"],
+            ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "w1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "o1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+            ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "w1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "g1", "g1", "w1", "w1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+            ["g1", "g1", "g1", "g1", "g1", "g1", "w1", "w1", "w1", "w1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1", "w1"]
+        ],
+        "key":{
+            "w1": "water",
+            "g1": "grassland",
+            "m1": "mountain",
+            "o1": "outpost",
+            "default": "grassland"
+        }
+    }
+    
+}

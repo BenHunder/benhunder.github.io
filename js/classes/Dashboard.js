@@ -66,8 +66,8 @@ export default class Dashboard extends Layer{
                 context.lineWidth = 2;
                 context.strokeStyle = "#D72727";
                 context.beginPath();
-                context.moveTo(x + xCost - 3, y - 10);
-                context.lineTo(x + xCost + 3, y - 10);
+                context.moveTo(x + xCost - 5, y - 6);
+                context.lineTo(x + xCost + 5, y - 6);
                 context.stroke();
             }
         });

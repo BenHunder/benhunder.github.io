@@ -117,8 +117,20 @@ export class Spawner{
     spawnSelections(){
         this.creatureFactories.forEach( creatureFactory => {
             if(player1.hasUnlocked(creatureFactory.name)){
+                this.spawnCreatureAt(creatureFactory, creatureFactory.selectionCell);
+            }
+        });
+    }
+
+    spawnPredeterminedCreatures(){
+        this.creatureFactories.forEach( creatureFactory => {
+            if(player1.hasUnlocked(creatureFactory.name)){
                 this.cellMap.get(creatureFactory.selectionCell).spawnNew(creatureFactory.create())
             }
         });
+    }
+
+    spawnCreatureAt(cf, cell){
+        this.cellMap.get(cell).spawnNew(cf.create())
     }
 }
