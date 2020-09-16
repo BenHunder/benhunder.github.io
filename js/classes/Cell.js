@@ -131,7 +131,6 @@ export default class Cell{
         this.isHovered = false;
         this.isProtected = false;
         this.creature = null;
-        this.terrain = null;
     };
 
 
@@ -152,7 +151,11 @@ export default class Cell{
     }
 
     drawTerrain(context){
-        context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y + (this.isActive?Math.ceil(this.depth):0));
+        try{
+            context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y + (this.isActive?Math.ceil(this.depth):0));
+        }catch(err){
+            console.log("error on ", this.terrain);
+        }
     }
 
     drawStatus(context){

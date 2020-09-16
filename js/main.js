@@ -167,7 +167,7 @@ async function initialize(){
 
         comp.level = currentLevel;
     
-        const controller = new Controller();
+        const controller = new Controller(gameCanvas);
 
         // spacebar reloads.. maybe
         controller.setMapping(32, keyState => {
@@ -459,6 +459,7 @@ function setLevel(comp, level){
     loadLevel(game1.level).then(level => {
         currentLevel = level;
         comp.level = level;
+        level.spawner.initialSpawn();
         unpause(comp);
     });
 }
