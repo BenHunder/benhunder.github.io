@@ -29,7 +29,7 @@ export default class Bunbun extends Creature{
     }
 
     ageMe(){
-        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "enemy");
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell);
         if(targetCell){
             targetCell.attack.start2(this.power);
         }

@@ -19,7 +19,7 @@ export default class Orchill extends Creature{
         this.health = this.maxHealth;
         this.scoreValue = 0;
         this.propogationRate = 0.03;
-        this.power = 2;
+        this.power = 3;
         this.alignment =  "enemy";
 
         

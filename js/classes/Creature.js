@@ -7,7 +7,7 @@ export default class Creature{
     constructor(traits, name, isMaster = false){
         this.scoreValue = this.alignment === "enemy" ? 10 : 0;
         this.traits = [];
-        this.isAnimating = false;
+        this.isAnimating = true;
         this.currentFrame = 0;
         this.currentCell = null;
         this.counter = 0;
@@ -77,8 +77,9 @@ export default class Creature{
         return this.name + '-e' + this.evolution;
     }
     
-    draw(context, x, y){
+    draw(context, x, y, animationName){
         const spriteSheet = spriteSheetMap.get(this.eName());
+        const animation = animationName == 'still' ? {"start": 0, "end": 0} : spriteSheet.getAnimation(animationName);
         let name = 'frame' + this.currentFrame;
 
         //advance frames
@@ -86,9 +87,8 @@ export default class Creature{
             if(this.counter >= spriteSheet.getDuration(name)/1000){
                 this.counter = 0;
                 this.currentFrame += 1;
-                if(this.currentFrame > spriteSheet.size()-1){
-                    this.currentFrame = 0;
-                    this.isAnimating = false;
+                if(this.currentFrame > animation.end){
+                    this.currentFrame = animation.start;
                 }
             }
         }else{

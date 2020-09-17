@@ -14,6 +14,8 @@ import Mushboy from '../assets/characters/mushboy/Mushboy.js';
 import Protector from '../assets/characters/protector/Protector.js';
 import Bunbun from '../../assets/characters/bunbun/Bunbun.js';
 import Sprout from '../assets/characters/sprout/Sprout.js';
+import Welder from '../assets/characters/welder/Welder.js';
+import Boxer from '../assets/characters/boxer/Boxer.js';
 
 
 const gameWidth = 640;
@@ -27,7 +29,9 @@ export const creatureTypes = {
     Sprout,
     Mushboy,
     Protector,
-    Bunbun 
+    Bunbun,
+    Welder,
+    Boxer
 }
 
 export function loadJson(path){
@@ -69,6 +73,9 @@ export function loadFrames(spriteSheetLocation, frameDataLocation, creatureName)
         frameNames.forEach( (frameName, n) => {
             const frame = frameData.frames[frameName].frame;
             sprites.define('frame' + n, frame.x, frame.y, frame.w, frame.h, frameData.frames[frameName].duration);
+        });
+        frameData.meta.frameTags.forEach(tag => { 
+            sprites.defineAnimation(tag.name, {"start":tag.from, "end":tag.to});
         });
         spriteSheetMap.set(creatureName, sprites);
     })

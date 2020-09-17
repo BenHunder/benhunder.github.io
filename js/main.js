@@ -293,9 +293,6 @@ async function initialize(){
 
         function clickCell(cell){
             if(!paused){
-                //age all cells
-                currentLevel.cellMap.occupiedCells().forEach((cell) => cell.creature.ageMe());
-
                 //interact with cell
                 const selection = cell.interact(player1.weapon, player1);
 
@@ -319,6 +316,9 @@ async function initialize(){
                     if(player1.ammo == 0){
                         player1.reload()
                     }
+
+                    //age all cells
+                    currentLevel.cellMap.occupiedCells().forEach((cell) => cell.creature.ageMe());
 
                     //increment energy by one each turn
                     player1.addEnergy();
@@ -362,7 +362,7 @@ function start(comp){
                 const outpostsUnderSiege = []
                 currentLevel.cellMap.findOutposts().forEach(outpost => {
                     //if it can find an enemy target adjacent to it, that means it is under siege and you lose
-                    if(currentLevel.cellMap.randomAdjacentTarget(outpost)){
+                    if(currentLevel.cellMap.randomAdjacentTarget(outpost, "enemy")){
                         outpostsUnderSiege.push(outpost);
                     }
                 });
@@ -444,7 +444,7 @@ function quitButton(comp){
 function nextLevelButton(comp){
     const nextLevel = (parseInt(game1.level, 10) + 1)
     game1.level = nextLevel;
-    setLevel(game1.level)
+    setLevel(comp, game1.level);
 }
 
 function levelButton(comp, action){
@@ -455,11 +455,13 @@ function levelButton(comp, action){
     setLevel(comp, game1.level);
 }
 
-function setLevel(comp, level){
-    loadLevel(game1.level).then(level => {
+function setLevel(comp, levelName){
+    loadLevel(levelName).then(level => {
         currentLevel = level;
         comp.level = level;
-        level.spawner.initialSpawn();
+        if(levelName != "characterSelection"){
+            level.spawner.initialSpawn();
+        }
         unpause(comp);
     });
 }

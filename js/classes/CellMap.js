@@ -109,8 +109,13 @@ export default class CellMap{
         return this.adjacentTo(cell).filter(cell => cell.isSpawnable());
     }
 
-    randomAdjacentTarget(cell, alignment = "enemy"){
-        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.alignment === alignment);
+    randomAdjacentTarget(cell, alignment = null){
+        let occupied = null;
+        if(alignment){
+            occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.alignment === alignment);    
+        }else{
+            occupied = this.adjacentTo(cell).filter(cell => cell.isActive);
+        }
         let r = getRandomInt(occupied.length);
         return occupied.length > 0 ? occupied[r]:null;
     }

@@ -59,7 +59,7 @@ export default class Dashboard extends Layer{
             //should probably get the correct value for these if variable sizes are needed
             const halfSpecialWidth = 16;
             const specialHeight = 32;
-            newCreature.draw(context, x + xCost - halfSpecialWidth, y - specialHeight);
+            newCreature.draw(context, x + xCost - halfSpecialWidth, y - specialHeight, 'still');
 
             //temporary way to indicate selected special
             if(i == this.player.specialSelection){

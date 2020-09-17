@@ -96,6 +96,7 @@
   "size": { "w": 352, "h": 40 },
   "scale": "1",
   "frameTags": [
+    { "name": "idle", "from": 0, "to": 0, "direction": "forward" }
   ],
   "layers": [
    { "name": "testLayer", "opacity": 255, "blendMode": "normal" },

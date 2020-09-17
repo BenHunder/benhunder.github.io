@@ -21,15 +21,26 @@ export default class Achilia extends Creature{
         this.propogationRate = 0.15;
         this.alignment =  "enemy";
 
+        this.power = 1;
+
         
     }
 
     ageMe(){
         this.age += 1;
+        this.attack();
         super.attemptPropogation();
     }
 
     evolve(){}
+
+    attack(){
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "ally");
+        if(targetCell){
+            console.log(this.currentCell.name + " attacks " + targetCell.name);
+            targetCell.attack.start2(this.power);
+        }
+    }
 
     //if this achilia is the master, it should kill all offspring.
     //todo? fix this so its possible to determine all of one achilia's offspring

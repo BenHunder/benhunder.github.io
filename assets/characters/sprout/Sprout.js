@@ -12,14 +12,25 @@ export default class Sprout extends Creature{
         this.scoreValue = 0;
         this.propogationRate = 0.02
         this.alignment =  "enemy";
+
+        this.power = 2;
     }
 
     ageMe(){
         this.age += 1;
+        this.attack();
         if(this.age%5 == 0 && this.evolution < 3){
             this.evolve();
         }
         super.attemptPropogation();
+    }
+
+    attack(){
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "ally");
+        if(targetCell){
+            console.log(this.currentCell.name + " attacks " + targetCell.name);
+            targetCell.attack.start2(this.power);
+        }
     }
 
     evolve(){

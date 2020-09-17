@@ -227,6 +227,6 @@ export default class Cell{
             context.lineWidth = 2;         // thickness
             context.strokeRect(x, y, 32, 32);
         }
-        this.creature.draw(context, x, y + Math.ceil(this.depth));
+        this.creature.draw(context, x, y + Math.ceil(this.depth), 'idle');
     }
 }

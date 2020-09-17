@@ -1,5 +1,5 @@
 { "frames": {
-   "plant-01 0.aseprite": {
+   "boxer 0.aseprite": {
     "frame": { "x": 0, "y": 0, "w": 32, "h": 32 },
     "rotated": false,
     "trimmed": false,
@@ -7,7 +7,7 @@
     "sourceSize": { "w": 32, "h": 32 },
     "duration": 100
    },
-   "plant-01 1.aseprite": {
+   "boxer 1.aseprite": {
     "frame": { "x": 32, "y": 0, "w": 32, "h": 32 },
     "rotated": false,
     "trimmed": false,
@@ -15,7 +15,7 @@
     "sourceSize": { "w": 32, "h": 32 },
     "duration": 100
    },
-   "plant-01 2.aseprite": {
+   "boxer 2.aseprite": {
     "frame": { "x": 64, "y": 0, "w": 32, "h": 32 },
     "rotated": false,
     "trimmed": false,
@@ -23,7 +23,7 @@
     "sourceSize": { "w": 32, "h": 32 },
     "duration": 100
    },
-   "plant-01 3.aseprite": {
+   "boxer 3.aseprite": {
     "frame": { "x": 96, "y": 0, "w": 32, "h": 32 },
     "rotated": false,
     "trimmed": false,
@@ -31,7 +31,7 @@
     "sourceSize": { "w": 32, "h": 32 },
     "duration": 100
    },
-   "plant-01 4.aseprite": {
+   "boxer 4.aseprite": {
     "frame": { "x": 128, "y": 0, "w": 32, "h": 32 },
     "rotated": false,
     "trimmed": false,
@@ -39,8 +39,8 @@
     "sourceSize": { "w": 32, "h": 32 },
     "duration": 100
    },
-   "plant-01 5.aseprite": {
-    "frame": { "x": 320, "y": 0, "w": 32, "h": 32 },
+   "boxer 5.aseprite": {
+    "frame": { "x": 160, "y": 0, "w": 32, "h": 32 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
@@ -50,16 +50,16 @@
  },
  "meta": {
   "app": "http://www.aseprite.org/",
-  "version": "1.2.13",
-  "image": "plant-01-sprites.png",
+  "version": "1.2.15",
+  "image": "boxer-e1-sheet.png",
   "format": "RGBA8888",
   "size": { "w": 192, "h": 32 },
   "scale": "1",
   "frameTags": [
-    { "name": "idle", "from": 0, "to": 0, "direction": "forward" }
+   { "name": "idle", "from": 0, "to": 5, "direction": "forward" }
   ],
   "layers": [
-   { "name": "idle", "opacity": 255, "blendMode": "normal" }
+   { "name": "boxer", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [
   ]

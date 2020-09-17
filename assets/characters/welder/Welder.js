@@ -1,7 +1,7 @@
 import Creature from '/js/classes/Creature.js'
 import { currentLevel } from '../../../js/main.js';
 
-export default class Protector extends Creature{
+export default class Welder extends Creature{
     constructor(creatureChance, creatureCluster, selectionCell){
 
         const traits = [
@@ -14,14 +14,14 @@ export default class Protector extends Creature{
         ];
 
         super(traits)
-        this.name = "protector";
+        this.name = "welder";
         this.height = 32;
         this.width = 32;
 
         this.alignment =  "ally";
         this.scoreValue = 10;
 
-        this.maxHealth = 15;
+        this.maxHealth = 30;
         this.health = this.maxHealth;
         
         this.power = 10;
@@ -29,7 +29,7 @@ export default class Protector extends Creature{
     }
 
     ageMe(){
-        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "ally");
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell);
         if(targetCell){
             targetCell.attack.start2(this.power);
         }
