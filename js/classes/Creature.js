@@ -3,7 +3,6 @@ import { currentLevel } from '../../../js/main.js';
 
 export default class Creature{
     constructor(name, isMaster = false){
-        this.scoreValue = this.alignment === "enemy" ? 10 : 0;
 
         this.isAnimating = true;
         this.currentAnimation = 'idle';

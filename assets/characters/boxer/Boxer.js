@@ -10,7 +10,6 @@ export default class Boxer extends Creature{
         this.width = 32;
 
         this.alignment =  "ally";
-        this.scoreValue = 10;
 
         this.maxHealth = 30;
         this.health = this.maxHealth;

@@ -477,6 +477,9 @@ function endTurn(clickedCell){
 
     //increment energy by one each turn
     player1.addEnergy();
+
+    //spawn asteroids
+    currentLevel.spawner.spawnAll();
 }
 
 

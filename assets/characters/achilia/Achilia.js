@@ -9,7 +9,6 @@ export default class Achilia extends Creature{
         this.width = 32;
         this.maxHealth = 1;
         this.health = this.maxHealth;
-        this.scoreValue = 0;
         this.propogationRate = 0.15;
         this.alignment =  "enemy";
 

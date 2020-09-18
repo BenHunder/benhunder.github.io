@@ -44,40 +44,18 @@ export class Spawner{
 
     spawnAll(){
         this.creatureFactories.forEach( creatureFactory => {
-            const r = Math.random();
-            if(r <= creatureFactory.chance){
-                if (creatureFactory.cluster > 1){
-                    this.spawnMultiple(creatureFactory);
-                }else{
-                    let creature = creatureFactory.create(true);
-                    let cell = null;
-
-                    if (creature instanceof Protector){
-                        //pick a random occupied cell then spawn a protector next to it, protecting it
-                        const targetCell = this.cellMap.randomOccupiedCell();
-                        if(targetCell){
-                            creature.targetCell = targetCell
-                            cell = this.cellMap.randomAdjacentTo(creature.targetCell, 1)[0];
-                        }
-                    }else if (creature instanceof Dragon){
-                        //pick a random cell and try to find two available adjacent cells to spawn protectors protecting the dragon
-                        cell = this.cellMap.randomAvailableCell();
-                        if(cell){
-                            const protectorCells = this.cellMap.randomAdjacentTo(cell, 2);
-                            protectorCells.forEach( c => {
-                                let protector = creature.subCreatureFactory.create();
-                                protector.targetCell = cell;
-                                c.spawnNew(protector);
-                            })
-                        }
-                    }else if(creature instanceof Spiderboy){
-                        cell = this.cellMap.spiderSpawn();
+            if(creatureFactory.name == 'asteroid'){
+                const r = Math.random();
+                if(r <= creatureFactory.chance){
+                    if (creatureFactory.cluster > 1){
+                        this.spawnMultiple(creatureFactory);
                     }else{
-                        cell = this.cellMap.randomAvailableCell();
-                    }
-                    
-                    if(cell){
-                        cell.spawnNew(creature);
+                        let creature = creatureFactory.create(true);
+                        const cell = this.cellMap.randomAvailableCell();
+                        
+                        if(cell){
+                            cell.spawnNew(creature);
+                        }
                     }
                 }
             }

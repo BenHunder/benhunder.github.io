@@ -9,7 +9,6 @@ export default class Dragon extends Creature{
         this.height = 40;
         this.width = 32;
         this.health = 20;
-        this.scoreValue = 10;
         this.alignment =  "ally";
     }
 }

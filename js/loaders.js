@@ -16,6 +16,7 @@ import Bunbun from '../../assets/characters/bunbun/Bunbun.js';
 import Sprout from '../assets/characters/sprout/Sprout.js';
 import Welder from '../assets/characters/welder/Welder.js';
 import Boxer from '../assets/characters/boxer/Boxer.js';
+import Asteroid from '../assets/characters/asteroid/Asteroid.js';
 
 
 const gameWidth = 640;
@@ -31,7 +32,8 @@ export const creatureTypes = {
     Protector,
     Bunbun,
     Welder,
-    Boxer
+    Boxer,
+    Asteroid
 }
 
 export function loadJson(path){

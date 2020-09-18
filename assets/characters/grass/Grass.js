@@ -8,7 +8,6 @@ export default class Grass extends Creature{
         this.width = 32;
         this.maxHealth = 10;
         this.health = this.maxHealth;
-        this.scoreValue = 0;
         this.propogationRate = 0.05;
         this.alignment =  "enemy";
 

@@ -88,6 +88,14 @@
     "h": 32
   },
   {
+    "name": "asteroid",
+    "type": "status",
+    "x": 160,
+    "y": 32,
+    "w": 32,
+    "h": 64
+  },
+  {
     "name": "wireframe",
     "type": "frame",
     "x": 0,

@@ -114,7 +114,7 @@ export default class CellMap{
         if(alignment){
             occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.alignment === alignment);    
         }else{
-            occupied = this.adjacentTo(cell).filter(cell => cell.isActive);
+            occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.alignment != "neutral");
         }
         let r = getRandomInt(occupied.length);
         return occupied.length > 0 ? occupied[r]:null;

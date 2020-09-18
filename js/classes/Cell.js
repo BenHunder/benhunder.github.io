@@ -56,8 +56,15 @@ export default class Cell{
     
     update(deltaTime){
         //spawn animation
-        if(this.isActive && (!this.duringSinkingAnimation) && (this.depth > 0)){
-            this.depth -= this.speed * deltaTime;
+        if(this.isActive && (!this.duringSinkingAnimation) && (this.depth != 0)){
+            if(this.depth < 0.5 && this.depth > -0.5){
+                this.depth = 0;
+            }else if(this.depth > 0){
+                this.depth -= this.speed * deltaTime;
+            }else{
+                this.depth += this.speed * deltaTime;
+            }
+            
         }
 
         //attack animation
@@ -117,6 +124,10 @@ export default class Cell{
         if(this.isSpawnable()){
             creature.currentCell = this;
             this.creature = creature;
+            if(creature.name == "asteroid"){
+                this.speed = 200;
+                this.depth = -300;
+            }
             this.isActive = true;
         }else{
             if(this.creature){

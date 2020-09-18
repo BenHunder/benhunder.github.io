@@ -10,7 +10,6 @@ export default class Protector extends Creature{
         this.width = 32;
 
         this.alignment =  "ally";
-        this.scoreValue = 10;
 
         this.maxHealth = 15;
         this.health = this.maxHealth;
