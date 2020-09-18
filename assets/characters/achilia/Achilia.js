@@ -4,15 +4,7 @@ import { currentLevel } from '../../../js/main.js';
 export default class Achilia extends Creature{
     constructor(isMaster = false){
 
-        const traits = [
-            {
-                "name": "hit",
-                "rate": 5,
-                "damage": 5,
-                "animationOffset": 2.75
-            }
-        ];
-        super(traits, 'achilia', isMaster);
+        super('achilia', isMaster);
         this.height = 32;
         this.width = 32;
         this.maxHealth = 1;
@@ -26,19 +18,11 @@ export default class Achilia extends Creature{
         
     }
 
-    ageMe(){
-        this.age += 1;
-        this.attack();
-        super.attemptPropogation();
-    }
-
-    evolve(){}
-
-    attack(){
+    attemptFight(){
         const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "ally");
         if(targetCell){
             console.log(this.currentCell.name + " attacks " + targetCell.name);
-            targetCell.attack.start2(this.power);
+            targetCell.attack(this.power);
         }
     }
 
@@ -50,7 +34,7 @@ export default class Achilia extends Creature{
                 //check if creatures are the same class
                 //todo: issue how to deal with multiple master creatures
                 if(cell.creature.constructor === this.constructor && cell.name != this.currentCell.name && !cell.creature.isMaster){
-                    cell.attack.kill();
+                    cell.kill();
                 }
             });
         }

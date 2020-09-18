@@ -3,15 +3,7 @@ import Creature from '/js/classes/Creature.js'
 export default class Grass extends Creature{
     constructor(creatureChance, creatureCluster, selectionCell){
 
-        const traits = [
-            {
-                "name": "hit",
-                "rate": 5,
-                "damage": 5,
-                "animationOffset": 2.75
-            }
-        ];
-        super(traits, 'grass');
+        super('grass');
         this.height = 32;
         this.width = 32;
         this.maxHealth = 10;
@@ -23,18 +15,13 @@ export default class Grass extends Creature{
         
     }
 
-    ageMe(){
-        this.age += 1;
-        super.attemptPropogation();
+    attemptEvolution(){
         if(this.age%10 == 0 && this.evolution < 3){
-            this.evolve();
+            //evolve
+            this.evolution += 1;
+            const currentDamage = this.maxHealth - this.health;
+            this.maxHealth += 10;
+            this.health = this.maxHealth - currentDamage;
         }
-    }
-
-    evolve(){
-        this.evolution += 1;
-        const currentDamage = this.maxHealth - this.health;
-        this.maxHealth += 10;
-        this.health = this.maxHealth - currentDamage;
     }
 }

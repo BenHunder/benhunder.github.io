@@ -37,7 +37,7 @@ export class Spawner{
         for (let i = 0; i < density; i++) {
             //this.spawnAll();
             if(i%2 == 0){
-                this.cellMap.occupiedCells().forEach((cell) => cell.creature.ageMe());
+                this.cellMap.occupiedCells().forEach((cell) => cell.creature.attemptPropogation());
             }
         }
     }

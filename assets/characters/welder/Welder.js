@@ -4,16 +4,7 @@ import { currentLevel } from '../../../js/main.js';
 export default class Welder extends Creature{
     constructor(creatureChance, creatureCluster, selectionCell){
 
-        const traits = [
-            {
-                "name": "hit",
-                "rate": 2.5,
-                "damage": 1,
-                "animationOffset": 0.3
-            }
-        ];
-
-        super(traits)
+        super();
         this.name = "welder";
         this.height = 32;
         this.width = 32;
@@ -28,10 +19,12 @@ export default class Welder extends Creature{
         
     }
 
-    ageMe(){
+    attemptFight(){
         const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell);
         if(targetCell){
-            targetCell.attack.start2(this.power);
+            this.currentAnimation = 'fight';
+            targetCell.attack(this.power);
+            
         }
     }
 }

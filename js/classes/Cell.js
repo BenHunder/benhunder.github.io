@@ -1,8 +1,5 @@
-import Attack from './traits/Attack.js';
-import Spawn from './traits/Spawn.js';
 import Weapon from './Weapon.js';
 import { globalSoundBoard, tileSheet } from '../main.js';
-import { Vec2 } from '../math.js';
 
 export default class Cell{
     constructor(name, indices, coordinates, terrain){
@@ -18,6 +15,7 @@ export default class Cell{
         this.maxDepth = 50;
         this.speed = 50;
         this.duringSinkingAnimation = false;
+        this.sinkDelay = 0;
         this.isActive = false;
         this.isHovered = false;
         this.isProtected = false;
@@ -25,20 +23,55 @@ export default class Cell{
 
         this.terrain = terrain;
         this.status = "frozen"
-
-        this.traits = [];
-
-        this.addTrait(new Attack(this));
-        this.addTrait(new Spawn(this));
-        
     }
 
+
+    attack(amount){
+        if(!this.duringSinkingAnimation && !this.isProtected){
+            globalSoundBoard.play('bonkEnemy');
+            this.creature.damage(amount);
+        }
+    }
+    //kill creature, the player is passed as an argument so their score will be increased
+    //todo: added the default player just to make achilia work, revist score later
+    kill(){
+        if(!this.duringSinkingAnimation){
+            this.creature.playSound('kill', 80);
+            const delay = this.creature.kill();
+
+            if(delay === 0){
+                this.duringSinkingAnimation = true;
+            }else if( delay > 0){
+                this.sinkDelay = delay;
+                this.duringSinkingAnimation = true;
+            }else{
+                //negative delay here is a special case where the cell shouldn't sink or die after the creature was killed. If killing a creature would replace it with another creature for example, that kill function should return a negative delay
+            }
+        }
+    }
     
     
     update(deltaTime){
-        this.traits.forEach(trait => {
-            trait.update(deltaTime);
-        });
+        //spawn animation
+        if(this.isActive && (!this.duringSinkingAnimation) && (this.depth > 0)){
+            this.depth -= this.speed * deltaTime;
+        }
+
+        //attack animation
+        if(this.creature && this.creature.health <= 0){
+            this.kill();
+        }
+        if(this.sinkDelay >= 0){
+            this.sinkDelay -= deltaTime;
+        }else{
+            if(this.duringSinkingAnimation && this.depth < this.maxDepth){
+                this.depth += this.speed * deltaTime;
+            }else if(this.duringSinkingAnimation && this.depth >= this.maxDepth){
+                this.duringSinkingAnimation = false;
+                this.reset();
+            }
+        }
+
         this.isProtected = false;
 
         if(this.hitTimer > 0){
@@ -48,19 +81,12 @@ export default class Cell{
         }
     }
 
-    addTrait(trait){
-        this.traits.push(trait);
-        this[trait.NAME] = trait;
-
-    }
-
-    //routes to appropriate trait based on held item and cell state, then damages player if an inactive cell is pressed or adds score if a creature is killed
     interact(item, player){
         this.hitTimer = this.trailTime;
         if(this.isActive){
             if(item instanceof Weapon && player.ammo > 0){
                 this.creature.isHeld = true;
-                this.attack.start(item, player);
+                this.attack(item.power);
                 return this.creature.name;
             }
         }else{
@@ -88,7 +114,7 @@ export default class Cell{
         if(this.isSpawnable()){
             creature.currentCell = this;
             this.creature = creature;
-            this.spawn.start();
+            this.isActive = true;
         }else{
             if(this.creature){
                 console.log("tried to spawn a " + creature.name + " on active cell " + this.name + " which already contained " + this.creature.name);
@@ -227,6 +253,6 @@ export default class Cell{
             context.lineWidth = 2;         // thickness
             context.strokeRect(x, y, 32, 32);
         }
-        this.creature.draw(context, x, y + Math.ceil(this.depth), 'idle');
+        this.creature.draw(context, x, y + Math.ceil(this.depth));
     }
 }

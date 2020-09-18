@@ -295,7 +295,6 @@ async function initialize(){
             if(!paused){
                 //interact with cell
                 const selection = cell.interact(player1.weapon, player1);
-
                 
                 //character selection interaction
                 if(selection && game1.level === "characterSelection"){
@@ -317,11 +316,7 @@ async function initialize(){
                         player1.reload()
                     }
 
-                    //age all cells
-                    currentLevel.cellMap.occupiedCells().forEach((cell) => cell.creature.ageMe());
-
-                    //increment energy by one each turn
-                    player1.addEnergy();
+                    endTurn(cell);
                 }
             }
         }
@@ -459,11 +454,28 @@ function setLevel(comp, levelName){
     loadLevel(levelName).then(level => {
         currentLevel = level;
         comp.level = level;
-        if(levelName != "characterSelection"){
-            level.spawner.initialSpawn();
-        }
+        level.spawner.initialSpawn();
         unpause(comp);
     });
+}
+
+function endTurn(clickedCell){
+    //age all cells
+    currentLevel.cellMap.occupiedCells().forEach((cell) => {
+        //creature should not attack, propogate, or evolve on the turn it was spawned
+        if(clickedCell.name != cell.name){
+            cell.creature.ageMe();
+            cell.creature.attemptFight();
+            //pause for animation
+            cell.creature.attemptPropogation();
+            //pause for animation
+            cell.creature.attemptEvolution();
+            //pause for animation
+        }
+    });
+
+    //increment energy by one each turn
+    player1.addEnergy();
 }
 
 

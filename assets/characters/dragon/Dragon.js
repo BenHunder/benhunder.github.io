@@ -1,19 +1,11 @@
 import Creature from '/js/classes/Creature.js'
 
 export default class Dragon extends Creature{
-    constructor(spriteSheet, creatureChance, creatureCluster, selectionCell){
+    constructor(creatureChance, creatureCluster, selectionCell){
 
-        traits = [
-            {
-                "name": "hit",
-                "rate": 5,
-                "damage": 5,
-                "animationOffset": 2.75
-            }
-        ];
 
-        super(spriteSheet, traits)
-        this.name = "mushboy";
+        super()
+        this.name = "dragon";
         this.height = 40;
         this.width = 32;
         this.health = 20;

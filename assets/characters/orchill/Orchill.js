@@ -4,15 +4,7 @@ import { currentLevel } from '../../../js/main.js';
 export default class Orchill extends Creature{
     constructor(isMaster = false){
 
-        const traits = [
-            {
-                "name": "hit",
-                "rate": 5,
-                "damage": 5,
-                "animationOffset": 2.75
-            }
-        ];
-        super(traits, 'orchill', isMaster);
+        super('orchill', isMaster);
         this.height = 32;
         this.width = 32;
         this.maxHealth = 20;
@@ -25,30 +17,23 @@ export default class Orchill extends Creature{
         
     }
 
-    ageMe(){
-        this.age += 1;
-        this.attack();
-        super.attemptPropogation();
-        if(this.age%10 == 0 && this.evolution < 3){
-            this.evolve();
-        }
-    }
-
-    attack(){
+    attemptFight(){
         const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "ally");
         if(targetCell){
             console.log(this.currentCell.name + " attacks " + targetCell.name);
-            targetCell.attack.start2(this.power);
+            targetCell.attack(this.power);
         }
     }
 
-    evolve(){
-        this.evolution += 1;
-        const currentDamage = this.maxHealth - this.health;
-        this.maxHealth += 10;
-        this.health = this.maxHealth - currentDamage;
+    attemptEvolution(){
+        if(this.age%10 == 0 && this.evolution < 3){
+            this.evolution += 1;
+            const currentDamage = this.maxHealth - this.health;
+            this.maxHealth += 10;
+            this.health = this.maxHealth - currentDamage;
 
-        this.power += 2
+            this.power += 2
+        }
     }
 
 }

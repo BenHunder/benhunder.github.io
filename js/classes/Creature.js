@@ -1,14 +1,15 @@
 import { globalSoundBoard, spriteSheetMap } from '../main.js';
-import Hit from "./traits/Hit.js";
-import Mystery from "./traits/Mystery.js";
 import { currentLevel } from '../../../js/main.js';
 
 export default class Creature{
-    constructor(traits, name, isMaster = false){
+    constructor(name, isMaster = false){
         this.scoreValue = this.alignment === "enemy" ? 10 : 0;
-        this.traits = [];
+
         this.isAnimating = true;
+        this.currentAnimation = 'idle';
+        this.animationCycles = 0;
         this.currentFrame = 0;
+
         this.currentCell = null;
         this.counter = 0;
         this.age = 0;
@@ -17,31 +18,11 @@ export default class Creature{
         this.isMaster = isMaster;
         this.name = name;
 
-        traits.forEach( trait => {
-            if(trait.name === 'hit'){
-                this.addTrait(new Hit(this, trait));
-            }else if(trait.name === 'mystery'){
-                this.addTrait(new Mystery(this, trait));
-            }
-
-            //TODO eventually traits will be defined in the JSON or somehting I guess, but for now, they are just strings. This line is pretty useless rn
-            //creature.addTrait(new Trait(traitName));
-        });
-    }
-
-    addTrait(trait) {
-        this.traits.push(trait);
-        this[trait.NAME] = trait;
     }
 
     //this function just adds a delay so a creature will pause for a second before it sinks after being killed. this was just for the mystery box
     kill(){
         let delay = 0;
-        this.traits.forEach( trait => {
-            if(typeof trait.kill === 'function'){
-                delay += trait.kill();
-            }
-        });
         return delay;
     }
 
@@ -56,6 +37,10 @@ export default class Creature{
         this.age += 1;
     }
 
+    attemptFight(){
+        //console.log("fight not implemented for ", this.name);
+    }
+
     attemptPropogation(){
         const r = Math.random();
         if(r <= this.propogationRate){
@@ -63,14 +48,14 @@ export default class Creature{
         }
     }
 
+    attemptEvolution(){
+        //console.log("evolve not implemented for ", this.name);
+    }
+
     update(deltaTime){
         if(this.isAnimating){
             this.counter += deltaTime;
         }
-
-        // this.traits.forEach(trait => {
-        //     trait.update(deltaTime);
-        // })
     } 
 
     eName(){
@@ -79,7 +64,7 @@ export default class Creature{
     
     draw(context, x, y, animationName){
         const spriteSheet = spriteSheetMap.get(this.eName());
-        const animation = animationName == 'still' ? {"start": 0, "end": 0} : spriteSheet.getAnimation(animationName);
+        const animation = animationName == 'still' ? {"start": 0, "end": 0} : spriteSheet.getAnimation(this.currentAnimation);
         let name = 'frame' + this.currentFrame;
 
         //advance frames
@@ -87,8 +72,19 @@ export default class Creature{
             if(this.counter >= spriteSheet.getDuration(name)/1000){
                 this.counter = 0;
                 this.currentFrame += 1;
+
+                //animation cycle complete
                 if(this.currentFrame > animation.end){
                     this.currentFrame = animation.start;
+                    if(this.currentAnimation != 'idle'){
+                        this.animationCycles += 1;
+                        
+                        //repeat each animation 3 times
+                        if(this.animationCycles > 2){
+                            this.currentAnimation = 'idle'
+                            this.animationCycles = 0;
+                        }
+                    }
                 }
             }
         }else{

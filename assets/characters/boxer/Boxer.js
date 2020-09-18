@@ -4,16 +4,7 @@ import { currentLevel } from '../../../js/main.js';
 export default class Boxer extends Creature{
     constructor(creatureChance, creatureCluster, selectionCell){
 
-        const traits = [
-            {
-                "name": "hit",
-                "rate": 2.5,
-                "damage": 1,
-                "animationOffset": 0.3
-            }
-        ];
-
-        super(traits)
+        super();
         this.name = "boxer";
         this.height = 32;
         this.width = 32;
@@ -28,22 +19,20 @@ export default class Boxer extends Creature{
         
     }
 
-    ageMe(){
-        this.age += 1;
+    attemptFight(){
         const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell);
         if(targetCell){
-            targetCell.attack.start2(this.power);
-        }
-        if(this.age%10 == 0 && this.evolution < 2){
-            this.evolve();
+            targetCell.attack(this.power);
         }
     }
 
-    evolve(){
-        console.log("evolving boxer?", this.age)
-        this.evolution += 1;
-        const currentDamage = this.maxHealth - this.health;
-        this.maxHealth += 10;
-        this.health = this.maxHealth - currentDamage;
+    attemptEvolution(){
+        if(this.age%10 == 0 && this.evolution < 2){
+            //evolve
+            this.evolution += 1;
+            const currentDamage = this.maxHealth - this.health;
+            this.maxHealth += 10;
+            this.health = this.maxHealth - currentDamage;
+        } 
     }
 }
