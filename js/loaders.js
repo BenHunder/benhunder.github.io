@@ -7,16 +7,17 @@ import Font from './classes/Font.js';
 import Cell from './classes/Cell.js';
 import Level from './classes/Level.js';
 import { Vec2, indicesToCoordinates } from './math.js';
-import Orchill from '../assets/characters/orchill/Orchill.js';
-import Achilia from '../assets/characters/achilia/Achilia.js';
-import Grass from '../assets/characters/grass/Grass.js';
-import Mushboy from '../assets/characters/mushboy/Mushboy.js';
-import Protector from '../assets/characters/protector/Protector.js';
-import Bunbun from '../../assets/characters/bunbun/Bunbun.js';
-import Sprout from '../assets/characters/sprout/Sprout.js';
-import Welder from '../assets/characters/welder/Welder.js';
-import Boxer from '../assets/characters/boxer/Boxer.js';
-import Asteroid from '../assets/characters/asteroid/Asteroid.js';
+import Orchill from '../assets/characters/enemies/orchill/Orchill.js';
+import Achilia from '../assets/characters/enemies/achilia/Achilia.js';
+import Grass from '../assets/characters/enemies/grass/Grass.js';
+import Mushboy from '../assets/characters/allies/mushboy/Mushboy.js';
+import Protector from '../assets/characters/allies/protector/Protector.js';
+import Bunbun from '../../assets/characters/allies/bunbun/Bunbun.js';
+import Sprout from '../assets/characters/enemies/sprout/Sprout.js';
+import Welder from '../assets/characters/allies/welder/Welder.js';
+import Boxer from '../assets/characters/allies/boxer/Boxer.js';
+import Asteroid from '../assets/characters/other/asteroid/Asteroid.js';
+import Outpost from '../assets/characters/other/outpost/Outpost.js';
 
 
 const gameWidth = 640;
@@ -33,7 +34,8 @@ export const creatureTypes = {
     Bunbun,
     Welder,
     Boxer,
-    Asteroid
+    Asteroid,
+    Outpost
 }
 
 export function loadJson(path){
@@ -155,7 +157,7 @@ export function loadLevel(lvl){
 
         level.spawner.creatures.forEach( creatureSpec => {
             promisesArray.push( 
-                loadCreatureType(creatureSpec.type, creatureSpec.evolutions, creatureSpec.initialChance, creatureSpec.cluster, creatureSpec.selectionCell, creatureSpec.cost)
+                loadCreatureType(creatureSpec.type, creatureSpec.evolutions, creatureSpec.initialChance, creatureSpec.cluster, creatureSpec.selectionCell, creatureSpec.cost, creatureSpec.group)
                 .then( creatureFactory => {
                     spawner.addCreature(creatureFactory);
                 })
@@ -198,13 +200,13 @@ export function loadLevel(lvl){
 }
 
 //load spritesheets for all evolutions of creature, then create and return a creatureFactory
-export function loadCreatureType(creatureName, creatureEvolutions, creatureChance, creatureCluster, selectionCell, creatureCost){
+export function loadCreatureType(creatureName, creatureEvolutions, creatureChance, creatureCluster, selectionCell, creatureCost, creatureGroup){
     let promisesArray = [];
 
     //load spritesheets for each evolution of creature
     for(let i = 1; i < creatureEvolutions+1; i++) {
-        const spriteSheetLocation = "/assets/characters/" + creatureName + "/" + creatureName + "-e" + i + "-sheet.png";
-        const frameDataLocation = "/assets/characters/" + creatureName + "/" + creatureName + "-e" + i + ".json";
+        const spriteSheetLocation = "/assets/characters/"+ creatureGroup + "/" + creatureName + "/" + creatureName + "-e" + i + "-sheet.png";
+        const frameDataLocation = "/assets/characters/" + creatureGroup + "/" + creatureName + "/" + creatureName + "-e" + i + ".json";
 
         const eName = creatureName + "-e" + i;
         promisesArray.push(

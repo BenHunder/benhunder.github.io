@@ -5,7 +5,8 @@
             {
                 "type": "grass",
                 "evolutions": 3,
-                "initialChance": 0.1
+                "initialChance": 0.1,
+                "group": "enemies"
             }
         ]
     },

@@ -1,11 +1,11 @@
 import Creature from '/js/classes/Creature.js'
-import { currentLevel } from '../../../js/main.js';
+import { currentLevel } from '../../../../js/main.js';
 
-export default class Bunbun extends Creature{
+export default class Boxer extends Creature{
     constructor(creatureChance, creatureCluster, selectionCell){
 
         super();
-        this.name = "bunbun";
+        this.name = "boxer";
         this.height = 32;
         this.width = 32;
 
@@ -23,5 +23,15 @@ export default class Bunbun extends Creature{
         if(targetCell){
             targetCell.attack(this.power);
         }
+    }
+
+    attemptEvolution(){
+        if(this.age > 0 && this.age%10 == 0 && this.evolution < 2){
+            //evolve
+            this.evolution += 1;
+            const currentDamage = this.maxHealth - this.health;
+            this.maxHealth += 10;
+            this.health = this.maxHealth - currentDamage;
+        } 
     }
 }

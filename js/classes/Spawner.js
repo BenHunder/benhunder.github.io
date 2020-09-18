@@ -1,8 +1,8 @@
 import {getRandomInt} from '../math.js';
 import {player1} from '../main.js'
-import Dragon from '../../assets/characters/dragon/Dragon.js';
-import Spiderboy from '../../assets/characters/spiderboy/Spiderboy.js';
-import Protector from '../../assets/characters/protector/Protector.js';
+import Dragon from '../../assets/characters/allies/dragon/Dragon.js';
+import Spiderboy from '../../assets/characters/allies/spiderboy/Spiderboy.js';
+import Protector from '../../assets/characters/allies/protector/Protector.js';
 
 export class Spawner{
     constructor(cellMap, spawnRate){
@@ -33,12 +33,16 @@ export class Spawner{
 
     initialSpawn(){
         //spawn random placements
-        const density = 40;
+        const density = 30;
         for (let i = 0; i < density; i++) {
             //this.spawnAll();
-            if(i%2 == 0){
-                this.cellMap.occupiedCells().forEach((cell) => cell.creature.attemptPropogation());
-            }
+            //if(i%2 == 0){
+                this.cellMap.occupiedCells().forEach((cell) => {
+                    cell.creature.attemptPropogation();
+                    cell.creature.ageMe();
+                    cell.creature.attemptEvolution();
+                });
+            //}
         }
     }
 

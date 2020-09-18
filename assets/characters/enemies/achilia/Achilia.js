@@ -1,5 +1,5 @@
 import Creature from '/js/classes/Creature.js';
-import { currentLevel } from '../../../js/main.js';
+import { currentLevel } from '../../../../js/main.js';
 
 export default class Achilia extends Creature{
     constructor(isMaster = false){

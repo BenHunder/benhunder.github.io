@@ -1,5 +1,5 @@
 import Creature from '/js/classes/Creature.js'
-import { player1, spriteSheetMap } from '../../../js/main.js';
+import { player1, spriteSheetMap } from '../../../../js/main.js';
 
 export default class Asteroid extends Creature{
     constructor(creatureChance, creatureCluster, selectionCell){

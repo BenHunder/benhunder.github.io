@@ -5,27 +5,38 @@
             {
                 "type": "grass",
                 "evolutions": 3,
-                "initialChance": 0.1
+                "initialChance": 0.1,
+                "group": "enemies"
             },
             {
                 "type": "sprout",
                 "evolutions": 3,
-                "initialChance": 0.05
+                "initialChance": 0.05,
+                "group": "enemies"
             },
             {
                 "type": "achilia",
                 "evolutions": 1,
-                "initialChance": 0.04
+                "initialChance": 0.04,
+                "group": "enemies"
             },
             {
                 "type": "orchill",
                 "evolutions": 3,
-                "initialChance": 0.04
+                "initialChance": 0.04,
+                "group": "enemies"
             },
             {
                 "type": "asteroid",
                 "evolutions": 1,
-                "initialChance": 0.075
+                "initialChance": 0.075,
+                "group": "other"
+            }
+            {
+                "type": "outpost",
+                "evolutions": 1,
+                "initialChance": 0.0,
+                "group": "other"
             }
         ]
     },

@@ -27,28 +27,32 @@
                 "evolutions": 1,
                 "chance": 0.03,
                 "selectionCell": "0-0",
-                "cost": 5
+                "cost": 5,
+                "group": "allies"
             },
             {
                 "type": "bunbun",
                 "evolutions": 1,
                 "chance": 0.04,
                 "selectionCell": "1-0",
-                "cost": 15
+                "cost": 15,
+                "group": "allies"
             },
             {
                 "type": "welder",
                 "evolutions": 1,
                 "chance": 0.04,
                 "selectionCell": "2-0",
-                "cost": 20
+                "cost": 20,
+                "group": "allies"
             },
             {
                 "type": "boxer",
                 "evolutions": 2,
                 "chance": 0.04,
                 "selectionCell": "3-0",
-                "cost": 25
+                "cost": 25,
+                "group": "allies"
             }  
         ]
     }

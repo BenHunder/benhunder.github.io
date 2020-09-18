@@ -1,11 +1,11 @@
 import Creature from '/js/classes/Creature.js'
-import { currentLevel } from '../../../js/main.js';
+import { currentLevel } from '../../../../js/main.js';
 
-export default class Welder extends Creature{
+export default class Bunbun extends Creature{
     constructor(creatureChance, creatureCluster, selectionCell){
 
         super();
-        this.name = "welder";
+        this.name = "bunbun";
         this.height = 32;
         this.width = 32;
 
@@ -19,15 +19,9 @@ export default class Welder extends Creature{
     }
 
     attemptFight(){
-        let killedSomething = false;
         const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell);
         if(targetCell){
-            this.currentAnimation = 'fight';
-            killedSomething = targetCell.attack(this.power);
-            
-            if(killedSomething <= 0){
-                targetCell.moveTo(this);
-            }
+            targetCell.attack(this.power);
         }
     }
 }
