@@ -9,13 +9,13 @@ export default class Outpost extends Creature{
         this.width = 32;
         this.maxHealth = 10;
         this.health = this.maxHealth;
-        this.alignment =  "neutral";
+        this.alignment =  "outpost";
 
         
     }
 
     kill(){
-        //player1.lose();
+        player1.lose();
         console.log("you lost");
         let delay = 0;
         return delay;

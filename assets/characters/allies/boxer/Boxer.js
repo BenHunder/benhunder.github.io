@@ -19,7 +19,7 @@ export default class Boxer extends Creature{
     }
 
     attemptFight(){
-        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell);
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, ['ally', 'enemy']);
         if(targetCell){
             targetCell.attack(this.power);
         }

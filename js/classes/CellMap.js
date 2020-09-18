@@ -109,14 +109,9 @@ export default class CellMap{
         return this.adjacentTo(cell).filter(cell => cell.isSpawnable());
     }
 
-    randomAdjacentTarget(cell, alignment = null){
-        let occupied = null;
-        if(alignment){
-            occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.alignment === alignment);    
-        }else{
-            occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.alignment != "neutral");
-        }
-        let r = getRandomInt(occupied.length);
+    randomAdjacentTarget(cell, targetAlignments){
+        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive && targetAlignments.includes(cell.creature.alignment));    
+        const r = getRandomInt(occupied.length);
         return occupied.length > 0 ? occupied[r]:null;
     }
 

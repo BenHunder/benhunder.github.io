@@ -20,7 +20,7 @@ export default class Welder extends Creature{
 
     attemptFight(){
         let killedSomething = false;
-        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell);
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, ['ally', 'enemy']);
         if(targetCell){
             this.currentAnimation = 'fight';
             killedSomething = targetCell.attack(this.power);

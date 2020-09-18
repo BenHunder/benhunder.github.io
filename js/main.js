@@ -354,17 +354,11 @@ function start(comp){
 
             //check win/lose conditions
             if(game1.level > 0){
-                const outpostsUnderSiege = []
-                currentLevel.cellMap.findOutposts().forEach(outpost => {
-                    //if it can find an enemy target adjacent to it, that means it is under siege and you lose
-                    if(currentLevel.cellMap.randomAdjacentTarget(outpost, "enemy")){
-                        outpostsUnderSiege.push(outpost);
-                    }
-                });
+                if(player1.hasLost){
+                    lose(comp);
+                }
                 if(currentLevel.cellMap.numEnemies() == 0){
                     win(comp);
-                }else if(outpostsUnderSiege.length > 0){
-                    lose(comp);
                 }
             }
 
@@ -387,12 +381,12 @@ function start(comp){
 
 initialize().then((comp) => start(comp));
 
-function win(comp){
+export function win(comp){
     comp.setMenu(winMenu);
     pause(comp);
 }
 
-function lose(comp){
+export function lose(comp){
     comp.setMenu(loseMenu);
     pause(comp);
 }
@@ -420,16 +414,12 @@ function startButton(comp){
     comp.setMenu(creatureMenu);
     game1.level = "characterSelection"
     player1.clearCreatures();
-    player1.resetEnergy();
     setLevel(comp, game1.level);
-    unpause(comp);
     //currentLevel.spawner.spawnSelections();
 }
 
 function restartButton(comp){
     setLevel(comp, game1.level);
-    player1.resetEnergy();
-    unpause(comp);
 }
 
 function quitButton(comp){
@@ -454,6 +444,7 @@ function setLevel(comp, levelName){
     loadLevel(levelName).then(level => {
         currentLevel = level;
         comp.level = level;
+        player1.reset();
         level.spawner.initialSpawn();
         unpause(comp);
     });

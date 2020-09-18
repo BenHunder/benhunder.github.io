@@ -20,11 +20,17 @@ export default class Player{
 
         this.creatureFactories = [];
         this.specialSelection = 0;
+
+        this.hasLost = false;
+    }
+
+    lose(){
+        this.hasLost = true;
     }
 
     reset(){
         this.energy = this.startingEnergy;
-        //this.creatureFactories = [];
+        this.hasLost = false;
     }
 
     addCreature(creatureFactory){
@@ -60,10 +66,6 @@ export default class Player{
         if(this.energy > this.maxEnergy){
             this.energy = this.maxEnergy;
         }
-    }
-
-    resetEnergy(){
-        this.energy = this.startingEnergy;
     }
 
 }

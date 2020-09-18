@@ -19,7 +19,7 @@ export default class Protector extends Creature{
     }
 
     attemptFight(){
-        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "ally");
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, ['ally']);
         if(targetCell){
             targetCell.attack(this.power);
         }

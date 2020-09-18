@@ -18,7 +18,7 @@ export default class Achilia extends Creature{
     }
 
     attemptFight(){
-        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, "ally");
+        const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, ['ally', 'outpost']);
         if(targetCell){
             console.log(this.currentCell.name + " attacks " + targetCell.name);
             targetCell.attack(this.power);

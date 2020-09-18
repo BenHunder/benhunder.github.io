@@ -124,7 +124,7 @@ export default class Cell{
         if(this.isSpawnable()){
             creature.currentCell = this;
             this.creature = creature;
-            if(creature.name == "asteroid"){
+            if(creature.name == "asteroid" || creature.name == "outpost"){
                 this.speed = 200;
                 this.depth = -300;
             }
