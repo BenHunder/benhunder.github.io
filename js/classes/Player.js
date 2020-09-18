@@ -1,7 +1,7 @@
 export default class Player{
     constructor(){
         this.baseScore = 0;
-        this.baseNumAllies = 1;
+        this.baseNumAllies = 2;
         this.maxAmmo = 1;
 
         this.alliesLeft = this.baseNumAllies;
@@ -14,7 +14,7 @@ export default class Player{
         this.unlocked.set("welder", true);
         this.unlocked.set("boxer", true);
 
-        this.startingEnergy = 100;
+        this.startingEnergy = 10;
         this.energy = this.startingEnergy;
         this.maxEnergy = 100;
 

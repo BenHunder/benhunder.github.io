@@ -35,7 +35,7 @@
                 "evolutions": 1,
                 "chance": 0.04,
                 "selectionCell": "1-0",
-                "cost": 15,
+                "cost": 10,
                 "group": "allies"
             },
             {
