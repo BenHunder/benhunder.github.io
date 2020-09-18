@@ -460,16 +460,17 @@ function setLevel(comp, levelName){
 }
 
 function endTurn(clickedCell){
+    const spawnSickCreature = clickedCell.creature
     //age all cells
-    currentLevel.cellMap.occupiedCells().forEach((cell) => {
+    currentLevel.cellMap.getActiveCreatures().forEach((creature) => {
         //creature should not attack, propogate, or evolve on the turn it was spawned
-        if(clickedCell.name != cell.name){
-            cell.creature.ageMe();
-            cell.creature.attemptFight();
+        if(creature != spawnSickCreature){
+            creature.ageMe();
+            creature.attemptFight();
             //pause for animation
-            cell.creature.attemptPropogation();
+            creature.attemptPropogation();
             //pause for animation
-            cell.creature.attemptEvolution();
+            creature.attemptEvolution();
             //pause for animation
         }
     });

@@ -1,10 +1,9 @@
 export default class Player{
     constructor(){
         this.baseScore = 0;
-        this.baseNumAllies = 3;
+        this.baseNumAllies = 1;
         this.maxAmmo = 1;
 
-        this.score = this.baseScore;
         this.alliesLeft = this.baseNumAllies;
         this.weapon = null;
         this.ammo = this.maxAmmo;
@@ -23,13 +22,8 @@ export default class Player{
         this.specialSelection = 0;
     }
 
-    addScore(amount){
-        this.score += amount;
-    }
-
     reset(){
         this.energy = this.startingEnergy;
-        //this.score = this.baseScore;
         //this.creatureFactories = [];
     }
 

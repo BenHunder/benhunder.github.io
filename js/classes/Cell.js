@@ -27,10 +27,13 @@ export default class Cell{
 
 
     attack(amount){
+        let remainingHealth = 1;
         if(!this.duringSinkingAnimation && !this.isProtected){
             globalSoundBoard.play('bonkEnemy');
-            this.creature.damage(amount);
+            remainingHealth = this.creature.damage(amount);
         }
+
+        return remainingHealth;
     }
     //kill creature, the player is passed as an argument so their score will be increased
     //todo: added the default player just to make achilia work, revist score later
@@ -128,13 +131,14 @@ export default class Cell{
         return !this.isActive && this.terrain != "water" && this.terrain != "mountain" && this.terrain != "outpost"
     }
 
-    replace(creature){
-        if(this.isActive){
-            creature.currentCell = this;
-            this.creature = creature; 
-        }else{
-            console.log("tried to replace an inactive cell");
-        }
+    moveTo(creature){
+        const fromCell = creature.currentCell;
+        fromCell.reset();
+
+        creature.currentCell = this;
+        this.creature = creature;
+        this.depth = 0;
+        this.isActive = true;
     }
 
     teleport(creature){

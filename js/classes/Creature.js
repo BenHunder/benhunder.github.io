@@ -31,6 +31,8 @@ export default class Creature{
         if(this.health < 0){
             this.health = 0;
         }
+
+        return this.health
     }
 
     ageMe(){

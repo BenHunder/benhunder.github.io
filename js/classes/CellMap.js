@@ -202,4 +202,8 @@ export default class CellMap{
     findOutposts(){
         return this.availableCells().filter(cell => cell.terrain === "outpost")
     }
+
+    getActiveCreatures(){
+        return this.allCells().filter((cell) => cell.isActive && !cell.duringSinkingAnimation).map(cell => cell.creature);
+    }
 }
