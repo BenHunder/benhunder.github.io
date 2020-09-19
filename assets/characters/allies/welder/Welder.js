@@ -2,7 +2,7 @@ import Creature from '/js/classes/Creature.js'
 import { currentLevel } from '../../../../js/main.js';
 
 export default class Welder extends Creature{
-    constructor(creatureChance, creatureCluster, selectionCell){
+    constructor(){
 
         super();
         this.name = "welder";

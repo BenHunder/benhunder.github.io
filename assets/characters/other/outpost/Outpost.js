@@ -2,7 +2,7 @@ import Creature from '/js/classes/Creature.js'
 import { player1, spriteSheetMap } from '../../../../js/main.js';
 
 export default class Outpost extends Creature{
-    constructor(creatureChance, creatureCluster, selectionCell){
+    constructor(){
 
         super('outpost');
         this.height = 48;

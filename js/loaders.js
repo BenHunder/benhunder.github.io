@@ -18,6 +18,7 @@ import Welder from '../assets/characters/allies/welder/Welder.js';
 import Boxer from '../assets/characters/allies/boxer/Boxer.js';
 import Asteroid from '../assets/characters/other/asteroid/Asteroid.js';
 import Outpost from '../assets/characters/other/outpost/Outpost.js';
+import Peekaboo from '../assets/characters/enemies/peekaboo/Peekaboo.js';
 
 
 const gameWidth = 640;
@@ -35,7 +36,8 @@ export const creatureTypes = {
     Welder,
     Boxer,
     Asteroid,
-    Outpost
+    Outpost,
+    Peekaboo
 }
 
 export function loadJson(path){

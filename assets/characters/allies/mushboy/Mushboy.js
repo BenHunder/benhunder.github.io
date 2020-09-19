@@ -1,7 +1,7 @@
 import Creature from '/js/classes/Creature.js'
 
 export default class Mushboy extends Creature{
-    constructor(creatureChance, creatureCluster, selectionCell){
+    constructor(){
 
         super('mushboy')
         this.height = 40;

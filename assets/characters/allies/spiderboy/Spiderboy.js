@@ -1,7 +1,7 @@
 import Creature from '/js/classes/Creature.js'
 
 export default class Spiderboy extends Creature{
-    constructor(creatureChance, creatureCluster, selectionCell){
+    constructor(){
 
         super();
         this.name = "spiderboy";

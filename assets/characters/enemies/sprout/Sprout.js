@@ -1,7 +1,7 @@
 import Creature from '/js/classes/Creature.js'
 
 export default class Sprout extends Creature{
-    constructor(creatureChance, creatureCluster, selectionCell){
+    constructor(){
 
         super([], 'sprout')
         this.height = 16;

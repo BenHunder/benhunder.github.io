@@ -1,7 +1,7 @@
 import Creature from '/js/classes/Creature.js'
 
 export default class Grass extends Creature{
-    constructor(creatureChance, creatureCluster, selectionCell){
+    constructor(){
 
         super('grass');
         this.height = 32;
