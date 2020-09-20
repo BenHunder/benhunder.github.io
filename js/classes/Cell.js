@@ -95,7 +95,6 @@ export default class Cell{
         this.hitTimer = this.trailTime;
         if(this.isActive){
             if(item instanceof Weapon && player.ammo > 0){
-                this.creature.isHeld = true;
                 this.attack(item.power);
                 return this.creature.name;
             }
@@ -116,7 +115,7 @@ export default class Cell{
 
     released(){
         if(this.creature){
-            this.creature.isHeld = false;
+            //this.creature.isHeld = false;
         }
     }
 

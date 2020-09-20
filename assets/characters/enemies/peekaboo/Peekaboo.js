@@ -27,6 +27,17 @@ export default class Peekaboo extends Creature{
         return this.health
     }
 
+    ageMe(){
+        this.age += 1;
+
+        if(this.age%2 == 0){
+            console.log(this.currentCell.name, this.age, this.isOpen);
+            this.currentAnimation = 'emerge';
+            this.isOpen = !this.isOpen;
+        }
+    }
+
+
     draw(context, x, y, animationName){
         const spriteSheet = spriteSheetMap.get(this.eName());
         const animation = animationName == 'still' ? {"start": 0, "end": 0} : spriteSheet.getAnimation(this.currentAnimation);
@@ -45,8 +56,8 @@ export default class Peekaboo extends Creature{
                         this.animationCycles += 1;
                         
                         //repeat each animation 3 times
-                        if(this.animationCycles > 2){
-                            this.currentAnimation = 'idle'
+                        if(this.animationCycles >= 0){
+                            this.currentAnimation = this.isOpen ? 'open':'idle';
                             this.animationCycles = 0;
                         }
                     }

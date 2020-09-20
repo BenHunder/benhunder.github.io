@@ -295,7 +295,7 @@ async function initialize(){
             if(!paused){
                 //interact with cell
                 const selection = cell.interact(player1.weapon, player1);
-                
+                console.log("clicked", cell.name);
                 //character selection interaction
                 if(selection && game1.level === "characterSelection"){
                     currentLevel.spawner.creatureFactories.forEach( cf => {
@@ -451,14 +451,14 @@ function setLevel(comp, levelName){
 }
 
 function endTurn(clickedCell){
-    const spawnSickCreature = clickedCell.creature
     //age all cells
     currentLevel.cellMap.getActiveCreatures().forEach((creature) => {
         //creature should not attack, propogate, or evolve on the turn it was spawned
-        if(creature != spawnSickCreature){
-            creature.ageMe();
+        if(creature.age > 0){
+            
             creature.attemptFight();
             //pause for animation
+            creature.ageMe();
             creature.attemptPropogation();
             //pause for animation
             creature.attemptEvolution();

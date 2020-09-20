@@ -33,7 +33,7 @@ export class Spawner{
 
     initialSpawn(){
         //spawn random placements
-        const density = 30;
+        const density = 10;
         for (let i = 0; i < density; i++) {
             //this.spawnAll();
             //if(i%2 == 0){
