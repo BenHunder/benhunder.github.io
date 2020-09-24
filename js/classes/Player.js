@@ -13,8 +13,9 @@ export default class Player{
         this.unlocked.set("bunbun", true);
         this.unlocked.set("welder", true);
         this.unlocked.set("boxer", true);
+        this.unlocked.set("dragon", true);
 
-        this.startingEnergy = 10;
+        this.startingEnergy = 50;
         this.energy = this.startingEnergy;
         this.maxEnergy = 100;
 

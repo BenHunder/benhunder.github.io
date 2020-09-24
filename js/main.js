@@ -414,8 +414,13 @@ function startButton(comp){
     comp.setMenu(creatureMenu);
     game1.level = "characterSelection"
     player1.clearCreatures();
-    setLevel(comp, game1.level);
-    //currentLevel.spawner.spawnSelections();
+    loadLevel(game1.level).then(level => {
+        currentLevel = level;
+        comp.level = level;
+        player1.reset();
+        currentLevel.spawner.spawnSelections();
+        unpause(comp);
+    });
 }
 
 function restartButton(comp){

@@ -93,7 +93,7 @@ export default class Creature{
 
         name = 'frame' + this.currentFrame;
         const buffer = spriteSheet.getBuffer(name);
-        context.drawImage(buffer, x, y);
+        context.drawImage(buffer, x, y + 32 - this.height);
     }
 
     playAnimation(name, cycles){
