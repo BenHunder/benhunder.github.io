@@ -294,12 +294,12 @@ async function initialize(){
         function clickCell(cell){
             if(!paused){
                 //interact with cell
-                const selection = cell.interact(player1.weapon, player1);
+                const interaction = cell.interact(player1.weapon, player1);
                 console.log("clicked", cell.name);
                 //character selection interaction
-                if(selection && game1.level === "characterSelection"){
+                if(interaction.result == "attacked" && game1.level === "characterSelection"){
                     currentLevel.spawner.creatureFactories.forEach( cf => {
-                        if(cf.name === selection){
+                        if(cf.name === interaction.creatureName){
                             player1.addCreature(cf);
                         }
                     });
@@ -316,7 +316,7 @@ async function initialize(){
                         player1.reload()
                     }
 
-                    endTurn(cell);
+                    endTurn(interaction, cell);
                 }
             }
         }
@@ -450,20 +450,20 @@ function setLevel(comp, levelName){
     });
 }
 
-function endTurn(clickedCell){
+function endTurn(interaction, clickedCell){
     //age all cells
     currentLevel.cellMap.getActiveCreatures().forEach((creature) => {
         //creature should not attack, propogate, or evolve on the turn it was spawned
         if(creature.age > 0){
-            
             creature.attemptFight();
             //pause for animation
-            creature.ageMe();
             creature.attemptPropogation();
             //pause for animation
             creature.attemptEvolution();
             //pause for animation
         }
+
+        creature.ageMe();
     });
 
     //increment energy by one each turn

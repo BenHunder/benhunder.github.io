@@ -78,12 +78,11 @@ export default class Creature{
                 if(this.currentFrame > animation.end){
                     this.currentFrame = animation.start;
                     if(this.currentAnimation != 'idle'){
-                        this.animationCycles += 1;
+                        this.animationCycles -= 1;
                         
-                        //repeat each animation 3 times
-                        if(this.animationCycles > 2){
-                            this.currentAnimation = 'idle'
-                            this.animationCycles = 0;
+                        //change animation back to idle if it has completed all cycles
+                        if(this.animationCycles <= 0){
+                            this.playAnimation('idle', 1)
                         }
                     }
                 }
@@ -95,6 +94,17 @@ export default class Creature{
         name = 'frame' + this.currentFrame;
         const buffer = spriteSheet.getBuffer(name);
         context.drawImage(buffer, x, y);
+    }
+
+    playAnimation(name, cycles){
+        this.currentAnimation = name;
+
+        //just to get animation start frame
+        const spriteSheet = spriteSheetMap.get(this.eName());
+        const animation = name == 'still' ? {"start": 0, "end": 0} : spriteSheet.getAnimation(this.currentAnimation);
+
+        this.currentFrame = animation.start;
+        this.animationCycles = cycles;
     }
     playSound(name, delay=0){
         if(globalSoundBoard.hasSound(name)){

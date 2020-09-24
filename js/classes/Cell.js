@@ -96,7 +96,7 @@ export default class Cell{
         if(this.isActive){
             if(item instanceof Weapon && player.ammo > 0){
                 this.attack(item.power);
-                return this.creature.name;
+                return {"result": "attacked", "creatureName": this.creature.name};
             }
         }else{
             globalSoundBoard.play('bonkOther');
@@ -106,6 +106,9 @@ export default class Cell{
                 const newCreature = special.create();
                 this.spawnNew(newCreature);
                 player.energy -= special.cost + 1;
+                return {"result": "spawned", "creatureName": this.creature.name};
+            }else{
+                return {"result": "nothing", "cell": null};
             }
         }
     }

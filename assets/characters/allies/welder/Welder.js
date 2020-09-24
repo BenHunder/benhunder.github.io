@@ -22,7 +22,7 @@ export default class Welder extends Creature{
         let killedSomething = false;
         const targetCell = currentLevel.cellMap.randomAdjacentTarget(this.currentCell, ['ally', 'enemy']);
         if(targetCell){
-            this.currentAnimation = 'fight';
+            this.playAnimation('fight', 3);
             killedSomething = targetCell.attack(this.power);
             
             if(killedSomething <= 0){
