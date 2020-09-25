@@ -105,6 +105,20 @@ export default class CellMap{
         ].filter((item) => item != null)
     }
 
+    //returns all cells within two spaces from the given cell. I'm sure there is a more efficient way to do this
+    withinTwo(cell){
+        let cells = this.adjacentTo(cell)
+
+        cells.forEach(adjCell => {
+            this.adjacentTo(adjCell).forEach(possibleCell => {
+                if( !cells.includes(possibleCell) ){
+                    cells.push(possibleCell);
+                }
+            });
+        });
+        return cells
+    }
+
     availableAdjacentTo(cell){
         return this.adjacentTo(cell).filter(cell => cell.isSpawnable());
     }

@@ -61,7 +61,15 @@
                 "selectionCell": "4-0",
                 "cost": 30,
                 "group": "allies"
-            }  
+            },
+            {
+                "type": "outpost",
+                "evolutions": 1,
+                "chance": 0.04,
+                "selectionCell": "5-0",
+                "cost": 35,
+                "group": "other"
+            }   
         ]
     }
 }

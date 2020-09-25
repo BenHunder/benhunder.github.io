@@ -5,7 +5,7 @@ export default class Outpost extends Creature{
     constructor(){
 
         super('outpost');
-        this.height = 48;
+        this.height = 32;
         this.width = 32;
         this.maxHealth = 10;
         this.health = this.maxHealth;

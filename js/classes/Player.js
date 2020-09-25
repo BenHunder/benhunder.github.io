@@ -14,6 +14,7 @@ export default class Player{
         this.unlocked.set("welder", true);
         this.unlocked.set("boxer", true);
         this.unlocked.set("dragon", true);
+        this.unlocked.set("outpost", true);
 
         this.startingEnergy = 50;
         this.energy = this.startingEnergy;

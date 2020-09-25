@@ -1,5 +1,6 @@
 import Weapon from './Weapon.js';
 import { globalSoundBoard, tileSheet } from '../main.js';
+import { currentLevel } from '../main.js';
 
 export default class Cell{
     constructor(name, indices, coordinates, terrain){
@@ -23,6 +24,7 @@ export default class Cell{
 
         this.terrain = terrain;
         this.status = "frozen"
+        this.isExplored = false;
     }
 
 
@@ -126,9 +128,10 @@ export default class Cell{
         if(this.isSpawnable()){
             creature.currentCell = this;
             this.creature = creature;
-            if(creature.name == "asteroid" || creature.name == "outpost"){
-                this.speed = 200;
-                this.depth = -300;
+            if(creature.name == "outpost"){
+                //this.speed = 200;
+                //this.depth = -300;
+                currentLevel.cellMap.withinTwo(this).forEach( cell => cell.isExplored = true);
             }
             this.isActive = true;
         }else{
@@ -195,7 +198,18 @@ export default class Cell{
 
     drawTerrain(context){
         try{
-            context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y + (this.isActive?Math.ceil(this.depth):0));
+
+            const x = this.coordinates.x;
+            const y = this.coordinates.y + (this.isActive?Math.ceil(this.depth):0);
+            
+            context.drawImage(tileSheet.getBuffer(this.terrain), x, y );
+
+            //draw if explored
+            if(this.isExplored){
+                context.globalAlpha = 0.4;
+                context.drawImage(tileSheet.getBuffer('darkened'), x, y );
+                context.globalAlpha = 1;
+            }
         }catch(err){
             console.log("error on ", this.terrain);
         }
@@ -208,7 +222,7 @@ export default class Cell{
         //draw status conditions
         if(this.status === "frozen"){
             context.globalAlpha = 0.25;
-            context.drawImage(tileSheet.getBuffer('frozen'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
+            //context.drawImage(tileSheet.getBuffer('frozen'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
             context.globalAlpha = 1;
         }
 
