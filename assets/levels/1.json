@@ -1,38 +1,74 @@
 {
-    "map": [ 
-        ["grassland", "grassland", "grassland", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "outpost", "grassland", "grassland", "grassland"],
-        ["grassland", "water", "water", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "water", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "water", "water", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "mountain", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "outpost", "grassland", "grassland", "grassland", "grassland", "mountain", "mountain", "water", "mountain", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "mountain", "water", "mountain", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "mountain", "mountain", "grassland", "grassland", "grassland", "grassland"]
-        
-    ],
     "spawner": {
         "spawnRate": 0.8,
         "creatures": [
             {
                 "type": "grass",
                 "evolutions": 3,
-                "initialChance": 0.1
+                "initialChance": 0.1,
+                "group": "enemies"
             },
             {
                 "type": "sprout",
                 "evolutions": 3,
-                "initialChance": 0.05
+                "initialChance": 0.05,
+                "group": "enemies"
             },
             {
                 "type": "achilia",
                 "evolutions": 1,
-                "initialChance": 0.04
+                "initialChance": 0.04,
+                "group": "enemies"
             },
             {
                 "type": "orchill",
                 "evolutions": 3,
-                "initialChance": 0.04
+                "initialChance": 0.04,
+                "group": "enemies"
+            },
+            {
+                "type": "peekaboo",
+                "evolutions": 1,
+                "initialChance": 0.04,
+                "group": "enemies"
+            },
+            {
+                "type": "asteroid",
+                "evolutions": 1,
+                "initialChance": 0.075,
+                "group": "other"
+            },
+            {
+                "type": "outpost",
+                "evolutions": 1,
+                "initialChance": 0.0,
+                "group": "other"
             }
         ]
+    },
+    "cellmap": {
+        "map": [ 
+            ["g1", "g1", "g1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "o2"],
+                ["g1", "g1", "g1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "o1", "g1", "g1", "g1"],
+            ["g1", "w1", "w1", "w1", "g1", "g1", "p1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "w1", "w1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+            ["a1", "w1", "w1", "g1", "g1", "g1", "g1", "a2", "g1", "m1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "o1", "g1", "g1", "g1", "g1", "m1", "m1", "w1", "m1", "g1", "g1", "g1"],
+            ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "m1", "w1", "m1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "m1", "m1", "g1", "g1", "g1", "g2"]
+        ],
+        "key": {
+            "g1": "grassland",
+            "w1": "water",
+            "m1": "mountain",
+            "o1": "outpost",
+            "a1": "achilia",
+            "s1": "sprout",
+            "o2": "orchill",
+            "g2": "grass",
+            "p1": "peekaboo",
+            "a2": "asteroid",
+            "default": "grassland"
+        }   
     }
 }

@@ -106,7 +106,7 @@ export function createLoseMenu(font, fontLarge){
                 'label': 'quit'
             }
         ]
-        return new Menu(font, fontLarge, 'YOU LOSE', options, true);
+        return new Menu(font, fontLarge, 'MISSION FAILED', options, true);
     });
 }
 

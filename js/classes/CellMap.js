@@ -58,28 +58,28 @@ export default class CellMap{
     }
 
     upperRight(cell){
-        const x = cell.indices.x + 1;
+        const x = cell.indices.y % 2 == 0 ? cell.indices.x : cell.indices.x + 1;
         const y = cell.indices.y - 1;
 
         return this.get(new Vec2(x, y));
     }
 
     lowerRight(cell){
-        const x = cell.indices.x + 1;
+        const x = cell.indices.y % 2 == 0 ? cell.indices.x : cell.indices.x + 1;
         const y = cell.indices.y + 1;
 
         return this.get(new Vec2(x, y));
     }
 
     upperLeft(cell){
-        const x = cell.indices.x;
+        const x = cell.indices.y % 2 == 0 ? cell.indices.x - 1 : cell.indices.x;
         const y = cell.indices.y - 1;
 
         return this.get(new Vec2(x, y));
     }
 
     lowerLeft(cell){
-        const x = cell.indices.x;
+        const x = cell.indices.y % 2 == 0 ? cell.indices.x - 1 : cell.indices.x;
         const y = cell.indices.y + 1;
 
         return this.get(new Vec2(x, y));
@@ -105,13 +105,27 @@ export default class CellMap{
         ].filter((item) => item != null)
     }
 
+    //returns all cells within two spaces from the given cell. I'm sure there is a more efficient way to do this
+    withinTwo(cell){
+        let cells = this.adjacentTo(cell)
+
+        cells.forEach(adjCell => {
+            this.adjacentTo(adjCell).forEach(possibleCell => {
+                if( !cells.includes(possibleCell) ){
+                    cells.push(possibleCell);
+                }
+            });
+        });
+        return cells
+    }
+
     availableAdjacentTo(cell){
         return this.adjacentTo(cell).filter(cell => cell.isSpawnable());
     }
 
-    randomAdjacentTarget(cell, alignment = "enemy"){
-        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive && cell.creature.alignment === alignment);
-        let r = getRandomInt(occupied.length);
+    randomAdjacentTarget(cell, targetAlignments){
+        const occupied = this.adjacentTo(cell).filter(cell => cell.isActive && targetAlignments.includes(cell.creature.alignment));    
+        const r = getRandomInt(occupied.length);
         return occupied.length > 0 ? occupied[r]:null;
     }
 
@@ -196,5 +210,9 @@ export default class CellMap{
 
     findOutposts(){
         return this.availableCells().filter(cell => cell.terrain === "outpost")
+    }
+
+    getActiveCreatures(){
+        return this.allCells().filter((cell) => cell.isActive && !cell.duringSinkingAnimation).map(cell => cell.creature);
     }
 }

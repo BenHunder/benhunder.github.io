@@ -3,6 +3,7 @@ export default class SpriteSheet{
         this.image = image;
         this.tiles = new Map();
         this.durations = new Map();
+        this.animations = new Map();
     } 
 
     define(name, x, y, width, height, duration){
@@ -34,4 +35,13 @@ export default class SpriteSheet{
     getBuffer(name){
         return this.tiles.get(name);
     }
+
+    defineAnimation(name, range){
+        this.animations.set(name, range);
+    }
+
+    getAnimation(name){
+        return this.animations.get(name);
+    }
+
 }

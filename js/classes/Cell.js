@@ -1,8 +1,5 @@
-import Attack from './traits/Attack.js';
-import Spawn from './traits/Spawn.js';
 import Weapon from './Weapon.js';
 import { globalSoundBoard, tileSheet } from '../main.js';
-import { Vec2 } from '../math.js';
 
 export default class Cell{
     constructor(name, indices, coordinates, terrain){
@@ -18,6 +15,7 @@ export default class Cell{
         this.maxDepth = 50;
         this.speed = 50;
         this.duringSinkingAnimation = false;
+        this.sinkDelay = 0;
         this.isActive = false;
         this.isHovered = false;
         this.isProtected = false;
@@ -25,43 +23,46 @@ export default class Cell{
 
         this.terrain = terrain;
         this.status = "frozen"
+        this.isExplored = false;
 
-        this.traits = [];
-
-        this.addTrait(new Attack(this));
-        this.addTrait(new Spawn(this));
-        
+        this.isRainedOn = false;
+        this.rainDepth = 0;
     }
 
-    
-    
-    update(deltaTime){
-        this.traits.forEach(trait => {
-            trait.update(deltaTime);
-        });
-        this.isProtected = false;
 
-        if(this.hitTimer > 0){
-            this.hitTimer -= deltaTime;
-        }else{
-            this.hitTimer = 0;
+    attack(amount){
+        let remainingHealth = 1;
+        if(!this.duringSinkingAnimation && !this.isProtected){
+            globalSoundBoard.play('bonkEnemy');
+            remainingHealth = this.creature.damage(amount);
+        }
+
+        return remainingHealth;
+    }
+    //kill creature, the player is passed as an argument so their score will be increased
+    //todo: added the default player just to make achilia work, revist score later
+    kill(){
+        if(!this.duringSinkingAnimation){
+            this.creature.playSound('kill', 80);
+            const delay = this.creature.kill();
+
+            if(delay === 0){
+                this.duringSinkingAnimation = true;
+            }else if( delay > 0){
+                this.sinkDelay = delay;
+                this.duringSinkingAnimation = true;
+            }else{
+                //negative delay here is a special case where the cell shouldn't sink or die after the creature was killed. If killing a creature would replace it with another creature for example, that kill function should return a negative delay
+            }
         }
     }
 
-    addTrait(trait){
-        this.traits.push(trait);
-        this[trait.NAME] = trait;
-
-    }
-
-    //routes to appropriate trait based on held item and cell state, then damages player if an inactive cell is pressed or adds score if a creature is killed
     interact(item, player){
         this.hitTimer = this.trailTime;
         if(this.isActive){
             if(item instanceof Weapon && player.ammo > 0){
-                this.creature.isHeld = true;
-                this.attack.start(item, player);
-                return this.creature.name;
+                this.attack(item.power);
+                return {"result": "attacked", "creatureName": this.creature.name};
             }
         }else{
             globalSoundBoard.play('bonkOther');
@@ -71,6 +72,9 @@ export default class Cell{
                 const newCreature = special.create();
                 this.spawnNew(newCreature);
                 player.energy -= special.cost + 1;
+                return {"result": "spawned", "creatureName": this.creature.name};
+            }else{
+                return {"result": "nothing", "cell": null};
             }
         }
     }
@@ -80,7 +84,7 @@ export default class Cell{
 
     released(){
         if(this.creature){
-            this.creature.isHeld = false;
+            //this.creature.isHeld = false;
         }
     }
 
@@ -88,9 +92,17 @@ export default class Cell{
         if(this.isSpawnable()){
             creature.currentCell = this;
             this.creature = creature;
-            this.spawn.start();
+            if(creature.name == "outpost" || creature.name == "asteroid"){
+                this.speed = 200;
+                this.depth = -300;
+            }
+            this.isActive = true;
         }else{
-            console.log("tried to spawn on active cell");
+            if(this.creature){
+                console.log("tried to spawn a " + creature.name + " on active cell " + this.name + " which already contained " + this.creature.name);
+            }else{
+                console.log("tried to spawn a " + creature.name + " on a non-spawnable cell " + this.name);
+            }
         }
     }
 
@@ -98,13 +110,14 @@ export default class Cell{
         return !this.isActive && this.terrain != "water" && this.terrain != "mountain" && this.terrain != "outpost"
     }
 
-    replace(creature){
-        if(this.isActive){
-            creature.currentCell = this;
-            this.creature = creature; 
-        }else{
-            console.log("tried to replace an inactive cell");
-        }
+    moveTo(creature){
+        const fromCell = creature.currentCell;
+        fromCell.reset();
+
+        creature.currentCell = this;
+        this.creature = creature;
+        this.depth = 0;
+        this.isActive = true;
     }
 
     teleport(creature){
@@ -124,18 +137,63 @@ export default class Cell{
         this.hitTimer = 0;
         this.duringSinkingAnimation = false;
         this.isActive = false;
+        this.isHovered = false;
         this.isProtected = false;
         this.creature = null;
     };
 
+
+    update(deltaTime){
+        //spawn animation
+        if(this.isActive && (!this.duringSinkingAnimation) && (this.depth != 0)){
+            if(this.depth < 0.5 && this.depth > -0.5){
+                this.depth = 0;
+            }else if(this.depth > 0){
+                this.depth -= this.speed * deltaTime;
+            }else{
+                this.depth += this.speed * deltaTime;
+            }
+        }
+
+        //attack animation
+        if(this.creature && this.creature.health <= 0){
+            this.kill();
+        }
+        if(this.sinkDelay >= 0){
+            this.sinkDelay -= deltaTime;
+        }else{
+            if(this.duringSinkingAnimation && this.depth < this.maxDepth){
+                this.depth += this.speed * deltaTime;
+            }else if(this.duringSinkingAnimation && this.depth >= this.maxDepth){
+                this.duringSinkingAnimation = false;
+                this.reset();
+            }
+        }
+
+        this.isProtected = false;
+
+        if(this.hitTimer > 0){
+            this.hitTimer -= deltaTime;
+        }else{
+            this.hitTimer = 0;
+        }
+
+        //rain animation
+        this.rainDepth += this.speed * deltaTime;
+        if(this.rainDepth >= 320){
+            this.rainDepth = 0;
+        }
+    }
 
 
     draw(context){
         // if(this.depth < this.maxDepth){
             this.drawTerrain(context);
 
+            this.drawStatus(context);
+
             if(this.creature){
-                this.drawStatus(context);
+                this.drawHealthBar(context);
             }
 
             this.drawMouseFrame(context);
@@ -143,22 +201,48 @@ export default class Cell{
             if(this.creature){
                 this.drawCreature(context);
             }
+
+
+            if(this.isRainedOn){
+                this.drawRain(context);
+            }
     }
 
     drawTerrain(context){
-        context.drawImage(tileSheet.getBuffer(this.terrain), this.coordinates.x, this.coordinates.y + (this.isActive?Math.ceil(this.depth):0));
+        try{
+
+            const x = this.coordinates.x;
+            const y = this.coordinates.y + (this.isActive?Math.ceil(this.depth):0);
+            
+            context.drawImage(tileSheet.getBuffer(this.terrain), x, y );
+
+            //draw if explored
+            if(this.isExplored){
+                context.globalAlpha = 0.4;
+                context.drawImage(tileSheet.getBuffer('darkened'), x, y );
+                context.globalAlpha = 1;
+            }
+        }catch(err){
+            console.log("error on ", this.terrain);
+        }
     }
 
     drawStatus(context){
-        //draw frame
-        context.drawImage(tileSheet.getBuffer('standard2'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
+        const x = this.coordinates.x;
+        const y = this.coordinates.y + (this.isActive?Math.ceil(this.depth):0);
 
         //draw status conditions
-        if(this.status === "frozen"){
+        if(this.isRainedOn){
             context.globalAlpha = 0.25;
-            context.drawImage(tileSheet.getBuffer('frozen'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
+            context.drawImage(tileSheet.getBuffer('wet'), x, y);
             context.globalAlpha = 1;
         }
+
+    }
+
+    drawHealthBar(context){
+        //draw frame
+        context.drawImage(tileSheet.getBuffer('standard2'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
 
         //draw healthbar.
         const x = this.coordinates.x + 10;
@@ -184,7 +268,6 @@ export default class Cell{
             context.lineTo(x+12, y + Math.ceil(this.depth));
             context.stroke();
         }
-
     }
 
     drawMouseFrame(context){
@@ -219,5 +302,45 @@ export default class Cell{
             context.strokeRect(x, y, 32, 32);
         }
         this.creature.draw(context, x, y + Math.ceil(this.depth));
+    }
+
+    drawRain(context){
+        const cloudX = this.coordinates.x - 14;
+        const cloudY = Math.floor(this.coordinates.y/2) - 50;
+
+        const rainX = this.coordinates.x;
+        const rainY = cloudY + 20 + this.rainDepth;
+
+        const aboveDistance = this.rainDepth;
+        //const belowDistance = this.coordinates.y - this.rainDepth;
+        const belowDistance = 320 - this.rainDepth;
+
+        const tilesAbove = Math.ceil(aboveDistance/32);
+        const tilesBelow = Math.floor(belowDistance/32);
+
+
+        // draw rain
+        for( let i = 0; i < tilesAbove; i++){
+            const yy =  rainY - (i*32)
+            //this 240 depends on the size of the map... should revisit
+            if(yy < 240){
+                context.drawImage(tileSheet.getBuffer('rain'), rainX, yy);
+            }
+        }
+
+        for( let i = 0; i < tilesBelow; i++ ){
+            const yy = rainY + (i*32)
+            //this 240 depends on the size of the map... should revisit
+            if(yy < 240){
+                context.drawImage(tileSheet.getBuffer('rain'), rainX, yy);
+            }
+        }
+
+        // draw cloud
+        //context.globalAlpha = 0.25;
+        context.drawImage(tileSheet.getBuffer('cloud'), cloudX, cloudY);
+        //context.globalAlpha = 1;
+
+        
     }
 }

@@ -4,7 +4,6 @@ export default class Player{
         this.baseNumAllies = 2;
         this.maxAmmo = 1;
 
-        this.score = this.baseScore;
         this.alliesLeft = this.baseNumAllies;
         this.weapon = null;
         this.ammo = this.maxAmmo;
@@ -12,23 +11,28 @@ export default class Player{
         this.unlocked = new Map();
         this.unlocked.set("protector", true);
         this.unlocked.set("bunbun", true);
+        this.unlocked.set("welder", true);
+        this.unlocked.set("boxer", true);
+        this.unlocked.set("dragon", true);
+        this.unlocked.set("outpost", true);
 
-        this.startingEnergy = 20;
+        this.startingEnergy = 50;
         this.energy = this.startingEnergy;
         this.maxEnergy = 100;
 
         this.creatureFactories = [];
         this.specialSelection = 0;
+
+        this.hasLost = false;
     }
 
-    addScore(amount){
-        this.score += amount;
+    lose(){
+        this.hasLost = true;
     }
 
     reset(){
         this.energy = this.startingEnergy;
-        //this.score = this.baseScore;
-        //this.creatureFactories = [];
+        this.hasLost = false;
     }
 
     addCreature(creatureFactory){

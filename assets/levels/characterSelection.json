@@ -1,14 +1,24 @@
 {
-    "map": [ 
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"],
-        ["grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland", "grassland"]
-    ],
+    "cellmap": {
+        "map": [ 
+            ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+            ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+            ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+            ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+                ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"]
+        ],
+        "key": {
+            "g1": "grassland",
+            "p1": "protector",
+            "b1": "bunbun",
+            "w2": "welder",
+            "b2": "boxer",
+            "default": "grassland"
+        }   
+    },
     "spawner": {
         "spawnRate": -1,
         "creatures": [
@@ -17,15 +27,49 @@
                 "evolutions": 1,
                 "chance": 0.03,
                 "selectionCell": "0-0",
-                "cost": 10
+                "cost": 5,
+                "group": "allies"
             },
             {
                 "type": "bunbun",
                 "evolutions": 1,
                 "chance": 0.04,
                 "selectionCell": "1-0",
-                "cost": 25
-            }  
+                "cost": 10,
+                "group": "allies"
+            },
+            {
+                "type": "welder",
+                "evolutions": 1,
+                "chance": 0.04,
+                "selectionCell": "2-0",
+                "cost": 20,
+                "group": "allies"
+            },
+            {
+                "type": "boxer",
+                "evolutions": 2,
+                "chance": 0.04,
+                "selectionCell": "3-0",
+                "cost": 25,
+                "group": "allies"
+            },
+            {
+                "type": "dragon",
+                "evolutions": 2,
+                "chance": 0.04,
+                "selectionCell": "4-0",
+                "cost": 30,
+                "group": "allies"
+            },
+            {
+                "type": "outpost",
+                "evolutions": 1,
+                "chance": 0.04,
+                "selectionCell": "5-0",
+                "cost": 35,
+                "group": "other"
+            }   
         ]
     }
 }

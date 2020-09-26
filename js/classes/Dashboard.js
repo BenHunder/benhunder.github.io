@@ -59,15 +59,15 @@ export default class Dashboard extends Layer{
             //should probably get the correct value for these if variable sizes are needed
             const halfSpecialWidth = 16;
             const specialHeight = 32;
-            newCreature.draw(context, x + xCost - halfSpecialWidth, y - specialHeight);
+            newCreature.draw(context, x + xCost - halfSpecialWidth, y - specialHeight, 'still');
 
             //temporary way to indicate selected special
             if(i == this.player.specialSelection){
                 context.lineWidth = 2;
                 context.strokeStyle = "#D72727";
                 context.beginPath();
-                context.moveTo(x + xCost - 3, y - 10);
-                context.lineTo(x + xCost + 3, y - 10);
+                context.moveTo(x + xCost - 5, y - 6);
+                context.lineTo(x + xCost + 5, y - 6);
                 context.stroke();
             }
         });

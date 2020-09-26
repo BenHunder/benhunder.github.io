@@ -2,7 +2,8 @@ const PRESSED = 1;
 const RELEASED = 0;
 
 export default class Controller{
-    constructor(){
+    constructor(canvas){
+        this.canvas = canvas
         this.keyStates = new Map();
         this.keyMap = new Map();
     }
@@ -29,10 +30,12 @@ export default class Controller{
 
             this.keyMap.get(keyCode)(keyState);
         }else{
+            const x = event.clientX - gameCanvas.offsetLeft;
+            const y = event.clientY - gameCanvas.offsetTop;
             if(event.type == "mousemove"){
-                this.onMouseMove(event.layerX, event.layerY);
+                this.onMouseMove(x, y);
             }else{
-                this.onClick(event.layerX, event.layerY);
+                this.onClick(x, y);
             }
         }
     }

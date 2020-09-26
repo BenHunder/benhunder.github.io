@@ -7,18 +7,25 @@ import Font from './classes/Font.js';
 import Cell from './classes/Cell.js';
 import Level from './classes/Level.js';
 import { Vec2, indicesToCoordinates } from './math.js';
-import Orchill from '../assets/characters/orchill/Orchill.js';
-import Achilia from '../assets/characters/achilia/Achilia.js';
-import Grass from '../assets/characters/grass/Grass.js';
-import Mushboy from '../assets/characters/mushboy/Mushboy.js';
-import Protector from '../assets/characters/protector/Protector.js';
-import Bunbun from '../../assets/characters/bunbun/Bunbun.js';
-import Sprout from '../assets/characters/sprout/Sprout.js';
+import Orchill from '../assets/characters/enemies/orchill/Orchill.js';
+import Achilia from '../assets/characters/enemies/achilia/Achilia.js';
+import Grass from '../assets/characters/enemies/grass/Grass.js';
+import Mushboy from '../assets/characters/allies/mushboy/Mushboy.js';
+import Protector from '../assets/characters/allies/protector/Protector.js';
+import Bunbun from '../../assets/characters/allies/bunbun/Bunbun.js';
+import Sprout from '../assets/characters/enemies/sprout/Sprout.js';
+import Welder from '../assets/characters/allies/welder/Welder.js';
+import Boxer from '../assets/characters/allies/boxer/Boxer.js';
+import Asteroid from '../assets/characters/other/asteroid/Asteroid.js';
+import Outpost from '../assets/characters/other/outpost/Outpost.js';
+import Peekaboo from '../assets/characters/enemies/peekaboo/Peekaboo.js';
+import Dragon from '../assets/characters/allies/dragon/Dragon.js';
 
 
 const gameWidth = 640;
 const gameHeight = 360;
 
+// this is called ES6 Object Literal Property Value Shorthand
 export const creatureTypes = {
     Achilia,
     Orchill,
@@ -26,7 +33,13 @@ export const creatureTypes = {
     Sprout,
     Mushboy,
     Protector,
-    Bunbun 
+    Bunbun,
+    Welder,
+    Boxer,
+    Asteroid,
+    Outpost,
+    Peekaboo,
+    Dragon
 }
 
 export function loadJson(path){
@@ -68,6 +81,9 @@ export function loadFrames(spriteSheetLocation, frameDataLocation, creatureName)
         frameNames.forEach( (frameName, n) => {
             const frame = frameData.frames[frameName].frame;
             sprites.define('frame' + n, frame.x, frame.y, frame.w, frame.h, frameData.frames[frameName].duration);
+        });
+        frameData.meta.frameTags.forEach(tag => { 
+            sprites.defineAnimation(tag.name, {"start":tag.from, "end":tag.to});
         });
         spriteSheetMap.set(creatureName, sprites);
     })
@@ -133,48 +149,71 @@ export function loadLevel(lvl){
         backgroundBuffer.width = gameWidth;
         backgroundBuffer.height = gameHeight;
         backgroundBuffer.getContext('2d').drawImage(img, 0, 0);
-        
-        const cellWidth = level.map[0].length;
-        const cellHeight = level.map.length;
-        const cellMap = new CellMap(cellWidth, cellHeight);
-        for(let i=0; i < cellHeight; i++){
-            for(let j=0; j < cellWidth; j++){ 
-                const cell = new Cell(j + "-" + i, new Vec2(j, i), indicesToCoordinates(new Vec2(j, i)), level.map[i][j]);
-                cellMap.set(cell.name, cell.indices, cell);
-            }
-        }
-        const newSpawner = new Spawner(cellMap, level.spawner.spawnRate);
 
+        //initialize cellmap
+        const cellWidth = level.cellmap.map[0].length;
+        const cellHeight = level.cellmap.map.length;
+        const cellMap = new CellMap(cellWidth, cellHeight);
+
+        //load creature (factories) from level.spawner into Spawner object
+        const spawner = new Spawner(cellMap, level.spawner.spawnRate);
         let promisesArray = [];
 
-        //load creatures in the level.json
         level.spawner.creatures.forEach( creatureSpec => {
             promisesArray.push( 
-                loadCreatureType(creatureSpec.type, creatureSpec.evolutions, creatureSpec.initialChance, creatureSpec.cluster, creatureSpec.selectionCell, creatureSpec.cost)
+                loadCreatureType(creatureSpec.type, creatureSpec.evolutions, creatureSpec.initialChance, creatureSpec.cluster, creatureSpec.selectionCell, creatureSpec.cost, creatureSpec.group)
                 .then( creatureFactory => {
-                    newSpawner.addCreature(creatureFactory);
+                    spawner.addCreature(creatureFactory);
                 })
             );
         });
         return Promise.all(promisesArray).then( x => {
 
-            //add player selections
+            //add player ally selections to spawner
             player1.creatureFactories.forEach( cf => {
-                newSpawner.addCreature(cf);
+                if(!spawner.creatureFactories.map(cf => cf.name).includes(cf.name)){
+                    spawner.addCreature(cf);
+                }
             })
-            return new Level(backgroundBuffer, cellMap, newSpawner);
-        });
+
+            //load terrains and predetermined creatures into cellmap
+            for(let i=0; i < cellHeight; i++){
+                for(let j=0; j < cellWidth; j++){ 
+
+                    const cellFill = level.cellmap.key[level.cellmap.map[i][j]];
+                    let cell = null;
+
+                    let isACreature = false
+                    spawner.creatureFactories.forEach(cf => {
+                        if(cf.name == cellFill){
+                            isACreature = true;
+                            cell = new Cell(j + "-" + i, new Vec2(j, i), indicesToCoordinates(new Vec2(j, i)), level.cellmap.key["default"]);
+                            cellMap.set(cell.name, cell.indices, cell);
+                            
+                            cell.spawnNew(cf.create());
+                        }
+                    });
+                    if(!isACreature){
+                        cell = new Cell(j + "-" + i, new Vec2(j, i), indicesToCoordinates(new Vec2(j, i)), cellFill);
+                        cellMap.set(cell.name, cell.indices, cell);
+                    }                
+                }
+            }
+
+            return new Level(backgroundBuffer, cellMap, spawner);
+
+        });  
     });
 }
 
 //load spritesheets for all evolutions of creature, then create and return a creatureFactory
-export function loadCreatureType(creatureName, creatureEvolutions, creatureChance, creatureCluster, selectionCell, creatureCost){
+export function loadCreatureType(creatureName, creatureEvolutions, creatureChance, creatureCluster, selectionCell, creatureCost, creatureGroup){
     let promisesArray = [];
 
     //load spritesheets for each evolution of creature
     for(let i = 1; i < creatureEvolutions+1; i++) {
-        const spriteSheetLocation = "/assets/characters/" + creatureName + "/" + creatureName + "-e" + i + "-sheet.png";
-        const frameDataLocation = "/assets/characters/" + creatureName + "/" + creatureName + "-e" + i + ".json";
+        const spriteSheetLocation = "/assets/characters/"+ creatureGroup + "/" + creatureName + "/" + creatureName + "-e" + i + "-sheet.png";
+        const frameDataLocation = "/assets/characters/" + creatureGroup + "/" + creatureName + "/" + creatureName + "-e" + i + ".json";
 
         const eName = creatureName + "-e" + i;
         promisesArray.push(

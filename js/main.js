@@ -167,7 +167,7 @@ async function initialize(){
 
         comp.level = currentLevel;
     
-        const controller = new Controller();
+        const controller = new Controller(gameCanvas);
 
         // spacebar reloads.. maybe
         controller.setMapping(32, keyState => {
@@ -293,17 +293,13 @@ async function initialize(){
 
         function clickCell(cell){
             if(!paused){
-                //age all cells
-                currentLevel.cellMap.occupiedCells().forEach((cell) => cell.creature.ageMe());
-
                 //interact with cell
-                const selection = cell.interact(player1.weapon, player1);
-
-                
+                const interaction = cell.interact(player1.weapon, player1);
+                console.log("clicked", cell.name);
                 //character selection interaction
-                if(selection && game1.level === "characterSelection"){
+                if(interaction.result == "attacked" && game1.level === "characterSelection"){
                     currentLevel.spawner.creatureFactories.forEach( cf => {
-                        if(cf.name === selection){
+                        if(cf.name === interaction.creatureName){
                             player1.addCreature(cf);
                         }
                     });
@@ -320,8 +316,7 @@ async function initialize(){
                         player1.reload()
                     }
 
-                    //increment energy by one each turn
-                    player1.addEnergy();
+                    endTurn(interaction, cell);
                 }
             }
         }
@@ -359,17 +354,11 @@ function start(comp){
 
             //check win/lose conditions
             if(game1.level > 0){
-                const outpostsUnderSiege = []
-                currentLevel.cellMap.findOutposts().forEach(outpost => {
-                    //if it can find an enemy target adjacent to it, that means it is under siege and you lose
-                    if(currentLevel.cellMap.randomAdjacentTarget(outpost)){
-                        outpostsUnderSiege.push(outpost);
-                    }
-                });
+                if(player1.hasLost){
+                    lose(comp);
+                }
                 if(currentLevel.cellMap.numEnemies() == 0){
                     win(comp);
-                }else if(outpostsUnderSiege.length > 0){
-                    lose(comp);
                 }
             }
 
@@ -392,12 +381,12 @@ function start(comp){
 
 initialize().then((comp) => start(comp));
 
-function win(comp){
+export function win(comp){
     comp.setMenu(winMenu);
     pause(comp);
 }
 
-function lose(comp){
+export function lose(comp){
     comp.setMenu(loseMenu);
     pause(comp);
 }
@@ -413,19 +402,6 @@ function initializeGame(){
 
 }
 
-function resetLevel(){
-    currentLevel.cellMap.allCells().forEach((cell) => {
-        cell.reset();
-    });
-    game1.reset();
-    player1.reset();
-}
-
-function initializeLevel(){
-    resetLevel();
-    currentLevel.spawner.initialSpawn();
-}
-
 function resumeButton(comp){
     if(game1.level === "characterSelection"){
         comp.setMenu(creatureMenu);
@@ -436,29 +412,29 @@ function resumeButton(comp){
 function startButton(comp){
     creatureMenu.setHeader("CHOOSE " + player1.alliesLeft + " ALLIES");
     comp.setMenu(creatureMenu);
-    unpause(comp);
-    currentLevel.spawner.spawnSelections();
+    game1.level = "characterSelection"
+    player1.clearCreatures();
+    loadLevel(game1.level).then(level => {
+        currentLevel = level;
+        comp.level = level;
+        player1.reset();
+        currentLevel.spawner.spawnSelections();
+        unpause(comp);
+    });
 }
 
 function restartButton(comp){
-    initializeLevel();
-    unpause(comp);
+    setLevel(comp, game1.level);
 }
 
 function quitButton(comp){
-    game1.level = 0;
     comp.setMenu(startMenu);
 }
 
 function nextLevelButton(comp){
     const nextLevel = (parseInt(game1.level, 10) + 1)
     game1.level = nextLevel;
-    loadLevel(game1.level).then(level => {
-        comp.level = level;
-        currentLevel = level;
-        initializeLevel();
-        unpause(comp);
-    });
+    setLevel(comp, game1.level);
 }
 
 function levelButton(comp, action){
@@ -466,12 +442,43 @@ function levelButton(comp, action){
         currentLevel.spawner.creatureFactories = [];
     }
     game1.level = action.substring(6, 7);
-    loadLevel(game1.level).then(level => {
+    setLevel(comp, game1.level);
+}
+
+function setLevel(comp, levelName){
+    loadLevel(levelName).then(level => {
         currentLevel = level;
         comp.level = level;
-        initializeLevel();
+        player1.reset();
+        level.spawner.initialSpawn();
         unpause(comp);
     });
+}
+
+function endTurn(interaction, clickedCell){
+    //age all cells
+    currentLevel.cellMap.getActiveCreatures().forEach((creature) => {
+        //creature should not attack, propogate, or evolve on the turn it was spawned
+        if(creature.age > 0){
+            creature.attemptFight();
+            //pause for animation
+            creature.attemptPropogation();
+            //pause for animation
+            creature.attemptEvolution();
+            //pause for animation
+        }
+
+        creature.ageMe();
+    });
+
+    //increment energy by one each turn
+    player1.addEnergy();
+
+    //spawn asteroids
+    currentLevel.spawner.spawnAll();
+
+    //update rain
+    currentLevel.spawner.updateRain();
 }
 
 
