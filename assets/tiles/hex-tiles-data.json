@@ -137,7 +137,7 @@
       "h": 32
     },
     {
-      "name": "frozen",
+      "name": "wet",
       "type": "frame",
       "x": 0,
       "y": 96,
@@ -173,6 +173,22 @@
       "type": "frame",
       "x": 128,
       "y": 96,
+      "w": 32,
+      "h": 32
+    },
+    {
+      "name": "cloud",
+      "type": "frame",
+      "x": 0,
+      "y": 128,
+      "w": 56,
+      "h": 32
+    },
+    {
+      "name": "rain",
+      "type": "frame",
+      "x": 64,
+      "y": 128,
       "w": 32,
       "h": 32
     }

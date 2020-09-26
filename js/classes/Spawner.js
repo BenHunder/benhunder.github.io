@@ -9,26 +9,31 @@ export class Spawner{
         this.cellMap = cellMap;
         this.creatureFactories = [];
         this.spawnRate = spawnRate;
-        this.counter = 0;
+
+        this.rainCells = [];
+        this.rainTurns = 5;
+        this.moveRainAfter = 5;
     }
 
     addCreature(creatureFactory){
         this.creatureFactories.push(creatureFactory);
     }
 
-
-    update(deltaTime){
-        this.counter += deltaTime;
-
-        //raise spawnRate (lower frequency of spawns) when there are more creatures on the board, so players aren't overwhelmed
-        //ie.. start faster, then get slower
-        const thresh = this.spawnRate * (((this.cellMap.numEnemies()*5) + 5) / 29);
-        //const thresh = this.spawnRate;
-
-        if(this.counter >= thresh){
-            this.spawnAll();
-            this.counter = 0;
+    updateRain(){
+        if(this.rainTurns >= this.moveRainAfter){
+            this.rainCells.forEach(cell => {
+                cell.isRainedOn = false;
+            });
+            this.rainCells = [];
+            // const center = this.cellMap.randomAvailableCell();
+            // this.rainCells = this.cellMap.adjacentTo(center);
+            // this.rainCells.push(center);
+            this.rainCells.push(this.cellMap.randomAvailableCell());
         }
+
+        this.rainCells.forEach(cell => {
+            cell.isRainedOn = true;
+        });
     }
 
     initialSpawn(){

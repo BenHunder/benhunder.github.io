@@ -24,6 +24,9 @@ export default class Cell{
         this.terrain = terrain;
         this.status = "frozen"
         this.isExplored = false;
+
+        this.isRainedOn = false;
+        this.rainDepth = 0;
     }
 
 
@@ -51,44 +54,6 @@ export default class Cell{
             }else{
                 //negative delay here is a special case where the cell shouldn't sink or die after the creature was killed. If killing a creature would replace it with another creature for example, that kill function should return a negative delay
             }
-        }
-    }
-    
-    
-    update(deltaTime){
-        //spawn animation
-        if(this.isActive && (!this.duringSinkingAnimation) && (this.depth != 0)){
-            if(this.depth < 0.5 && this.depth > -0.5){
-                this.depth = 0;
-            }else if(this.depth > 0){
-                this.depth -= this.speed * deltaTime;
-            }else{
-                this.depth += this.speed * deltaTime;
-            }
-            
-        }
-
-        //attack animation
-        if(this.creature && this.creature.health <= 0){
-            this.kill();
-        }
-        if(this.sinkDelay >= 0){
-            this.sinkDelay -= deltaTime;
-        }else{
-            if(this.duringSinkingAnimation && this.depth < this.maxDepth){
-                this.depth += this.speed * deltaTime;
-            }else if(this.duringSinkingAnimation && this.depth >= this.maxDepth){
-                this.duringSinkingAnimation = false;
-                this.reset();
-            }
-        }
-
-        this.isProtected = false;
-
-        if(this.hitTimer > 0){
-            this.hitTimer -= deltaTime;
-        }else{
-            this.hitTimer = 0;
         }
     }
 
@@ -178,19 +143,68 @@ export default class Cell{
     };
 
 
+    update(deltaTime){
+        //spawn animation
+        if(this.isActive && (!this.duringSinkingAnimation) && (this.depth != 0)){
+            if(this.depth < 0.5 && this.depth > -0.5){
+                this.depth = 0;
+            }else if(this.depth > 0){
+                this.depth -= this.speed * deltaTime;
+            }else{
+                this.depth += this.speed * deltaTime;
+            }
+        }
+
+        //attack animation
+        if(this.creature && this.creature.health <= 0){
+            this.kill();
+        }
+        if(this.sinkDelay >= 0){
+            this.sinkDelay -= deltaTime;
+        }else{
+            if(this.duringSinkingAnimation && this.depth < this.maxDepth){
+                this.depth += this.speed * deltaTime;
+            }else if(this.duringSinkingAnimation && this.depth >= this.maxDepth){
+                this.duringSinkingAnimation = false;
+                this.reset();
+            }
+        }
+
+        this.isProtected = false;
+
+        if(this.hitTimer > 0){
+            this.hitTimer -= deltaTime;
+        }else{
+            this.hitTimer = 0;
+        }
+
+        //rain animation
+        this.rainDepth += this.speed * deltaTime;
+        if(this.rainDepth >= 320){
+            this.rainDepth = 0;
+        }
+    }
+
 
     draw(context){
         // if(this.depth < this.maxDepth){
             this.drawTerrain(context);
 
+            this.drawStatus(context);
+
             if(this.creature){
-                this.drawStatus(context);
+                this.drawHealthBar(context);
             }
 
             this.drawMouseFrame(context);
 
             if(this.creature){
                 this.drawCreature(context);
+            }
+
+
+            if(this.isRainedOn){
+                this.drawRain(context);
             }
     }
 
@@ -214,15 +228,21 @@ export default class Cell{
     }
 
     drawStatus(context){
-        //draw frame
-        context.drawImage(tileSheet.getBuffer('standard2'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
+        const x = this.coordinates.x;
+        const y = this.coordinates.y + (this.isActive?Math.ceil(this.depth):0);
 
         //draw status conditions
-        if(this.status === "frozen"){
+        if(this.isRainedOn){
             context.globalAlpha = 0.25;
-            //context.drawImage(tileSheet.getBuffer('frozen'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
+            context.drawImage(tileSheet.getBuffer('wet'), x, y);
             context.globalAlpha = 1;
         }
+
+    }
+
+    drawHealthBar(context){
+        //draw frame
+        context.drawImage(tileSheet.getBuffer('standard2'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
 
         //draw healthbar.
         const x = this.coordinates.x + 10;
@@ -248,7 +268,6 @@ export default class Cell{
             context.lineTo(x+12, y + Math.ceil(this.depth));
             context.stroke();
         }
-
     }
 
     drawMouseFrame(context){
@@ -283,5 +302,45 @@ export default class Cell{
             context.strokeRect(x, y, 32, 32);
         }
         this.creature.draw(context, x, y + Math.ceil(this.depth));
+    }
+
+    drawRain(context){
+        const cloudX = this.coordinates.x - 14;
+        const cloudY = Math.floor(this.coordinates.y/2) - 50;
+
+        const rainX = this.coordinates.x;
+        const rainY = cloudY + 20 + this.rainDepth;
+
+        const aboveDistance = this.rainDepth;
+        //const belowDistance = this.coordinates.y - this.rainDepth;
+        const belowDistance = 320 - this.rainDepth;
+
+        const tilesAbove = Math.ceil(aboveDistance/32);
+        const tilesBelow = Math.floor(belowDistance/32);
+
+
+        // draw rain
+        for( let i = 0; i < tilesAbove; i++){
+            const yy =  rainY - (i*32)
+            //this 240 depends on the size of the map... should revisit
+            if(yy < 240){
+                context.drawImage(tileSheet.getBuffer('rain'), rainX, yy);
+            }
+        }
+
+        for( let i = 0; i < tilesBelow; i++ ){
+            const yy = rainY + (i*32)
+            //this 240 depends on the size of the map... should revisit
+            if(yy < 240){
+                context.drawImage(tileSheet.getBuffer('rain'), rainX, yy);
+            }
+        }
+
+        // draw cloud
+        //context.globalAlpha = 0.25;
+        context.drawImage(tileSheet.getBuffer('cloud'), cloudX, cloudY);
+        //context.globalAlpha = 1;
+
+        
     }
 }

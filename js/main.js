@@ -476,6 +476,9 @@ function endTurn(interaction, clickedCell){
 
     //spawn asteroids
     currentLevel.spawner.spawnAll();
+
+    //update rain
+    currentLevel.spawner.updateRain();
 }
 
 
