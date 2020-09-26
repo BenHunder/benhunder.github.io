@@ -171,7 +171,9 @@ export function loadLevel(lvl){
 
             //add player ally selections to spawner
             player1.creatureFactories.forEach( cf => {
-                spawner.addCreature(cf);
+                if(!spawner.creatureFactories.map(cf => cf.name).includes(cf.name)){
+                    spawner.addCreature(cf);
+                }
             })
 
             //load terrains and predetermined creatures into cellmap
@@ -194,7 +196,8 @@ export function loadLevel(lvl){
                     if(!isACreature){
                         cell = new Cell(j + "-" + i, new Vec2(j, i), indicesToCoordinates(new Vec2(j, i)), cellFill);
                         cellMap.set(cell.name, cell.indices, cell);
-                    }                }
+                    }                
+                }
             }
 
             return new Level(backgroundBuffer, cellMap, spawner);

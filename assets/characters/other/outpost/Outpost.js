@@ -1,5 +1,5 @@
 import Creature from '/js/classes/Creature.js'
-import { player1, spriteSheetMap } from '../../../../js/main.js';
+import { player1, currentLevel, spriteSheetMap } from '../../../../js/main.js';
 
 export default class Outpost extends Creature{
     constructor(){
@@ -19,6 +19,12 @@ export default class Outpost extends Creature{
         console.log("you lost");
         let delay = 0;
         return delay;
+    }
+
+    ageMe(){
+        this.age += 1;
+
+        currentLevel.cellMap.withinTwo(this.currentCell).forEach( cell => cell.isExplored = true);
     }
 
 }

@@ -1,6 +1,5 @@
 import Weapon from './Weapon.js';
 import { globalSoundBoard, tileSheet } from '../main.js';
-import { currentLevel } from '../main.js';
 
 export default class Cell{
     constructor(name, indices, coordinates, terrain){
@@ -128,10 +127,9 @@ export default class Cell{
         if(this.isSpawnable()){
             creature.currentCell = this;
             this.creature = creature;
-            if(creature.name == "outpost"){
-                //this.speed = 200;
-                //this.depth = -300;
-                currentLevel.cellMap.withinTwo(this).forEach( cell => cell.isExplored = true);
+            if(creature.name == "outpost" || creature.name == "asteroid"){
+                this.speed = 200;
+                this.depth = -300;
             }
             this.isActive = true;
         }else{
