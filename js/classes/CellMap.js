@@ -123,6 +123,10 @@ export default class CellMap{
         return this.adjacentTo(cell).filter(cell => cell.isSpawnable());
     }
 
+    availableWithinTwo(cell){
+        return this.withinTwo(cell).filter(cell => cell.isSpawnable());
+    }
+
     randomAdjacentTarget(cell, targetAlignments){
         const occupied = this.adjacentTo(cell).filter(cell => cell.isActive && targetAlignments.includes(cell.creature.alignment));    
         const r = getRandomInt(occupied.length);
@@ -130,10 +134,29 @@ export default class CellMap{
     }
 
     //returns an array of max length n (could be less) of random cells adjacent to cell
-    randomAdjacentTo(cell, n){
+    randomAvailableAdjacent(cell, n){
         let cells = [];
 
         let possibleCells = this.availableAdjacentTo(cell);
+        for(let i = 0; i < n; i++){
+            if(possibleCells.length > 0){
+                let r = getRandomInt(possibleCells.length);
+                const newSpawn = possibleCells.splice(r, 1);
+                cells.push(newSpawn[0]);
+            }else{
+                //not enough available adjecent spaces, return as many as possible
+                break;
+            }
+        }
+
+        return cells;
+    }
+
+    //returns an array of max length n (could be less) of random cells adjacent to cell
+    randomAvailableWithinTwo(cell, n){
+        let cells = [];
+
+        let possibleCells = this.availableWithinTwo(cell);
         for(let i = 0; i < n; i++){
             if(possibleCells.length > 0){
                 let r = getRandomInt(possibleCells.length);
@@ -153,7 +176,7 @@ export default class CellMap{
     }
 
     availableCells(){
-        return this.allCells().filter((cell) => !cell.isActive);
+        return this.allCells().filter((cell) => cell.isSpawnable());
     }
 
     occupiedCells(){

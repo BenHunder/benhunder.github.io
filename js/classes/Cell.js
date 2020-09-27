@@ -107,7 +107,7 @@ export default class Cell{
     }
 
     isSpawnable(){
-        return !this.isActive && this.terrain != "water" && this.terrain != "mountain" && this.terrain != "outpost"
+        return !this.isActive && this.terrain != "water" && this.terrain != "mountain"
     }
 
     moveTo(creature){
@@ -305,11 +305,11 @@ export default class Cell{
     }
 
     drawRain(context){
-        const cloudX = this.coordinates.x - 14;
+        const cloudX = this.coordinates.x - 18;
         const cloudY = Math.floor(this.coordinates.y/2) - 50;
 
         const rainX = this.coordinates.x;
-        const rainY = cloudY + 20 + this.rainDepth;
+        const rainY = cloudY + 12 + this.rainDepth;
 
         const aboveDistance = this.rainDepth;
         //const belowDistance = this.coordinates.y - this.rainDepth;
@@ -324,7 +324,7 @@ export default class Cell{
             const yy =  rainY - (i*32)
             //this 240 depends on the size of the map... should revisit
             if(yy < 240){
-                context.drawImage(tileSheet.getBuffer('rain'), rainX, yy);
+                context.drawImage(tileSheet.getBuffer(i%2 == 0 ? 'rain':'rain2'), rainX, yy);
             }
         }
 
@@ -332,13 +332,13 @@ export default class Cell{
             const yy = rainY + (i*32)
             //this 240 depends on the size of the map... should revisit
             if(yy < 240){
-                context.drawImage(tileSheet.getBuffer('rain'), rainX, yy);
+                context.drawImage(tileSheet.getBuffer(i%2 == 0 ? 'rain':'rain2'), rainX, yy);
             }
         }
 
         // draw cloud
         //context.globalAlpha = 0.25;
-        context.drawImage(tileSheet.getBuffer('cloud'), cloudX, cloudY);
+        context.drawImage(tileSheet.getBuffer('cloud2'), cloudX, cloudY);
         //context.globalAlpha = 1;
 
         

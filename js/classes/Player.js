@@ -1,7 +1,7 @@
 export default class Player{
     constructor(){
         this.baseScore = 0;
-        this.baseNumAllies = 2;
+        this.baseNumAllies = 3;
         this.maxAmmo = 1;
 
         this.alliesLeft = this.baseNumAllies;

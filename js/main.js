@@ -474,11 +474,13 @@ function endTurn(interaction, clickedCell){
     //increment energy by one each turn
     player1.addEnergy();
 
+    //update rain
+    currentLevel.spawner.updateRain();
+
     //spawn asteroids
     currentLevel.spawner.spawnAll();
 
-    //update rain
-    currentLevel.spawner.updateRain();
+    
 }
 
 
