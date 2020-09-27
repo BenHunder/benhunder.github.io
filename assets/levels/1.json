@@ -29,7 +29,7 @@
             {
                 "type": "asteroid",
                 "evolutions": 1,
-                "initialChance": 0.075,
+                "initialChance": 0.05,
                 "group": "other"
             },
             {

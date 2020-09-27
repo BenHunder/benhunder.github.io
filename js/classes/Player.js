@@ -16,7 +16,7 @@ export default class Player{
         this.unlocked.set("dragon", true);
         this.unlocked.set("outpost", true);
 
-        this.startingEnergy = 50;
+        this.startingEnergy = 20;
         this.energy = this.startingEnergy;
         this.maxEnergy = 100;
 

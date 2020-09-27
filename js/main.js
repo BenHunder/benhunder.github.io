@@ -357,9 +357,6 @@ function start(comp){
                 if(player1.hasLost){
                     lose(comp);
                 }
-                if(currentLevel.cellMap.numEnemies() == 0){
-                    win(comp);
-                }
             }
 
             //draw everything
