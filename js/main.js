@@ -363,6 +363,8 @@ function start(comp){
             if(game1.level > 0){
                 if(player1.hasLost){
                     lose(comp);
+                }else if(currentLevel.cellMap.checkWin()){
+                    win(comp);
                 }
             }
 

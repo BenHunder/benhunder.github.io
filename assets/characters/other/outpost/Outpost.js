@@ -24,6 +24,7 @@ export default class Outpost extends Creature{
     ageMe(){
         this.age += 1;
 
+        this.currentCell.isExplored = true;
         currentLevel.cellMap.withinTwo(this.currentCell).forEach( cell => cell.isExplored = true);
     }
 

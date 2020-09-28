@@ -253,4 +253,18 @@ export default class CellMap{
 
         return true;
     }
+
+    checkWin(){
+        const cells = this.allCells();
+        for(let i = 0; i < cells.length; i++){
+            const cell = cells[i];
+            //checking if there is a plant within the build site range of a hovered outpost
+            //todo: do something better instead of terrain blank
+            if(cell.terrain != 'blank' && !cell.isExplored){
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
