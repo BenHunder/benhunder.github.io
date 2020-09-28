@@ -1,5 +1,5 @@
 import Weapon from './Weapon.js';
-import { globalSoundBoard, tileSheet } from '../main.js';
+import { globalSoundBoard, tileSheet, player1, currentLevel} from '../main.js';
 
 export default class Cell{
     constructor(name, indices, coordinates, terrain){
@@ -23,10 +23,17 @@ export default class Cell{
 
         this.terrain = terrain;
         this.status = "frozen"
-        this.isExplored = false;
 
         this.isRainedOn = false;
         this.rainDepth = 0;
+
+        this.isExplored = false;
+        //isBuildSite means an outpost is in hover status and if built, this cell will become explored
+        this.isBuildSite = false;
+
+        this.isBlinkOn = true;
+        this.blinkSpeed = 0.25;
+        this.blinkTimer = this.blinkSpeed;
     }
 
 
@@ -70,12 +77,14 @@ export default class Cell{
             const special = player.selectedSpecial();
             if(player.energy >= special.cost){
                 const newCreature = special.create();
-                this.spawnNew(newCreature);
-                player.energy -= special.cost + 1;
-                return {"result": "spawned", "creatureName": this.creature.name};
-            }else{
-                return {"result": "nothing", "cell": null};
+                const result = this.spawnNew(newCreature);
+                if(result){
+                    player.energy -= special.cost + 1;
+                    return {"result": "spawned", "creatureName": this.creature.name};
+                }
             }
+            
+            return {"result": "nothing", "cell": null};
         }
     }
 
@@ -89,7 +98,7 @@ export default class Cell{
     }
 
     spawnNew(creature){
-        if(this.isSpawnable()){
+        if(this.isSpawnable() && (creature.name != 'outpost' || currentLevel.cellMap.canCurrentlyBuildOutpost())){
             creature.currentCell = this;
             this.creature = creature;
             if(creature.name == "outpost" || creature.name == "asteroid"){
@@ -97,17 +106,21 @@ export default class Cell{
                 this.depth = -300;
             }
             this.isActive = true;
+
+            return true;
         }else{
             if(this.creature){
                 console.log("tried to spawn a " + creature.name + " on active cell " + this.name + " which already contained " + this.creature.name);
             }else{
                 console.log("tried to spawn a " + creature.name + " on a non-spawnable cell " + this.name);
             }
+
+            return false;
         }
     }
 
     isSpawnable(){
-        return !this.isActive && this.terrain != "water" && this.terrain != "mountain"
+        return !this.isActive && this.terrain != "water" && this.terrain != "mountain" && this.terrain != "blank"
     }
 
     moveTo(creature){
@@ -183,11 +196,19 @@ export default class Cell{
         if(this.rainDepth >= 320){
             this.rainDepth = 0;
         }
+
+        //update blinking hover image
+        this.blinkTimer -= deltaTime;
+        if(this.blinkTimer < 0){
+            this.isBlinkOn = !this.isBlinkOn;
+            this.blinkTimer = this.blinkSpeed;
+        }
     }
 
 
     draw(context){
         // if(this.depth < this.maxDepth){
+        if(this.terrain != "blank"){
             this.drawTerrain(context);
 
             this.drawStatus(context);
@@ -206,10 +227,11 @@ export default class Cell{
             if(this.isRainedOn){
                 this.drawRain(context);
             }
+        }
     }
 
     drawTerrain(context){
-        try{
+        // try{
 
             const x = this.coordinates.x;
             const y = this.coordinates.y + (this.isActive?Math.ceil(this.depth):0);
@@ -222,9 +244,15 @@ export default class Cell{
                 context.drawImage(tileSheet.getBuffer('darkened'), x, y );
                 context.globalAlpha = 1;
             }
-        }catch(err){
-            console.log("error on ", this.terrain);
-        }
+
+            if(this.isBuildSite && this.isBlinkOn){
+                context.globalAlpha = 0.4;
+                context.drawImage(tileSheet.getBuffer(currentLevel.cellMap.canCurrentlyBuildOutpost() ? 'good':'bad'), x, y );
+                context.globalAlpha = 1;
+            }
+        // }catch(err){
+        //     console.log("error on ", this.name, this.terrain);
+        // }
     }
 
     drawStatus(context){
@@ -242,7 +270,7 @@ export default class Cell{
 
     drawHealthBar(context){
         //draw frame
-        context.drawImage(tileSheet.getBuffer('standard2'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
+        context.drawImage(tileSheet.getBuffer(this.creature.alignment == "ally" ? 'standard':'standard2'), this.coordinates.x, this.coordinates.y + Math.ceil(this.depth));
 
         //draw healthbar.
         const x = this.coordinates.x + 10;
@@ -274,6 +302,11 @@ export default class Cell{
 
         if(this.isHovered){
             context.drawImage(tileSheet.getBuffer('wireframe5'), this.coordinates.x, this.coordinates.y + (this.isActive?Math.ceil(this.depth):0));
+
+            const special = player1.selectedSpecial();
+            if(this.isSpawnable() && this.isBlinkOn && special){
+                special.drawIcon(context, this.coordinates.x, this.coordinates.y);
+            }
         }
         if(this.hitTimer > 0){
             context.globalAlpha = this.hitTimer;

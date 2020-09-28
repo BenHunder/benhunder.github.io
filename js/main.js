@@ -269,12 +269,19 @@ async function initialize(){
                 //unhover old cell
                 if(currentHoveredCell){
                     currentHoveredCell.isHovered = false;
+                    currentLevel.cellMap.allCells().forEach(cell => cell.isBuildSite = false);
                 }
 
                 //hover new cell
                 const newCell = currentLevel.cellMap.get(newIndices.x + "-" + newIndices.y);
                 newCell.isHovered = true;
+                const special = player1.selectedSpecial();
+                if(special && special.name == 'outpost' && newCell.isSpawnable()){
+                    currentLevel.cellMap.withinTwo(newCell).forEach(cell => cell.isBuildSite = true);
+                }
+
                 currentHoveredCell = newCell;
+
             }
             
         }

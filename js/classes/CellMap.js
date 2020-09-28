@@ -238,4 +238,19 @@ export default class CellMap{
     getActiveCreatures(){
         return this.allCells().filter((cell) => cell.isActive && !cell.duringSinkingAnimation).map(cell => cell.creature);
     }
+
+    //TODO-OPTIMIZATION: should maybe only iterated through buildSite cells instead of iterating though all cells
+    canCurrentlyBuildOutpost(){
+    
+        const cells = this.allCells();
+        for(let i = 0; i < cells.length; i++){
+            const cell = cells[i];
+            //checking if there is a plant within the build site range of a hovered outpost
+            if(cell.isBuildSite && cell.isActive && cell.creature.alignment == 'enemy'){
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

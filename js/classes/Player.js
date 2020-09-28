@@ -60,7 +60,7 @@ export default class Player{
     }
 
     selectedSpecial(){
-        return this.creatureFactories[this.specialSelection];
+        return this.creatureFactories.length > 0 ? this.creatureFactories[this.specialSelection]:null;
     }
 
     addEnergy(amount=1){

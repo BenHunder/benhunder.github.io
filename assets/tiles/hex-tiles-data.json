@@ -145,7 +145,7 @@
       "h": 32
     },
     {
-      "name": "explored",
+      "name": "good",
       "type": "frame",
       "x": 32,
       "y": 96,
@@ -153,7 +153,7 @@
       "h": 32
     },
     {
-      "name": "burned",
+      "name": "bad",
       "type": "frame",
       "x": 64,
       "y": 96,

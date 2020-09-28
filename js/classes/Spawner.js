@@ -54,9 +54,7 @@ export class Spawner{
         }
 
         this.rainCells.push(this.cellMap.randomAvailableCell());
-        console.log(this.rainCells);
         this.updateRain();
-        console.log(this.rainCells);
     }
 
     spawnAll(){
@@ -97,7 +95,7 @@ export class Spawner{
             if(spawnedCreatures.length > 0){
                 const r = getRandomInt(spawnedCreatures.length);
                 const creature = spawnedCreatures[r].create(true);
-                
+
                 cell.spawnNew(creature);
             }               
         });
