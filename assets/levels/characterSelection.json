@@ -67,7 +67,7 @@
                 "evolutions": 1,
                 "chance": 0.04,
                 "selectionCell": "5-0",
-                "cost": 35,
+                "cost": 0,
                 "group": "other"
             }   
         ]

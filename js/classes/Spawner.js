@@ -11,8 +11,8 @@ export class Spawner{
         this.spawnRate = spawnRate;
 
         this.rainCells = [];
-        this.rainTurns = 5;
-        this.moveRainAfter = 5;
+        this.rainTurns = 0;
+        this.moveRainAfter = 1;
     }
 
     addCreature(creatureFactory){
@@ -24,16 +24,19 @@ export class Spawner{
             this.rainCells.forEach(cell => {
                 cell.isRainedOn = false;
             });
-            this.rainCells = [];
+            this.rainCells = this.cellMap.randomAvailableWithinTwo(this.rainCells[0], 1);
+            
             // const center = this.cellMap.randomAvailableCell();
             // this.rainCells = this.cellMap.adjacentTo(center);
             // this.rainCells.push(center);
-            this.rainCells.push(this.cellMap.randomAvailableCell());
+            // this.rainCells.push(this.cellMap.randomAvailableCell());
         }
 
         this.rainCells.forEach(cell => {
             cell.isRainedOn = true;
         });
+
+        this.rainTurns += 1;
     }
 
     initialSpawn(){
@@ -49,6 +52,9 @@ export class Spawner{
                 });
             //}
         }
+
+        this.rainCells.push(this.cellMap.randomAvailableCell());
+        this.updateRain();
     }
 
     spawnAll(){
@@ -69,6 +75,30 @@ export class Spawner{
                 }
             }
         });
+
+        this.rainSpawn();
+    }
+
+    rainSpawn(){
+        this.rainCells.forEach(cell => {
+            let spawnedCreatures = [];
+            this.creatureFactories.forEach( creatureFactory => {
+                if(creatureFactory.group == 'enemies'){
+                    const r = Math.random();
+                    if(r <= creatureFactory.chance){
+                        spawnedCreatures.push(creatureFactory);
+                            
+                    }
+                }
+            });
+
+            if(spawnedCreatures.length > 0){
+                const r = getRandomInt(spawnedCreatures.length);
+                const creature = spawnedCreatures[r].create(true);
+
+                cell.spawnNew(creature);
+            }               
+        });
     }
 
     propogate(creature){
@@ -77,7 +107,7 @@ export class Spawner{
             for (let i = 0; i < this.creatureFactories.length; i++) {
                 const cf = this.creatureFactories[i];
                 if(creature instanceof cf.creatureType){
-                    const targetCell = this.cellMap.randomAdjacentTo(firstCell, 1)[0];
+                    const targetCell = this.cellMap.randomAvailableAdjacent(firstCell, 1)[0];
                     if(targetCell){
                         targetCell.spawnNew(cf.create());
                         console.log(firstCell.name + " propogated to " + targetCell.name);
@@ -92,7 +122,7 @@ export class Spawner{
     spawnMultiple(creatureFactory){
         const firstCell = this.cellMap.randomAvailableCell();
         if(firstCell){
-            const spawns = this.cellMap.randomAdjacentTo(firstCell, creatureFactory.cluster);
+            const spawns = this.cellMap.randomAvailableAdjacent(firstCell, creatureFactory.cluster);
 
             firstCell.spawnNew(creatureFactory.create());
             spawns.forEach(cell => {

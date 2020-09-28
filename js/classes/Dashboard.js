@@ -1,4 +1,5 @@
 import Layer from './Layer.js';
+import { spriteSheetMap } from '../main.js';
 
 export default class Dashboard extends Layer{
     constructor(zIndex, font, player, game){
@@ -45,7 +46,7 @@ export default class Dashboard extends Layer{
 
         this.font.print(string, context, x, y);
     }
-
+ 
     drawEnergyMeter(context){
         const x = 25;
         const y = context.canvas.height - 20;
@@ -54,12 +55,13 @@ export default class Dashboard extends Layer{
 
         //draw specials (which are only creature factories at the moment)
         this.player.creatureFactories.forEach( (special, i) => {
-            const newCreature = special.create();
+
             const xCost = Math.ceil((special.cost / this.player.maxEnergy) * barWidth);
             //should probably get the correct value for these if variable sizes are needed
             const halfSpecialWidth = 16;
             const specialHeight = 32;
-            newCreature.draw(context, x + xCost - halfSpecialWidth, y - specialHeight, 'still');
+
+            special.drawIcon(context, x + xCost - halfSpecialWidth, y - specialHeight);
 
             //temporary way to indicate selected special
             if(i == this.player.specialSelection){

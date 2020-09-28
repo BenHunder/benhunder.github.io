@@ -269,12 +269,19 @@ async function initialize(){
                 //unhover old cell
                 if(currentHoveredCell){
                     currentHoveredCell.isHovered = false;
+                    currentLevel.cellMap.allCells().forEach(cell => cell.isBuildSite = false);
                 }
 
                 //hover new cell
                 const newCell = currentLevel.cellMap.get(newIndices.x + "-" + newIndices.y);
                 newCell.isHovered = true;
+                const special = player1.selectedSpecial();
+                if(special && special.name == 'outpost' && newCell.isSpawnable()){
+                    currentLevel.cellMap.withinTwo(newCell).forEach(cell => cell.isBuildSite = true);
+                }
+
                 currentHoveredCell = newCell;
+
             }
             
         }
@@ -356,9 +363,6 @@ function start(comp){
             if(game1.level > 0){
                 if(player1.hasLost){
                     lose(comp);
-                }
-                if(currentLevel.cellMap.numEnemies() == 0){
-                    win(comp);
                 }
             }
 
@@ -474,11 +478,13 @@ function endTurn(interaction, clickedCell){
     //increment energy by one each turn
     player1.addEnergy();
 
+    //update rain
+    currentLevel.spawner.updateRain();
+
     //spawn asteroids
     currentLevel.spawner.spawnAll();
 
-    //update rain
-    currentLevel.spawner.updateRain();
+    
 }
 
 

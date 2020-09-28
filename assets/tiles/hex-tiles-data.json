@@ -145,7 +145,7 @@
       "h": 32
     },
     {
-      "name": "explored",
+      "name": "good",
       "type": "frame",
       "x": 32,
       "y": 96,
@@ -153,7 +153,7 @@
       "h": 32
     },
     {
-      "name": "burned",
+      "name": "bad",
       "type": "frame",
       "x": 64,
       "y": 96,
@@ -190,6 +190,22 @@
       "x": 64,
       "y": 128,
       "w": 32,
+      "h": 32
+    },
+    {
+      "name": "rain2",
+      "type": "frame",
+      "x": 96,
+      "y": 128,
+      "w": 32,
+      "h": 32
+    },
+    {
+      "name": "cloud2",
+      "type": "frame",
+      "x": 0,
+      "y": 160,
+      "w": 64,
       "h": 32
     }
   ]

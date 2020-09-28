@@ -1,7 +1,7 @@
 export default class Player{
     constructor(){
         this.baseScore = 0;
-        this.baseNumAllies = 2;
+        this.baseNumAllies = 3;
         this.maxAmmo = 1;
 
         this.alliesLeft = this.baseNumAllies;
@@ -16,7 +16,7 @@ export default class Player{
         this.unlocked.set("dragon", true);
         this.unlocked.set("outpost", true);
 
-        this.startingEnergy = 50;
+        this.startingEnergy = 20;
         this.energy = this.startingEnergy;
         this.maxEnergy = 100;
 
@@ -60,7 +60,7 @@ export default class Player{
     }
 
     selectedSpecial(){
-        return this.creatureFactories[this.specialSelection];
+        return this.creatureFactories.length > 0 ? this.creatureFactories[this.specialSelection]:null;
     }
 
     addEnergy(amount=1){

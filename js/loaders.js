@@ -222,7 +222,7 @@ export function loadCreatureType(creatureName, creatureEvolutions, creatureChanc
     };
 
     return Promise.all(promisesArray).then( () => {
-        return new CreatureFactory(creatureTypes[capitalize(creatureName)], creatureName, creatureChance, creatureCluster, selectionCell, creatureCost);
+        return new CreatureFactory(creatureTypes[capitalize(creatureName)], creatureName, creatureChance, creatureCluster, selectionCell, creatureCost, creatureGroup);
     });
 }
 

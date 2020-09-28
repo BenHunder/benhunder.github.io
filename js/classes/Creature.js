@@ -65,7 +65,7 @@ export default class Creature{
     
     draw(context, x, y, animationName){
         const spriteSheet = spriteSheetMap.get(this.eName());
-        const animation = animationName == 'still' ? {"start": 0, "end": 0} : spriteSheet.getAnimation(this.currentAnimation);
+        const animation = spriteSheet.getAnimation(this.currentAnimation);
         let name = 'frame' + this.currentFrame;
 
         //advance frames
@@ -101,7 +101,7 @@ export default class Creature{
 
         //just to get animation start frame
         const spriteSheet = spriteSheetMap.get(this.eName());
-        const animation = name == 'still' ? {"start": 0, "end": 0} : spriteSheet.getAnimation(this.currentAnimation);
+        const animation = spriteSheet.getAnimation(this.currentAnimation);
 
         this.currentFrame = animation.start;
         this.animationCycles = cycles;
